@@ -91,7 +91,7 @@
                     <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#adicionarModal">
                         <i class="bi bi-plus-circle"></i> Adicionar Registro
                     </button>
-<!--                     <div>
+                        <!--  <div>
                         <button class="btn btn-success" id="exportExcel">
                             <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
                         </button>
@@ -105,11 +105,13 @@
                     <table id="rsoTable" class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <th>ID</th>
+                                <!-- <th>ID</th> -->
                                 <th>RSO Num</th>
                                 <th>Data</th>
+                                <th>PPRi</th>
                                 <th>Viatura</th>
                                 <th>Encarregado</th>
+                                <th>BOp</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -122,6 +124,7 @@
         </div>
     </div>
 
+
     <!-- Modal Detalhes -->
     <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -131,16 +134,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-2"><strong>ID:</strong> <span id="detailId">RSO001</span></div>
-                    <div class="mb-2"><strong>Data:</strong> <span id="detailData">15/09/2023</span></div>
-                    <div class="mb-2"><strong>VTR:</strong> <span id="detailVtr">VTR-1234</span></div>
-                    <div class="mb-2"><strong>Encarregado:</strong> <span id="detailEncarregado">Carlos Silva</span></div>
-                    <hr>
-                    <div class="mb-2"><strong>Campo 1:</strong> <span id="detailCampo1">Valor do Campo 1</span></div>
-                    <div class="mb-2"><strong>Campo 2:</strong> <span id="detailCampo2">Valor do Campo 2</span></div>
-                    <div class="mb-2"><strong>Campo 3:</strong> <span id="detailCampo3">Valor do Campo 3</span></div>
-                    <div class="mb-2"><strong>Campo 4:</strong> <span id="detailCampo4">Valor do Campo 4</span></div>
-                    <div class="mb-2"><strong>Campo 5:</strong> <span id="detailCampo5">Valor do Campo 5</span></div>
+                    <!-- Conteúdo gerado via JS -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
@@ -148,6 +142,47 @@
             </div>
         </div>
     </div>
+
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarModalLabel">Editar Registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3"><label for="editNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="editNumRSO" required></div>
+                        <div class="mb-3"><label for="editData" class="form-label">Data</label><input type="date" class="form-control" id="editData" required></div>
+                        <div class="mb-3"><label for="editNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
+                        <div class="mb-3"><label for="editEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="editEncEq"></div>
+                        <div class="mb-3"><label for="editVtr" class="form-label">VTR</label><input type="text" class="form-control" id="editVtr"></div>
+                        <div class="mb-3"><label for="editBop" class="form-label">BOP</label><input type="text" class="form-control" id="editBop"></div>
+                        <div class="mb-3"><label for="editTpSvc" class="form-label">Tipo Serviço</label><input type="text" class="form-control" id="editTpSvc"></div>
+                        <div class="mb-3"><label for="editAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="editAux1"></div>
+                        <div class="mb-3"><label for="editAux2" class="form-label">Aux2</label><input type="text" class="form-control" id="editAux2"></div>
+                        <div class="mb-3"><label for="editAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="editAux3"></div>
+                        <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>
+                        <div class="mb-3"><label for="editQtdFisc" class="form-label">Qtd Fisc</label><input type="text" class="form-control" id="editQtdFisc"></div>
+                        <div class="mb-3"><label for="editQtdAut" class="form-label">Qtd Aut</label><input type="text" class="form-control" id="editQtdAut"></div>
+                        <div class="mb-3"><label for="editQtBO" class="form-label">Qt BO</label><input type="text" class="form-control" id="editQtBO"></div>
+                        <div class="mb-3"><label for="editQtARV" class="form-label">Qt ARV</label><input type="text" class="form-control" id="editQtARV"></div>
+                        <div class="mb-3"><label for="editQtdARD" class="form-label">Qtd ARD</label><input type="text" class="form-control" id="editQtdARD"></div>
+                        <div class="mb-3"><label for="editQtdImg" class="form-label">Qtd Img</label><input type="text" class="form-control" id="editQtdImg"></div>
+                        <div class="mb-3"><label for="editQtdTestes" class="form-label">Qtd Testes</label><input type="text" class="form-control" id="editQtdTestes"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvarEdicao">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Modal Adicionar -->
     <div class="modal fade" id="adicionarModal" tabindex="-1" aria-labelledby="adicionarModalLabel" aria-hidden="true">
@@ -211,31 +246,16 @@ function renderTable(rsos) {
     rsos.forEach(rso => {
         tbody.append(`
             <tr>
-                <td>${rso._id}</td>
                 <td>${rso.numRSO || ''}</td>
                 <td>${rso.data || ''}</td>
                 <td>${rso.numPPRi || ''}</td>
                 <td>${rso.encEq || ''}</td>
                 <td>${rso.vtr || ''}</td>
                 <td>${rso.bop || ''}</td>
-                <td>${rso.tpSvc || ''}</td>
-                <td>${rso.aux1 || ''}</td>
-                <td>${rso.aux2 || ''}</td>
-                <td>${rso.aux3 || ''}</td>
-                <td>${rso.hrInicio || ''}</td>
-                <td>${rso.qtdFisc || ''}</td>
-                <td>${rso.qtdAut || ''}</td>
-                <td>${rso.qtBO || ''}</td>
-                <td>${rso.qtARV || ''}</td>
-                <td>${rso.qtdARD || ''}</td>
-                <td>${rso.qtdImg || ''}</td>
-                <td>${rso.qtdTestes || ''}</td>
+
                 <td>
                     <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
                         <i class="bi bi-eye"></i>
-                    </button>
-                    <button class="btn btn-danger btn-action btn-delete" data-id="${rso._id}">
-                        <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>
@@ -286,16 +306,95 @@ $(document).ready(function() {
         });
     });
 
+    // Editar Registro
+    $(document).on('click', '#btnEditar', function() {
+        const id = $(this).data('id');
+        $.get(`${API_URL}/${id}`, function(rso) {
+            $('#editId').val(rso._id);
+            $('#editNumRSO').val(rso.numRSO);
+            $('#editData').val(rso.data);
+            $('#editNumPPRi').val(rso.numPPRi);
+            $('#editEncEq').val(rso.encEq);
+            $('#editVtr').val(rso.vtr);
+            $('#editBop').val(rso.bop);
+            $('#editTpSvc').val(rso.tpSvc);
+            $('#editAux1').val(rso.aux1);
+            $('#editAux2').val(rso.aux2);
+            $('#editAux3').val(rso.aux3);
+            $('#editHrInicio').val(rso.hrInicio);
+            $('#editQtdFisc').val(rso.qtdFisc);
+            $('#editQtdAut').val(rso.qtdAut);
+            $('#editQtBO').val(rso.qtBO);
+            $('#editQtARV').val(rso.qtARV);
+            $('#editQtdARD').val(rso.qtdARD);
+            $('#editQtdImg').val(rso.qtdImg);
+            $('#editQtdTestes').val(rso.qtdTestes);
+            $('#editarModal').modal('show');
+        });
+    });
+
+
+    //Salvar Edição
+    $('#salvarEdicao').click(function() {
+        const id = $('#editId').val();
+        const data = {
+            numRSO: $('#editNumRSO').val(),
+            data: $('#editData').val(),
+            numPPRi: $('#editNumPPRi').val(),
+            encEq: $('#editEncEq').val(),
+            vtr: $('#editVtr').val(),
+            bop: $('#editBop').val(),
+            tpSvc: $('#editTpSvc').val(),
+            aux1: $('#editAux1').val(),
+            aux2: $('#editAux2').val(),
+            aux3: $('#editAux3').val(),
+            hrInicio: $('#editHrInicio').val(),
+            qtdFisc: $('#editQtdFisc').val(),
+            qtdAut: $('#editQtdAut').val(),
+            qtBO: $('#editQtBO').val(),
+            qtARV: $('#editQtARV').val(),
+            qtdARD: $('#editQtdARD').val(),
+            qtdImg: $('#editQtdImg').val(),
+            qtdTestes: $('#editQtdTestes').val()
+        };
+        $.ajax({
+            url: `${API_URL}/${id}`,
+            type: 'PUT',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            success: function() {
+                $('#editarModal').modal('hide');
+                $.get(API_URL, renderTable);
+            }
+        });
+    });
+    
+
     // Exibir detalhes
     $(document).on('click', '.btn-details', function() {
         const id = $(this).data('id');
         $.get(`${API_URL}/${id}`, function(rso) {
-            let html = '';
-            for (const key in rso) {
-                if (key !== '__v') {
-                    html += `<div class="mb-2"><strong>${key}:</strong> ${rso[key]}</div>`;
-                }
-            }
+            let html = `
+                <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${rso._id}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">RSO Num:</strong> ${rso.numRSO}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Data:</strong> ${rso.data}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Viatura:</strong> ${rso.vtr}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Encarregado:</strong> ${rso.encEq}</div>
+                <hr>
+            `;
+            const camposSecundarios = [
+                'bop','tpSvc','aux1','aux2','aux3','hrInicio','qtdFisc','qtdAut','qtBO','qtARV','qtdARD','qtdImg','qtdTestes'
+            ];
+            camposSecundarios.forEach(campo => {
+                html += `<div class="mb-2"><strong>${campo}:</strong> ${rso[campo] || ''}</div>`;
+            });
+            html += `
+                <div class="mt-3 text-end">
+                    <button class="btn btn-warning" id="btnEditar" data-id="${rso._id}" data-bs-dismiss="modal">
+                        <i class="bi bi-pencil"></i> Editar
+                    </button>
+                </div>
+            `;
             $('#detalhesModal .modal-body').html(html);
         });
     });
