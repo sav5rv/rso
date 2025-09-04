@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cadastro de Usuários</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+
+        .nav-brand h2 {
+            color: #007bff;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-menu a:hover {
+            color: #007bff;
+        }
+
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger span {
+            width: 25px;
+            height: 3px;
+            background: #333;
+            margin: 3px 0;
+            transition: 0.3s;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #007bff, #0056b3);
+            color: white;
+            padding: 120px 0 80px;
+            text-align: center;
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+        }
+
+        .cta-button {
+            background: #fff;
+            color: #007bff;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Sections */
+        section {
+            padding: 80px 0;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 3rem;
+            font-size: 2.5rem;
+            color: #333;
+        }
+
+        /* Services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .service-card {
+            background: #f8f9fa;
+            padding: 2rem;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Contact Form */
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .contact-form button {
+            background: #007bff;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .contact-form button:hover {
+            background: #0056b3;
+        }
+
+        /* Footer */
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        /* Card Styles */
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+        }
+        
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+        }
+        
+        .btn-gradient {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            border: none;
+            color: white;
+        }
+        
+        .btn-gradient:hover {
+            background: linear-gradient(45deg, #0b5ed7, #0ba9c8);
+            color: white;
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+            background-color: #f8f9fa;
+            border: 1px solid #ced4da;
+            border-left: none;
+            border-radius: 0 0.375rem 0.375rem 0;
+        }
+        
+        .input-group-text {
+            background-color: #f8f9fa;
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background-color: #fff;
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 27px rgba(0,0,0,0.05);
+                padding: 2rem 0;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script src="app.js"></script>
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h2>MeuSite</h2>
+            </div>
+            <ul class="nav-menu">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#sobre">Sobre</a></li>
+                <li><a href="#servicos">Serviços</a></li>
+                <li><a href="#contato">Contato</a></li>
+                <li><a href="rso.html">RSO</a></li>
+                <li><a href="cadastro.html">Cad Usuario</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Bem-vindo ao Nosso Site</h1>
+                <p>cia</p>
+                <button class="cta-button">Login</button>
+            </div>
+        </section>
+
+        <section id="sobre" class="about">
+            <div class="container">
+                <h2>Sobre Nós</h2>
+                <div class="about-content">
+                    <div class="about-text">
+                        <p>Somos uma empresa dedicada a criar experiências digitais excepcionais.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="servicos" class="services">
+            <div class="container">
+                <h2>Nossos Serviços</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <h3>Web Design</h3>
+                        <p>Criamos designs modernos e responsivos</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>Desenvolvimento</h3>
+                        <p>Sites e aplicações web de alta qualidade</p>
+                    </div>
+                    <div class="service-card">
+                        <h3>SEO</h3>
+                        <p>Otimização para mecanismos de busca</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="contact">
+            <div class="container">
+                <h2>Entre em Contato</h2>
+                <form class="contact-form">
+                    <input type="text" placeholder="Seu nome" required>
+                    <input type="email" placeholder="Seu email" required>
+                    <textarea placeholder="Sua mensagem" rows="5" required></textarea>
+                    <button type="submit">Enviar Mensagem</button>
+                </form>
+            </div>
+        </section>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8 col-lg-6">
+                        <div class="card">
+                            <div class="card-header text-center py-3">
+                                <h2><i class="bi bi-person-plus-fill me-2"></i>Cadastro de Usuário</h2>
+                            </div>
+                            <div class="card-body p-4">
+                                <form id="userForm">
+                                    <div class="mb-3">
+                                        <label for="nome" class="form-label required-field">Nome Completo</label>
+                                        <input type="text" class="form-control" id="nome" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label required-field">E-mail</label>
+                                        <input type="email" class="form-control" id="email" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="celular" class="form-label required-field">Celular</label>
+                                        <input type="text" class="form-control" id="celular" placeholder="(XX) XXXXX-XXXX" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="dataNascimento" class="form-label required-field">Data de Nascimento</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="dataNascimento" placeholder="DD-MM-YYYY" required>
+                                            <span class="input-group-text" id="calendarioBtn"><i class="bi bi-calendar"></i></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="senha" class="form-label required-field">Senha</label>
+                                        <div class="input-group">
+                                            <input type="password" class="form-control" id="senha" required>
+                                            <span class="input-group-text password-toggle" id="togglePassword">
+                                                <i class="bi bi-eye"></i>
+                                            </span>
+                                        </div>
+                                        <div class="form-text">Mínimo 8 caracteres, incluindo letras, números e caracteres especiais</div>
+                                    </div>
+
+                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                                        <button type="button" class="btn btn-secondary me-md-2" id="cancelarBtn">
+                                            <i class="bi bi-x-circle"></i> Cancelar
+                                        </button>
+                                        <button type="button" class="btn btn-info me-md-2" id="localizarBtn" data-bs-toggle="modal" data-bs-target="#localizarModal">
+                                            <i class="bi bi-search"></i> Localizar
+                                        </button>
+                                        <button type="submit" class="btn btn-gradient" id="cadastrarBtn">
+                                            <i class="bi bi-person-plus"></i> Cadastrar
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section> -->
+    </main>
+
+    <footer class="footer">
+        <p>&copy; 2024 MeuSite. Todos os direitos reservados.</p>
+    </footer>
+
+
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    
+    <script>
+        // Menu Mobile
+        const hamburger = document.querySelector('.hamburger');
+        const navMenu = document.querySelector('.nav-menu');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link
+        document.querySelectorAll('.nav-menu a').forEach(n => n.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        }));
+
+        // Smooth scroll para links internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Validação do formulário
+        const contactForm = document.querySelector('.contact-form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Validação básica
+                const inputs = this.querySelectorAll('input, textarea');
+                let isValid = true;
+
+                inputs.forEach(input => {
+                    if (!input.value.trim()) {
+                        isValid = false;
+                        input.style.borderColor = 'red';
+                    } else {
+                        input.style.borderColor = '#ddd';
+                    }
+                });
+
+                if (isValid) {
+                    alert('Mensagem enviada com sucesso!');
+                    this.reset();
+                } else {
+                    alert('Por favor, preencha todos os campos.');
+                }
+            });
+        }
+
+        // Animação de scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observar elementos para animação
+        document.querySelectorAll('.service-card, .about-content').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(el);
+        });
+
+        // Código do formulário de cadastro
+        $(document).ready(function() {
+            // Aplicar máscaras aos campos
+            $('#celular').mask('(00) 00000-0000');
+            $('#dataNascimento').mask('00-00-0000');
+            
+            // Configurar o botão de calendário
+            $('#calendarioBtn').click(function() {
+                $('#dataNascimento').focus();
+            });
+            
+            // Configurar o toggle de visualização de senha
+            $('#togglePassword').click(function() {
+                const senhaInput = $('#senha');
+                const tipo = senhaInput.attr('type') === 'password' ? 'text' : 'password';
+                senhaInput.attr('type', tipo);
+                $(this).find('i').toggleClass('bi-eye bi-eye-slash');
+            });
+            
+            // Validação do formulário
+            $('#userForm').on('submit', function(e) {
+                e.preventDefault();
+                
+                // Validar campos obrigatórios
+                let isValid = true;
+                $('input[required]').each(function() {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                // Validar senha
+                const senha = $('#senha').val();
+                const senhaRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+                if (!senhaRegex.test(senha)) {
+                    isValid = false;
+                    $('#senha').addClass('is-invalid');
+                    alert('A senha deve ter pelo menos 8 caracteres, incluindo letras, números e caracteres especiais.');
+                } else {
+                    $('#senha').removeClass('is-invalid');
+                }
+                
+                if (isValid) {
+                    // Simular cadastro bem-sucedido
+                    const nome = $('#nome').val();
+                    const random = Math.random();
+                    
+                    if (random > 0.3) { // 70% de chance de sucesso
+                        alert(`Usuário: ${nome}, cadastrado com sucesso!`);
+                        window.location.href = 'login.html'; // Redirecionar para tela de login
+                    } else {
+                        alert(`Erro ao cadastrar o usuário: ${nome}`);
+                    }
+                }
+            });
+            
+            // Botão Cancelar
+            $('#cancelarBtn').click(function() {
+                $('#userForm')[0].reset();
+                $('input').removeClass('is-invalid');
+                // Simular redirecionamento para tela de login
+                alert('Operação cancelada. Redirecionando para login...');
+                window.location.href = 'login.html';
+            });
+            
+            // Simulação de busca de usuários
+            $('#buscarBtn').click(function() {
+                const termo = $('#busca').val().toLowerCase();
+                const usuarios = [
+                    { nome: 'João Silva', email: 'joao@email.com', celular: '(11) 99999-9999' },
+                    { nome: 'Maria Santos', email: 'maria@email.com', celular: '(11) 98888-8888' },
+                    { nome: 'Pedro Oliveira', email: 'pedro@email.com', celular: '(11) 97777-7777' }
+                ];
+                
+                let resultadosHTML = '';
+                
+                if (termo) {
+                    const resultados = usuarios.filter(user => 
+                        user.nome.toLowerCase().includes(termo) || 
+                        user.email.toLowerCase().includes(termo)
+                    );
+                    
+                    if (resultados.length > 0) {
+                        resultados.forEach(user => {
+                            resultadosHTML += `
+                                <tr>
+                                    <td>${user.nome}</td>
+                                    <td>${user.email}</td>
+                                    <td>${user.celular}</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary selecionar-usuario" 
+                                                data-nome="${user.nome}" 
+                                                data-email="${user.email}" 
+                                                data-celular="${user.celular}">
+                                            Selecionar
+                                        </button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                    } else {
+                        resultadosHTML = '<tr><td colspan="4" class="text-center">Nenhum usuário encontrado</td></tr>';
+                    }
+                } else {
+                    resultadosHTML = '<tr><td colspan="4" class="text-center">Digite um termo para buscar</td></tr>';
+                }
+                
+                $('#resultadosBusca').html(resultadosHTML);
+                
+                // Configurar botões de seleção
+                $('.selecionar-usuario').click(function() {
+                    const nome = $(this).data('nome');
+                    const email = $(this).data('email');
+                    const celular = $(this).data('celular');
+                    
+                    $('#nome').val(nome);
+                    $('#email').val(email);
+                    $('#celular').val(celular);
+                    
+                    $('#localizarModal').modal('hide');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

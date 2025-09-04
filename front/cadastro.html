@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cadastro - DataTable</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+        }
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+        }
+        .btn-gradient {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            border: none;
+            color: white;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(45deg, #0b5ed7, #0ba9c8);
+            color: white;
+        }
+        .navbar-custom {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            margin-bottom: 20px;
+            border-radius: 1rem;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+        }
+        .table-responsive {
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .btn-action {
+            margin: 0 3px;
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+        .modal-header {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+        }
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+    </style>
+    <script src="app.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-check"></i> Sistema de Cadastro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="bi bi-table"></i> Cadastros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rso.html"><i class="bi bi-clipboard-data"></i> RSO</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center py-3">
+                <h2><i class="bi bi-people-fill me-2"></i>Registros de Usuários</h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex justify-content-between mb-3">
+                    <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#cadastroModal">
+                        <i class="bi bi-plus-circle"></i> Adicionar Usuário
+                    </button>
+                    <div>
+                        <button class="btn btn-success" id="exportExcel">
+                            <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
+                        </button>
+                        <button class="btn btn-danger" id="exportPDF">
+                            <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="usuariosTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Celular</th>
+                                <th>Data Nasc.</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>USR001</td>
+                                <td>Carlos Silva</td>
+                                <td>carlos@email.com</td>
+                                <td>(11) 99999-9999</td>
+                                <td>15/05/1985</td>
+                                <td>
+                                    <button class="btn btn-info btn-action btn-details" data-bs-toggle="modal" data-bs-target="#detalhesModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#excluirModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>USR002</td>
+                                <td>Maria Santos</td>
+                                <td>maria@email.com</td>
+                                <td>(11) 98888-8888</td>
+                                <td>22/08/1990</td>
+                                <td>
+                                    <button class="btn btn-info btn-action btn-details" data-bs-toggle="modal" data-bs-target="#detalhesModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#excluirModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>USR003</td>
+                                <td>João Oliveira</td>
+                                <td>joao@email.com</td>
+                                <td>(11) 97777-7777</td>
+                                <td>10/12/1982</td>
+                                <td>
+                                    <button class="btn btn-info btn-action btn-details" data-bs-toggle="modal" data-bs-target="#detalhesModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#excluirModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>USR004</td>
+                                <td>Ana Costa</td>
+                                <td>ana@email.com</td>
+                                <td>(11) 96666-6666</td>
+                                <td>03/04/1995</td>
+                                <td>
+                                    <button class="btn btn-info btn-action btn-details" data-bs-toggle="modal" data-bs-target="#detalhesModal">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+                                    <button class="btn btn-warning btn-action btn-edit" data-bs-toggle="modal" data-bs-target="#editarModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-action btn-delete" data-bs-toggle="modal" data-bs-target="#excluirModal">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Cadastro -->
+    <div class="modal fade" id="cadastroModal" tabindex="-1" aria-labelledby="cadastroModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cadastroModalLabel"><i class="bi bi-person-plus me-2"></i>Cadastrar Novo Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="userForm">
+                        <div class="mb-3">
+                            <label for="nome" class="form-label required-field">Nome Completo</label>
+                            <input type="text" class="form-control" id="nome" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label required-field">E-mail</label>
+                            <input type="email" class="form-control" id="email" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="celular" class="form-label required-field">Celular</label>
+                            <input type="text" class="form-control" id="celular" placeholder="(XX) XXXXX-XXXX" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="dataNascimento" class="form-label required-field">Data de Nascimento</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="dataNascimento" placeholder="DD-MM-YYYY" required>
+                                <span class="input-group-text" id="calendarioBtn"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="senha" class="form-label required-field">Senha</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="senha" required>
+                                <span class="input-group-text password-toggle" id="togglePassword">
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                            </div>
+                            <div class="form-text">Mínimo 8 caracteres, incluindo letras, números e caracteres especiais</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvarCadastro">Salvar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Detalhes -->
+    <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detalhesModalLabel"><i class="bi bi-person-circle me-2"></i>Detalhes do Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-2"><strong>ID:</strong> <span id="detailId">USR001</span></div>
+                    <div class="mb-2"><strong>Nome:</strong> <span id="detailNome">Carlos Silva</span></div>
+                    <div class="mb-2"><strong>E-mail:</strong> <span id="detailEmail">carlos@email.com</span></div>
+                    <div class="mb-2"><strong>Celular:</strong> <span id="detailCelular">(11) 99999-9999</span></div>
+                    <div class="mb-2"><strong>Data de Nascimento:</strong> <span id="detailDataNasc">15/05/1985</span></div>
+                    <div class="mb-2"><strong>Data de Cadastro:</strong> <span id="detailDataCad">10/09/2023</span></div>
+                    <div class="mb-2"><strong>Status:</strong> <span class="badge bg-success">Ativo</span></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar -->
+    <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editarModalLabel"><i class="bi bi-pencil-square me-2"></i>Editar Usuário</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editForm">
+                        <input type="hidden" id="editId">
+                        <div class="mb-3">
+                            <label for="editNome" class="form-label required-field">Nome Completo</label>
+                            <input type="text" class="form-control" id="editNome" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmail" class="form-label required-field">E-mail</label>
+                            <input type="email" class="form-control" id="editEmail" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editCelular" class="form-label required-field">Celular</label>
+                            <input type="text" class="form-control" id="editCelular" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editDataNascimento" class="form-label required-field">Data de Nascimento</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="editDataNascimento" required>
+                                <span class="input-group-text"><i class="bi bi-calendar"></i></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="editAlterarSenha">
+                            <label class="form-check-label" for="editAlterarSenha">Alterar senha</label>
+                        </div>
+
+                        <div class="mb-4" id="editSenhaContainer" style="display: none;">
+                            <label for="editSenha" class="form-label">Nova Senha</label>
+                            <div class="input-group">
+                                <input type="password" class="form-control" id="editSenha">
+                                <span class="input-group-text password-toggle">
+                                    <i class="bi bi-eye"></i>
+                                </span>
+                            </div>
+                            <div class="form-text">Deixe em branco para manter a senha atual</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="salvarEdicao">Salvar Alterações</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Excluir -->
+    <div class="modal fade" id="excluirModal" tabindex="-1" aria-labelledby="excluirModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="excluirModalLabel"><i class="bi bi-exclamation-triangle me-2"></i>Confirmar Exclusão</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir o usuário <strong id="userToDelete">Carlos Silva</strong>?</p>
+                    <p class="text-danger">Esta ação não pode ser desfeita.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmarExclusao">Excluir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Inicializar DataTable
+            $('#usuariosTable').DataTable({
+                responsive: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excel',
+                        text: '<i class="bi bi-file-earmark-excel"></i> Exportar Excel',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdf',
+                        text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+                        className: 'btn btn-danger'
+                    }
+                ],
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json'
+                }
+            });
+
+            // Configurar botões de exportação
+            $('#exportExcel').click(function() {
+                $('.buttons-excel').trigger('click');
+            });
+
+            $('#exportPDF').click(function() {
+                $('.buttons-pdf').trigger('click');
+            });
+
+            // Aplicar máscaras aos campos
+            $('#celular').mask('(00) 00000-0000');
+            $('#dataNascimento').mask('00-00-0000');
+            $('#editCelular').mask('(00) 00000-0000');
+            $('#editDataNascimento').mask('00-00-0000');
+            
+            // Configurar o botão de calendário
+            $('#calendarioBtn').click(function() {
+                $('#dataNascimento').focus();
+            });
+            
+            // Configurar o toggle de visualização de senha
+            $('#togglePassword').click(function() {
+                const senhaInput = $('#senha');
+                const tipo = senhaInput.attr('type') === 'password' ? 'text' : 'password';
+                senhaInput.attr('type', tipo);
+                $(this).find('i').toggleClass('bi-eye bi-eye-slash');
+            });
+
+            $('.password-toggle').click(function() {
+                const senhaInput = $(this).closest('.input-group').find('input');
+                const tipo = senhaInput.attr('type') === 'password' ? 'text' : 'password';
+                senhaInput.attr('type', tipo);
+                $(this).find('i').toggleClass('bi-eye bi-eye-slash');
+            });
+            
+            // Alternar exibição do campo de senha na edição
+            $('#editAlterarSenha').change(function() {
+                if ($(this).is(':checked')) {
+                    $('#editSenhaContainer').slideDown();
+                } else {
+                    $('#editSenhaContainer').slideUp();
+                }
+            });
+            
+            // Configurar botões de ação
+            $('.btn-details').click(function() {
+                const row = $(this).closest('tr');
+                const id = row.find('td:eq(0)').text();
+                const nome = row.find('td:eq(1)').text();
+                const email = row.find('td:eq(2)').text();
+                const celular = row.find('td:eq(3)').text();
+                const dataNasc = row.find('td:eq(4)').text();
+                
+                $('#detailId').text(id);
+                $('#detailNome').text(nome);
+                $('#detailEmail').text(email);
+                $('#detailCelular').text(celular);
+                $('#detailDataNasc').text(dataNasc);
+                $('#detailDataCad').text('10/09/2023'); // Simulado
+            });
+
+            $('.btn-edit').click(function() {
+                const row = $(this).closest('tr');
+                const id = row.find('td:eq(0)').text();
+                const nome = row.find('td:eq(1)').text();
+                const email = row.find('td:eq(2)').text();
+                const celular = row.find('td:eq(3)').text();
+                const dataNasc = row.find('td:eq(4)').text();
+                
+                $('#editId').val(id);
+                $('#editNome').val(nome);
+                $('#editEmail').val(email);
+                $('#editCelular').val(celular);
+                $('#editDataNascimento').val(dataNasc);
+                $('#editAlterarSenha').prop('checked', false);
+                $('#editSenhaContainer').hide();
+            });
+
+            $('.btn-delete').click(function() {
+                const row = $(this).closest('tr');
+                const nome = row.find('td:eq(1)').text();
+                $('#userToDelete').text(nome);
+            });
+            
+            // Salvar cadastro
+            $('#salvarCadastro').click(function() {
+                // Validar campos obrigatórios
+                let isValid = true;
+                $('#userForm input[required]').each(function() {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                // Validar senha
+                const senha = $('#senha').val();
+                const senhaRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/;
+                if (!senhaRegex.test(senha)) {
+                    isValid = false;
+                    $('#senha').addClass('is-invalid');
+                    alert('A senha deve ter pelo menos 8 caracteres, incluindo letras, números e caracteres especiais.');
+                } else {
+                    $('#senha').removeClass('is-invalid');
+                }
+                
+                if (isValid) {
+                    // Simular cadastro bem-sucedido
+                    const nome = $('#nome').val();
+                    alert(`Usuário ${nome} cadastrado com sucesso!`);
+                    $('#cadastroModal').modal('hide');
+                    $('#userForm')[0].reset();
+                    
+                    // Recarregar a tabela (em uma aplicação real, isso atualizaria os dados)
+                    $('#usuariosTable').DataTable().ajax.reload();
+                }
+            });
+            
+            // Confirmar exclusão
+            $('#confirmarExclusao').click(function() {
+                alert('Usuário excluído com sucesso!');
+                $('#excluirModal').modal('hide');
+            });
+            
+            // Salvar edição
+            $('#salvarEdicao').click(function() {
+                // Validar campos obrigatórios
+                let isValid = true;
+                $('#editForm input[required]').each(function() {
+                    if ($(this).val() === '') {
+                        isValid = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                if (isValid) {
+                    // Simular edição bem-sucedida
+                    const nome = $('#editNome').val();
+                    alert(`Usuário ${nome} atualizado com sucesso!`);
+                    $('#editarModal').modal('hide');
+                    
+                    // Recarregar a tabela (em uma aplicação real, isso atualizaria os dados)
+                    $('#usuariosTable').DataTable().ajax.reload();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
