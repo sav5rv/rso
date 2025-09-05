@@ -91,21 +91,12 @@
                     <button class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#adicionarModal">
                         <i class="bi bi-plus-circle"></i> Adicionar Registro
                     </button>
-                        <!--  <div>
-                        <button class="btn btn-success" id="exportExcel">
-                            <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
-                        </button>
-                        <button class="btn btn-danger" id="exportPDF">
-                            <i class="bi bi-file-earmark-pdf"></i> Exportar PDF
-                        </button>
-                    </div> -->
                 </div>
                 
                 <div class="table-responsive">
                     <table id="rsoTable" class="table table-striped table-hover">
                         <thead>
                             <tr>
-                                <!-- <th>ID</th> -->
                                 <th>RSO Num</th>
                                 <th>Data</th>
                                 <th>PPRi</th>
@@ -155,24 +146,49 @@
                 <div class="modal-body">
                     <form id="editForm">
                         <input type="hidden" id="editId">
-                        <div class="mb-3"><label for="editNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="editNumRSO" required></div>
+                        <!-- <div class="mb-3"><label for="editNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="editNumRSO" required></div> -->
                         <div class="mb-3"><label for="editData" class="form-label">Data</label><input type="date" class="form-control" id="editData" required></div>
+                        <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>                        
                         <div class="mb-3"><label for="editNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
                         <div class="mb-3"><label for="editEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="editEncEq"></div>
-                        <div class="mb-3"><label for="editVtr" class="form-label">VTR</label><input type="text" class="form-control" id="editVtr"></div>
-                        <div class="mb-3"><label for="editBop" class="form-label">BOP</label><input type="text" class="form-control" id="editBop"></div>
-                        <div class="mb-3"><label for="editTpSvc" class="form-label">Tipo Serviço</label><input type="text" class="form-control" id="editTpSvc"></div>
+                        <!-- <div class="mb-3"><label for="editVtr" class="form-label">VTR</label><input type="text" class="form-control" id="editVtr"></div> -->
+                        <div class="mb-3">
+                            <label for="editVtr" class="form-label">VTR</label>
+                            <input type="text" class="form-control" id="editVtr" placeholder="B-1234">
+                            <small class="form-text text-muted">Formato: B-1234</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editBop" class="form-label">BOP</label>
+                            <select class="form-control" id="editBop">
+                                <option value="">Selecione</option>
+                                <option value="270/5">127/2</option>
+                                <option value="270/5">258/1</option>
+                                <option value="270/5">258/2</option>
+                                <option value="270/5">270/5</option>
+                                <option value="270/6">270/6</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="editTpSvc" class="form-label">Tipo Serviço</label>
+                            <select class="form-control" id="editTpSvc">
+                                <option value="">Selecione</option>
+                                <option value="Patrulha">Patrulha</option>
+                                <option value="Dejem">Dejem</option>
+                                <option value="TOR">TOR</option>
+                                <option value="BOp">BOp</option>
+                                <option value="E.Extra">E.Extra</option>
+                            </select>
+                        </div>
                         <div class="mb-3"><label for="editAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="editAux1"></div>
                         <div class="mb-3"><label for="editAux2" class="form-label">Aux2</label><input type="text" class="form-control" id="editAux2"></div>
                         <div class="mb-3"><label for="editAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="editAux3"></div>
-                        <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>
-                        <div class="mb-3"><label for="editQtdFisc" class="form-label">Qtd Fisc</label><input type="text" class="form-control" id="editQtdFisc"></div>
-                        <div class="mb-3"><label for="editQtdAut" class="form-label">Qtd Aut</label><input type="text" class="form-control" id="editQtdAut"></div>
-                        <div class="mb-3"><label for="editQtBO" class="form-label">Qt BO</label><input type="text" class="form-control" id="editQtBO"></div>
-                        <div class="mb-3"><label for="editQtARV" class="form-label">Qt ARV</label><input type="text" class="form-control" id="editQtARV"></div>
-                        <div class="mb-3"><label for="editQtdARD" class="form-label">Qtd ARD</label><input type="text" class="form-control" id="editQtdARD"></div>
-                        <div class="mb-3"><label for="editQtdImg" class="form-label">Qtd Img</label><input type="text" class="form-control" id="editQtdImg"></div>
-                        <div class="mb-3"><label for="editQtdTestes" class="form-label">Qtd Testes</label><input type="text" class="form-control" id="editQtdTestes"></div>
+                        <div class="mb-3"><label for="editQtdFisc" class="form-label">Qtd Fisc</label><input type="number" class="form-control" id="editQtdFisc"></div>
+                        <div class="mb-3"><label for="editQtdAut" class="form-label">Qtd Aut</label><input type="number" class="form-control" id="editQtdAut"></div>
+                        <div class="mb-3"><label for="editQtBO" class="form-label">Qt BO</label><input type="number" class="form-control" id="editQtBO"></div>
+                        <div class="mb-3"><label for="editQtARV" class="form-label">Qt ARV</label><input type="number" class="form-control" id="editQtARV"></div>
+                        <div class="mb-3"><label for="editQtdARD" class="form-label">Qtd ARD</label><input type="number" class="form-control" id="editQtdARD"></div>
+                        <div class="mb-3"><label for="editQtdImg" class="form-label">Qtd Img</label><input type="number" class="form-control" id="editQtdImg"></div>
+                        <div class="mb-3"><label for="editQtdTestes" class="form-label">Qtd Testes</label><input type="number" class="form-control" id="editQtdTestes"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -189,34 +205,60 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adicionarModalLabel">Adicionar Novo Registro</h5>
+                    <h5 class="modal-title" id="adicionarModalLabel">Registrar R.S.O.</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <form id="addForm">
-                        <div class="mb-3"><label for="addNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="addNumRSO" required></div>
+                        <!-- <div class="mb-3"><label for="addNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="addNumRSO"></div> -->
                         <div class="mb-3"><label for="addData" class="form-label">Data</label><input type="date" class="form-control" id="addData" required></div>
-                        <div class="mb-3"><label for="addNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="addNumPPRi"></div>
+                        <div class="mb-3"><label for="addHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="addHrInicio"></div>                        
+                        <div class="mb-3"><label for="addNumPPRi" class="form-label">Número do PPRi</label><input type="number" class="form-control" id="addNumPPRi"></div>
                         <div class="mb-3"><label for="addEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="addEncEq"></div>
-                        <div class="mb-3"><label for="addVtr" class="form-label">VTR</label><input type="text" class="form-control" id="addVtr"></div>
-                        <div class="mb-3"><label for="addBop" class="form-label">BOP</label><input type="text" class="form-control" id="addBop"></div>
-                        <div class="mb-3"><label for="addTpSvc" class="form-label">Tipo Serviço</label><input type="text" class="form-control" id="addTpSvc"></div>
-                        <div class="mb-3"><label for="addAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="addAux1"></div>
-                        <div class="mb-3"><label for="addAux2" class="form-label">Aux2</label><input type="text" class="form-control" id="addAux2"></div>
-                        <div class="mb-3"><label for="addAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="addAux3"></div>
-                        <div class="mb-3"><label for="addHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="addHrInicio"></div>
-                        <div class="mb-3"><label for="addQtdFisc" class="form-label">Qtd Fisc</label><input type="text" class="form-control" id="addQtdFisc"></div>
+                        <div class="mb-3">
+                            <label for="addVtr" class="form-label">Viatura</label>
+                            <input type="text" class="form-control" id="addVtr" placeholder="B-1234">
+                            <!-- <small class="form-text text-muted">Formato: B-1234</small> -->
+                        </div>
+                        <div class="mb-3">
+                            <label for="addBop" class="form-label">Base Operacional</label>
+                            <select class="form-control" id="addBop">
+                                <option value="">Selecione</option>
+                                <option value="270/5">127/2</option>
+                                <option value="270/5">258/1</option>
+                                <option value="270/5">258/2</option>
+                                <option value="270/5">270/5</option>
+                                <option value="270/6">270/6</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="addTpSvc" class="form-label">Tipo Serviço</label>
+                            <select class="form-control" id="addTpSvc">
+                                <option value="">Selecione</option>
+                                <option value="Patrulha">Patrulha</option>
+                                <option value="Dejem">Dejem</option>
+                                <option value="TOR">TOR</option>
+                                <option value="BOp">BOp</option>
+                                <option value="E.Extra">E.Extra</option>
+                            </select>
+                        </div>                        
+                        <!-- <div class="mb-3"><label for="addBop" class="form-label">BOP</label><input type="text" class="form-control" id="addBop"></div> -->
+                        <!-- <div class="mb-3"><label for="addTpSvc" class="form-label">Tipo Serviço</label><input type="text" class="form-control" id="addTpSvc"></div> -->
+                        <div class="mb-3"><label for="addAux1" class="form-label">Auxiliar 1</label><input type="text" class="form-control" id="addAux1"></div>
+                        <div class="mb-3"><label for="addAux2" class="form-label">Auxiliar 2</label><input type="text" class="form-control" id="addAux2"></div>
+                        <div class="mb-3"><label for="addAux3" class="form-label">Auxiliar 3</label><input type="text" class="form-control" id="addAux3"></div>
+                        <!-- <div class="mb-3"><label for="addQtdFisc" class="form-label">Qtd Fisc</label><input type="text" class="form-control" id="addQtdFisc"></div>
                         <div class="mb-3"><label for="addQtdAut" class="form-label">Qtd Aut</label><input type="text" class="form-control" id="addQtdAut"></div>
                         <div class="mb-3"><label for="addQtBO" class="form-label">Qt BO</label><input type="text" class="form-control" id="addQtBO"></div>
                         <div class="mb-3"><label for="addQtARV" class="form-label">Qt ARV</label><input type="text" class="form-control" id="addQtARV"></div>
                         <div class="mb-3"><label for="addQtdARD" class="form-label">Qtd ARD</label><input type="text" class="form-control" id="addQtdARD"></div>
                         <div class="mb-3"><label for="addQtdImg" class="form-label">Qtd Img</label><input type="text" class="form-control" id="addQtdImg"></div>
-                        <div class="mb-3"><label for="addQtdTestes" class="form-label">Qtd Testes</label><input type="text" class="form-control" id="addQtdTestes"></div>
+                        <div class="mb-3"><label for="addQtdTestes" class="form-label">Qtd Testes</label><input type="text" class="form-control" id="addQtdTestes"></div> -->
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary">Salvar</button>
+                    <button type="button" class="btn btn-primary" id="salvarAdicionar">Salvar</button>
                 </div>
             </div>
         </div>
@@ -229,6 +271,7 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <!-- Export Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
@@ -240,19 +283,35 @@
 <script>
 const API_URL = 'http://localhost:3001/api/rso';
 
+// ...existing code...
+let dataTable;
+
 function renderTable(rsos) {
+    // Se já existe, destrói para evitar duplicidade
+    if ($.fn.DataTable.isDataTable('#rsoTable')) {
+        $('#rsoTable').DataTable().destroy();
+    }
     const tbody = $('#rsoTableBody');
     tbody.empty();
     rsos.forEach(rso => {
+        // Formata o campo data para DD-MM-YYYY
+        let dataFormatada = '';
+        if (rso.data) {
+            const partes = rso.data.split('-');
+            if (partes.length === 3) {
+                dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+            } else {
+                dataFormatada = rso.data;
+            }
+        }
         tbody.append(`
             <tr>
                 <td>${rso.numRSO || ''}</td>
-                <td>${rso.data || ''}</td>
+                <td>${dataFormatada || ''}</td>
                 <td>${rso.numPPRi || ''}</td>
-                <td>${rso.encEq || ''}</td>
                 <td>${rso.vtr || ''}</td>
+                <td>${rso.encEq || ''}</td>
                 <td>${rso.bop || ''}</td>
-
                 <td>
                     <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
                         <i class="bi bi-eye"></i>
@@ -261,7 +320,35 @@ function renderTable(rsos) {
             </tr>
         `);
     });
+
+    // Inicializa o DataTable
+    dataTable = $('#rsoTable').DataTable({
+        language: {
+            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+        },
+        destroy: true,
+        dom: 'Bfrtip',
+        buttons: [
+            {
+                extend: 'excelHtml5',
+                text: '<i class="bi bi-file-earmark-excel"></i> Exportar XLSX',
+                className: 'btn btn-success'
+            },
+            {
+                extend: 'pdfHtml5',
+                text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+                className: 'btn btn-danger'
+            },
+            {
+                extend: 'print',
+                text: '<i class="bi bi-printer"></i> Imprimir',
+                className: 'btn btn-secondary'
+            }
+        ]
+    });
+
 }
+
 
 function getFormData() {
     return {
@@ -291,7 +378,7 @@ $(document).ready(function() {
     $.get(API_URL, renderTable);
 
     // Adicionar registro
-    $('.btn-primary').click(function() {
+    $('#salvarAdicionar').click(function() {
         const data = getFormData();
         $.ajax({
             url: API_URL,
@@ -306,13 +393,39 @@ $(document).ready(function() {
         });
     });
 
+    // aplicar máscara
+    $('#addVtr').mask('A-0000', {
+        translation: {
+            'A': { pattern: /[A-Za-z]/ }
+        }
+    });
+    $('#editVtr').mask('A-0000', {
+        translation: {
+            'A': { pattern: /[A-Za-z]/ }
+        }
+    });
+
+    $('#addHrInicio, #editHrInicio').mask('00:00');
+
+    // converter em maiusculo
+    $('#addVtr, #editVtr').on('input', function() {
+        let val = $(this).val();
+        // Só altera a letra, mantém o traço e números
+        if (val.length > 0) {
+            $(this).val(val.charAt(0).toUpperCase() + val.slice(1));
+        }
+    });
+
+
     // Editar Registro
     $(document).on('click', '#btnEditar', function() {
         const id = $(this).data('id');
+        console.log(`id para edição ${id}`);
         $.get(`${API_URL}/${id}`, function(rso) {
             $('#editId').val(rso._id);
             $('#editNumRSO').val(rso.numRSO);
             $('#editData').val(rso.data);
+            $('#editHrInicio').val(rso.hrInicio);            
             $('#editNumPPRi').val(rso.numPPRi);
             $('#editEncEq').val(rso.encEq);
             $('#editVtr').val(rso.vtr);
@@ -321,7 +434,6 @@ $(document).ready(function() {
             $('#editAux1').val(rso.aux1);
             $('#editAux2').val(rso.aux2);
             $('#editAux3').val(rso.aux3);
-            $('#editHrInicio').val(rso.hrInicio);
             $('#editQtdFisc').val(rso.qtdFisc);
             $('#editQtdAut').val(rso.qtdAut);
             $('#editQtBO').val(rso.qtBO);
@@ -337,9 +449,11 @@ $(document).ready(function() {
     //Salvar Edição
     $('#salvarEdicao').click(function() {
         const id = $('#editId').val();
+                console.log(`id salvo para edição linha 366 ${id}`);
         const data = {
             numRSO: $('#editNumRSO').val(),
             data: $('#editData').val(),
+            hrInicio: $('#editHrInicio').val(),            
             numPPRi: $('#editNumPPRi').val(),
             encEq: $('#editEncEq').val(),
             vtr: $('#editVtr').val(),
@@ -348,7 +462,6 @@ $(document).ready(function() {
             aux1: $('#editAux1').val(),
             aux2: $('#editAux2').val(),
             aux3: $('#editAux3').val(),
-            hrInicio: $('#editHrInicio').val(),
             qtdFisc: $('#editQtdFisc').val(),
             qtdAut: $('#editQtdAut').val(),
             qtBO: $('#editQtBO').val(),
@@ -357,6 +470,7 @@ $(document).ready(function() {
             qtdImg: $('#editQtdImg').val(),
             qtdTestes: $('#editQtdTestes').val()
         };
+            console.log('data salvo para edição linha 387', JSON.stringify(data, null, 2));
         $.ajax({
             url: `${API_URL}/${id}`,
             type: 'PUT',
@@ -374,19 +488,56 @@ $(document).ready(function() {
     $(document).on('click', '.btn-details', function() {
         const id = $(this).data('id');
         $.get(`${API_URL}/${id}`, function(rso) {
+
+            let dataFormatada = '';
+            if (rso.data) {
+                const partes = rso.data.split('-');
+                if (partes.length === 3) {
+                    dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+                } else {
+                    dataFormatada = rso.data;
+                }
+            }
+
             let html = `
                 <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${rso._id}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">RSO Num:</strong> ${rso.numRSO}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Data:</strong> ${rso.data}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Data:</strong> ${dataFormatada}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Hora Inicio:</strong> ${rso.hrInicio}</div>                
+                <div class="mb-2"><strong style="color:#0d6efd;">PPRi Num:</strong> ${rso.numPPRi}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">Viatura:</strong> ${rso.vtr}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">Encarregado:</strong> ${rso.encEq}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">BOp:</strong> ${rso.bop}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Serviço:</strong> ${rso.tpSvc}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Aux-1:</strong> ${rso.aux1}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Aux-2:</strong> ${rso.aux2}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">Aux-3:</strong> ${rso.aux3}</div>
                 <hr>
             `;
+
             const camposSecundarios = [
-                'bop','tpSvc','aux1','aux2','aux3','hrInicio','qtdFisc','qtdAut','qtBO','qtARV','qtdARD','qtdImg','qtdTestes'
+                'qtdFisc','qtdAut','qtBO','qtARV','qtdARD','qtdImg','qtdTestes', 'createdAt', 'updatedAt'
             ];
+
+            const nomesCampos = {
+                qtdFisc: 'Quantidade de Fiscalizados',
+                qtdAut: 'Quantidade de Autuações',
+                qtBO: 'Quantidade de BO',
+                qtARV: 'Quantidade de ARV',
+                qtdARD: 'Quantidade de ARD',
+                qtdImg: 'Quantidade de Imagens',
+                qtdTestes: 'Quantidade de Testes',
+                createdAt: 'Data/Hora de Inclusão',
+                updatedAt: 'Data/Hora de Alteração'
+            };
+
             camposSecundarios.forEach(campo => {
-                html += `<div class="mb-2"><strong>${campo}:</strong> ${rso[campo] || ''}</div>`;
+                let valor = rso[campo] || '';
+                // Formata datas se necessário
+                if (campo === 'createdAt' || campo === 'updatedAt') {
+                    valor = valor ? new Date(valor).toLocaleString('pt-BR') : '';
+                }
+                html += `<div class="mb-2"><strong>${nomesCampos[campo]}:</strong> ${valor}</div>`;
             });
             html += `
                 <div class="mt-3 text-end">

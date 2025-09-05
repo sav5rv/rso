@@ -1,2 +1,0 @@
-mkdir back
-cd back

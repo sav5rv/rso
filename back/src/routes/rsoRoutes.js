@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const RSO = require('../models/rso');
+const Counter = require('../models/rsoCounter');
 
 // Listar todos
 router.get('/', async (req, res) => {
@@ -10,7 +11,13 @@ router.get('/', async (req, res) => {
 
 // Criar novo
 router.post('/', async (req, res) => {
-    console.log(req.body); // Veja o que está chegando do frontend
+    // Busca e incrementa o contador
+    const counter = await Counter.findOneAndUpdate(
+        { name: 'numRSO' },
+        { $inc: { seq: 1 } },
+        { new: true, upsert: true }
+    );
+    req.body.numRSO = counter.seq; // Define o número automático
     const rso = new RSO(req.body);
     await rso.save();
     res.status(201).json(rso);
@@ -25,6 +32,7 @@ router.get('/:id', async (req, res) => {
 
 // Atualizar
 router.put('/:id', async (req, res) => {
+    console.log('PUT req.body:', req.body);
     const rso = await RSO.findByIdAndUpdate(req.params.id, req.body, { new: true });
     res.json(rso);
 });

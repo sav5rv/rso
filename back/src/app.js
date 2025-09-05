@@ -10,7 +10,14 @@ app.use(cors());
 app.use(express.json());
 
 // Conexão com MongoDB
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+const mongoUser = process.env.MONGO_USER;
+const mongoPass = process.env.MONGO_PASS;
+const mongoHost = process.env.MONGO_HOST;
+const mongoDb   = process.env.MONGO_DB;
+
+const MONGO_URI = `mongodb+srv://${mongoUser}:${mongoPass}@${mongoHost}/${mongoDb}`;
+
+mongoose.connect(MONGO_URI)
     .then(() => console.log('MongoDB conectado'))
     .catch(err => console.error('Erro ao conectar MongoDB:', err));
 
