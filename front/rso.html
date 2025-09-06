@@ -384,11 +384,18 @@ $(document).ready(function() {
             url: API_URL,
             type: 'POST',
             contentType: 'application/json',
-            data: JSON.stringify(getFormData()),
-            success: function() {
+            data: JSON.stringify(data),
+            success: function(response) {
                 $('#adicionarModal').modal('hide');
                 $.get(API_URL, renderTable);
                 $('#addForm')[0].reset();
+
+                // Exibe mensagem com o número do registro
+                if (response && response.numRSO) {
+                    alert(`Registrado! Número do RSO ---- ${response.numRSO}`);
+                } else {
+                    alert('Registro salvo com sucesso!');
+                }
             }
         });
     });
