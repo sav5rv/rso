@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta RSO</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+        }
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+        }
+        .btn-gradient {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            border: none;
+            color: white;
+        }
+        .btn-gradient:hover {
+            background: linear-gradient(45deg, #0b5ed7, #0ba9c8);
+            color: white;
+        }
+        .navbar-custom {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            margin-bottom: 20px;
+            border-radius: 1rem;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+        }
+        .table-responsive {
+            border-radius: 0.5rem;
+            overflow: auto;
+        }
+        .btn-action {
+            margin: 0 3px;
+            width: 35px;
+            height: 35px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+        /* Garantir que a tabela se adapte */
+        #rsoTable th, #rsoTable td {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="bi bi-shield-check"></i> Sistema
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="cadastro.html"><i class="bi bi-person-plus"></i> Cadastro</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="rso.html"><i class="bi bi-table"></i> RSO</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center py-3">
+                <h2><i class="bi bi-search me-2"></i>Consulta de RSO</h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex mb-3 align-items-end">
+                    <div class="me-2">
+                        <label for="filtroBop" class="form-label">Filtrar por BOP:</label>
+                        <select class="form-control" id="filtroBop">
+                            <option value="">Todos</option>
+                            <option value="127/2">127/2</option>
+                            <option value="258/1">258/1</option>
+                            <option value="258/2">258/2</option>
+                            <option value="270/5">270/5</option>
+                            <option value="270/6">270/6</option>
+                        </select>
+                    </div>
+
+                    <div class="me-2">
+                        <label for="filtroMes" class="form-label">Mês:</label>
+                        <select class="form-control" id="filtroMes">
+                            <option value="">Todos</option>
+                            <option value="01">Janeiro</option>
+                            <option value="02">Fevereiro</option>
+                            <option value="03">Março</option>
+                            <option value="04">Abril</option>
+                            <option value="05">Maio</option>
+                            <option value="06">Junho</option>
+                            <option value="07">Julho</option>
+                            <option value="08">Agosto</option>
+                            <option value="09">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>                    
+                    
+                    <div class="me-2">
+                        <label for="filtroEncarregado" class="form-label">Encarregado:</label>
+                        <input type="text" class="form-control" id="filtroEncarregado" placeholder="Nome do Encarregado">
+                    </div>
+                    
+                    <div class="me-2">
+                        <label for="filtroHoraInicio" class="form-label">Hora Início:</label>
+                        <input type="text" class="form-control" id="filtroHoraInicio" placeholder="Ex: 10:00">
+                    </div>
+
+                    <div class="me-2">
+                        <label for="filtroServico" class="form-label">Serviço:</label>
+                        <select class="form-control" id="filtroServico">
+                                <option value="">Todos</option>
+                                <option value="Patrulha">Patrulha</option>
+                                <option value="Dejem">Dejem</option>
+                                <option value="TOR">TOR</option>
+                                <option value="BOp">BOp</option>
+                                <option value="E.Extra">E.Extra</option>
+                        </select>
+                    </div>                    
+
+                    <button id="btnFiltrar" class="btn btn-gradient">
+                        <i class="bi bi-filter"></i> Filtrar
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table id="rsoTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>RSO Num</th>
+                                <th>Data</th>
+                                <th>Hora Início</th>
+                                <th>PPRi</th>
+                                <th>Viatura</th>
+                                <th>Encarregado</th>
+                                <th>BOP</th>
+                                <th>Serviço</th>
+                                <th>Auxiliar 1</th>
+                                <th>Auxiliar 2</th>
+                                <th>Auxiliar 3</th>
+                                <th>Qtd Fisc</th>
+                                <th>Qtd Aut</th>
+                                <th>Qt BO</th>
+                                <th>Qt ARV</th>
+                                <th>Qtd ARD</th>
+                                <th>Qtd Img</th>
+                                <th>Qtd Testes</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rsoTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+    
+    <script>
+        const API_URL = 'http://localhost:3001/api/rso/buscar'; // Atualize para o endpoint correto
+        let dataTable;
+
+        function renderTable(rsos) {
+            if ($.fn.DataTable.isDataTable('#rsoTable')) {
+                $('#rsoTable').DataTable().destroy();
+            }
+            const tbody = $('#rsoTableBody');
+            tbody.empty();
+            rsos.forEach(rso => {
+                let dataFormatada = '';
+                if (rso.data) {
+                    const partes = rso.data.split('-');
+                    if (partes.length === 3) {
+                        dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+                    } else {
+                        dataFormatada = rso.data;
+                    }
+                }
+                
+                // Adicionamos todas as colunas de dados aqui
+                tbody.append(`
+                    <tr>
+                        <td>${rso.numRSO || ''}</td>
+                        <td>${dataFormatada || ''}</td>
+                        <td>${rso.hrInicio || ''}</td>
+                        <td>${rso.numPPRi || ''}</td>
+                        <td>${rso.vtr || ''}</td>
+                        <td>${rso.encEq || ''}</td>
+                        <td>${rso.bop || ''}</td>
+                        <td>${rso.tpSvc || ''}</td>
+                        <td>${rso.aux1 || ''}</td>
+                        <td>${rso.aux2 || ''}</td>
+                        <td>${rso.aux3 || ''}</td>
+                        <td>${rso.qtdFisc || ''}</td>
+                        <td>${rso.qtdAut || ''}</td>
+                        <td>${rso.qtBO || ''}</td>
+                        <td>${rso.qtARV || ''}</td>
+                        <td>${rso.qtdARD || ''}</td>
+                        <td>${rso.qtdImg || ''}</td>
+                        <td>${rso.qtdTestes || ''}</td>
+                    </tr>
+                `);
+            });
+
+            dataTable = $('#rsoTable').DataTable({
+                language: {
+                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                },
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="bi bi-file-earmark-excel"></i> Exportar XLSX',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer"></i> Imprimir',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+        }
+
+        // Event listener para o botão de filtrar
+        $('#btnFiltrar').on('click', function() {
+            const filtroBop = $('#filtroBop').val();
+            const filtroEncarregado = $('#filtroEncarregado').val();
+            const filtroHoraInicio = $('#filtroHoraInicio').val();
+            const filtroServico = $('#filtroServico').val();
+
+            // Cria um objeto de parâmetros de consulta
+            const params = {};
+            if (filtroBop) {
+                params.bop = filtroBop;
+            }
+            if (filtroMes) {
+                params.mes = filtroMes;
+            }            
+            if (filtroEncarregado) {
+                params.encEq = filtroEncarregado;
+            }
+            if (filtroHoraInicio) {
+                params.hrInicio = filtroHoraInicio;
+            }
+            if (filtroServico) {
+                params.tpSvc = filtroServico;
+            }
+            
+            // Converte o objeto de parâmetros para uma string de URL (Ex: "bop=270%2F5&encEq=Fulano")
+            const queryString = $.param(params);
+            const url = `${API_URL}?${queryString}`;
+
+            // AQUI ESTÁ O CONSOLE.LOG PARA VOCÊ VER A URL GERADA
+            console.log('URL da requisição:', url);
+
+            // Faz a requisição com a nova URL
+            $.get(url, renderTable);
+        });
+    </script>
+</body>
+</html>

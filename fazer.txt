@@ -1,0 +1,11 @@
+vtr é R-01234
+
+adicionar campos OBS e CGP
+
+campo serviço, incluir 	EAP - operacional - 
+
+campo hora, não formatei como hora, digitei 00:00
+campo data, formatei como data, 22/02/2025
+
+GEMINI
+erro ao realizar a consulta pelo campo data

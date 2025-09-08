@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sistema</title>
+    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- DataTables CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-    <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
     <style>
         body {
             background-color: #f8f9fa;
@@ -51,13 +53,10 @@
             align-items: center;
             justify-content: center;
         }
-        /* Oculta as colunas de exportação para que não poluam a visualização */
-        .export-only {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
+    <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
         <div class="container-fluid">
             <a class="navbar-brand" href="#">
@@ -75,7 +74,7 @@
                         <a class="nav-link" href="cadastro.html"><i class="bi bi-person-plus"></i> Cadastro</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="consulta-rso.html"><i class="bi bi-funnel-fill"></i> Filtro</a>
+                        <a class="nav-link active" href="#"><i class="bi bi-table"></i> RSO</a>
                     </li>
                 </ul>
             </div>
@@ -105,22 +104,11 @@
                                 <th>Encarregado</th>
                                 <th>BOp</th>
                                 <th>Ações</th>
-                                <th class="export-only">Hora Início</th>
-                                <th class="export-only">Serviço</th>
-                                <th class="export-only">Aux-1</th>
-                                <th class="export-only">Aux-2</th>
-                                <th class="export-only">Aux-3</th>
-                                <th class="export-only">Qtd Fisc</th>
-                                <th class="export-only">Qtd Aut</th>
-                                <th class="export-only">Qt BO</th>
-                                <th class="export-only">Qt ARV</th>
-                                <th class="export-only">Qtd ARD</th>
-                                <th class="export-only">Qtd Img</th>
-                                <th class="export-only">Qtd Testes</th>
                             </tr>
                         </thead>
                         <tbody id="rsoTableBody">
-                            </tbody>
+                            <!-- Preenchido via JS -->
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -128,6 +116,7 @@
     </div>
 
 
+    <!-- Modal Detalhes -->
     <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -136,7 +125,8 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    </div>
+                    <!-- Conteúdo gerado via JS -->
+                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
                 </div>
@@ -145,6 +135,7 @@
     </div>
 
 
+    <!-- Modal Editar -->
     <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -155,10 +146,12 @@
                 <div class="modal-body">
                     <form id="editForm">
                         <input type="hidden" id="editId">
+                        <!-- <div class="mb-3"><label for="editNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="editNumRSO" required></div> -->
                         <div class="mb-3"><label for="editData" class="form-label">Data</label><input type="date" class="form-control" id="editData" required></div>
                         <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>                        
                         <div class="mb-3"><label for="editNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
                         <div class="mb-3"><label for="editEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="editEncEq"></div>
+                        <!-- <div class="mb-3"><label for="editVtr" class="form-label">VTR</label><input type="text" class="form-control" id="editVtr"></div> -->
                         <div class="mb-3">
                             <label for="editVtr" class="form-label">VTR</label>
                             <input type="text" class="form-control" id="editVtr" placeholder="B-1234">
@@ -207,6 +200,7 @@
     </div>
 
 
+    <!-- Modal Adicionar -->
     <div class="modal fade" id="adicionarModal" tabindex="-1" aria-labelledby="adicionarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -216,6 +210,7 @@
                 </div>
                 <div class="modal-body">
                     <form id="addForm">
+                        <!-- <div class="mb-3"><label for="addNumRSO" class="form-label">numRSO</label><input type="text" class="form-control" id="addNumRSO"></div> -->
                         <div class="mb-3"><label for="addData" class="form-label">Data</label><input type="date" class="form-control" id="addData" required></div>
                         <div class="mb-3"><label for="addHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="addHrInicio"></div>                        
                         <div class="mb-3"><label for="addNumPPRi" class="form-label">Número do PPRi</label><input type="number" class="form-control" id="addNumPPRi"></div>
@@ -223,7 +218,8 @@
                         <div class="mb-3">
                             <label for="addVtr" class="form-label">Viatura</label>
                             <input type="text" class="form-control" id="addVtr" placeholder="B-1234">
-                            </div>
+                            <!-- <small class="form-text text-muted">Formato: B-1234</small> -->
+                        </div>
                         <div class="mb-3">
                             <label for="addBop" class="form-label">Base Operacional</label>
                             <select class="form-control" id="addBop">
@@ -246,10 +242,19 @@
                                 <option value="E.Extra">E.Extra</option>
                             </select>
                         </div>                        
+                        <!-- <div class="mb-3"><label for="addBop" class="form-label">BOP</label><input type="text" class="form-control" id="addBop"></div> -->
+                        <!-- <div class="mb-3"><label for="addTpSvc" class="form-label">Tipo Serviço</label><input type="text" class="form-control" id="addTpSvc"></div> -->
                         <div class="mb-3"><label for="addAux1" class="form-label">Auxiliar 1</label><input type="text" class="form-control" id="addAux1"></div>
                         <div class="mb-3"><label for="addAux2" class="form-label">Auxiliar 2</label><input type="text" class="form-control" id="addAux2"></div>
                         <div class="mb-3"><label for="addAux3" class="form-label">Auxiliar 3</label><input type="text" class="form-control" id="addAux3"></div>
-                        </form>
+                        <!-- <div class="mb-3"><label for="addQtdFisc" class="form-label">Qtd Fisc</label><input type="text" class="form-control" id="addQtdFisc"></div>
+                        <div class="mb-3"><label for="addQtdAut" class="form-label">Qtd Aut</label><input type="text" class="form-control" id="addQtdAut"></div>
+                        <div class="mb-3"><label for="addQtBO" class="form-label">Qt BO</label><input type="text" class="form-control" id="addQtBO"></div>
+                        <div class="mb-3"><label for="addQtARV" class="form-label">Qt ARV</label><input type="text" class="form-control" id="addQtARV"></div>
+                        <div class="mb-3"><label for="addQtdARD" class="form-label">Qtd ARD</label><input type="text" class="form-control" id="addQtdARD"></div>
+                        <div class="mb-3"><label for="addQtdImg" class="form-label">Qtd Img</label><input type="text" class="form-control" id="addQtdImg"></div>
+                        <div class="mb-3"><label for="addQtdTestes" class="form-label">Qtd Testes</label><input type="text" class="form-control" id="addQtdTestes"></div> -->
+                    </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
@@ -259,10 +264,13 @@
         </div>
     </div>
 
+    <!-- Bootstrap & jQuery JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables JS -->
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- Export Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
@@ -309,18 +317,6 @@ function renderTable(rsos) {
                         <i class="bi bi-eye"></i>
                     </button>
                 </td>
-                <td class="export-only">${rso.hrInicio || ''}</td>
-                <td class="export-only">${rso.tpSvc || ''}</td>
-                <td class="export-only">${rso.aux1 || ''}</td>
-                <td class="export-only">${rso.aux2 || ''}</td>
-                <td class="export-only">${rso.aux3 || ''}</td>
-                <td class="export-only">${rso.qtdFisc || ''}</td>
-                <td class="export-only">${rso.qtdAut || ''}</td>
-                <td class="export-only">${rso.qtBO || ''}</td>
-                <td class="export-only">${rso.qtARV || ''}</td>
-                <td class="export-only">${rso.qtdARD || ''}</td>
-                <td class="export-only">${rso.qtdImg || ''}</td>
-                <td class="export-only">${rso.qtdTestes || ''}</td>
             </tr>
         `);
     });
