@@ -102,7 +102,7 @@
                                 <th>Data</th>
                                 <th>PPRi</th>
                                 <th>Viatura</th>
-                                <th>Encarregado</th>
+                                <th>CGP</th>
                                 <th>BOp</th>
                                 <th>Ações</th>
                                 <th class="export-only">Hora Início</th>
@@ -112,8 +112,8 @@
                                 <th class="export-only">Aux-3</th>
                                 <th class="export-only">Qtd Fisc</th>
                                 <th class="export-only">Qtd Aut</th>
-                                <th class="export-only">Qt BO</th>
-                                <th class="export-only">Qt ARV</th>
+                                <th class="export-only">Qtd BO</th>
+                                <th class="export-only">Qtd ARV</th>
                                 <th class="export-only">Qtd ARD</th>
                                 <th class="export-only">Qtd Img</th>
                                 <th class="export-only">Qtd Testes</th>
@@ -158,7 +158,7 @@
                         <div class="mb-3"><label for="editData" class="form-label">Data</label><input type="date" class="form-control" id="editData" required></div>
                         <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>                        
                         <div class="mb-3"><label for="editNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
-                        <div class="mb-3"><label for="editEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="editEncEq"></div>
+                        <div class="mb-3"><label for="editCgp" class="form-label">CGP</label><input type="text" class="form-control" id="editCgp"></div>
                         <div class="mb-3">
                             <label for="editVtr" class="form-label">VTR</label>
                             <input type="text" class="form-control" id="editVtr" placeholder="B-1234">
@@ -179,11 +179,16 @@
                             <label for="editTpSvc" class="form-label">Tipo Serviço</label>
                             <select class="form-control" id="editTpSvc">
                                 <option value="">Selecione</option>
-                                <option value="Patrulha">Patrulha</option>
+                                <option value="ADM">ADM</option>
+                                <option value="CGP">CGP</option>
+                                <option value="CMT">CMT</option>
                                 <option value="Dejem">Dejem</option>
+                                <option value="Escala Extra">Escala Extra</option>
+                                <option value="Guarda Quartel">Guarda Quartel</option>
+                                <option value="OPERACIONAL">OPERACIONAL</option>
+                                <option value="PDR">PDR</option>
+                                <option value="Reforço Op">Reforço Op</option>
                                 <option value="TOR">TOR</option>
-                                <option value="BOp">BOp</option>
-                                <option value="E.Extra">E.Extra</option>
                             </select>
                         </div>
                         <div class="mb-3"><label for="editAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="editAux1"></div>
@@ -191,8 +196,8 @@
                         <div class="mb-3"><label for="editAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="editAux3"></div>
                         <div class="mb-3"><label for="editQtdFisc" class="form-label">Qtd Fisc</label><input type="number" class="form-control" id="editQtdFisc"></div>
                         <div class="mb-3"><label for="editQtdAut" class="form-label">Qtd Aut</label><input type="number" class="form-control" id="editQtdAut"></div>
-                        <div class="mb-3"><label for="editQtBO" class="form-label">Qt BO</label><input type="number" class="form-control" id="editQtBO"></div>
-                        <div class="mb-3"><label for="editQtARV" class="form-label">Qt ARV</label><input type="number" class="form-control" id="editQtARV"></div>
+                        <div class="mb-3"><label for="editQtdBO" class="form-label">Qtd BO</label><input type="number" class="form-control" id="editQtdBO"></div>
+                        <div class="mb-3"><label for="editQtdARV" class="form-label">Qtd ARV</label><input type="number" class="form-control" id="editQtdARV"></div>
                         <div class="mb-3"><label for="editQtdARD" class="form-label">Qtd ARD</label><input type="number" class="form-control" id="editQtdARD"></div>
                         <div class="mb-3"><label for="editQtdImg" class="form-label">Qtd Img</label><input type="number" class="form-control" id="editQtdImg"></div>
                         <div class="mb-3"><label for="editQtdTestes" class="form-label">Qtd Testes</label><input type="number" class="form-control" id="editQtdTestes"></div>
@@ -219,7 +224,7 @@
                         <div class="mb-3"><label for="addData" class="form-label">Data</label><input type="date" class="form-control" id="addData" required></div>
                         <div class="mb-3"><label for="addHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="addHrInicio"></div>                        
                         <div class="mb-3"><label for="addNumPPRi" class="form-label">Número do PPRi</label><input type="number" class="form-control" id="addNumPPRi"></div>
-                        <div class="mb-3"><label for="addEncEq" class="form-label">Encarregado</label><input type="text" class="form-control" id="addEncEq"></div>
+                        <div class="mb-3"><label for="addCgp" class="form-label">CGP</label><input type="text" class="form-control" id="addCgp"></div>
                         <div class="mb-3">
                             <label for="addVtr" class="form-label">Viatura</label>
                             <input type="text" class="form-control" id="addVtr" placeholder="B-1234">
@@ -239,11 +244,16 @@
                             <label for="addTpSvc" class="form-label">Tipo Serviço</label>
                             <select class="form-control" id="addTpSvc">
                                 <option value="">Selecione</option>
-                                <option value="Patrulha">Patrulha</option>
+                                <option value="ADM">ADM</option>
+                                <option value="CGP">CGP</option>
+                                <option value="CMT">CMT</option>
                                 <option value="Dejem">Dejem</option>
+                                <option value="Escala Extra">Escala Extra</option>
+                                <option value="Guarda Quartel">Guarda Quartel</option>
+                                <option value="OPERACIONAL">OPERACIONAL</option>
+                                <option value="PDR">PDR</option>
+                                <option value="Reforço Op">Reforço Op</option>
                                 <option value="TOR">TOR</option>
-                                <option value="BOp">BOp</option>
-                                <option value="E.Extra">E.Extra</option>
                             </select>
                         </div>                        
                         <div class="mb-3"><label for="addAux1" class="form-label">Auxiliar 1</label><input type="text" class="form-control" id="addAux1"></div>
@@ -302,7 +312,7 @@ function renderTable(rsos) {
                 <td>${dataFormatada || ''}</td>
                 <td>${rso.numPPRi || ''}</td>
                 <td>${rso.vtr || ''}</td>
-                <td>${rso.encEq || ''}</td>
+                <td>${rso.cgp || ''}</td>
                 <td>${rso.bop || ''}</td>
                 <td>
                     <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
@@ -316,8 +326,8 @@ function renderTable(rsos) {
                 <td class="export-only">${rso.aux3 || ''}</td>
                 <td class="export-only">${rso.qtdFisc || ''}</td>
                 <td class="export-only">${rso.qtdAut || ''}</td>
-                <td class="export-only">${rso.qtBO || ''}</td>
-                <td class="export-only">${rso.qtARV || ''}</td>
+                <td class="export-only">${rso.qtdBO || ''}</td>
+                <td class="export-only">${rso.qtdARV || ''}</td>
                 <td class="export-only">${rso.qtdARD || ''}</td>
                 <td class="export-only">${rso.qtdImg || ''}</td>
                 <td class="export-only">${rso.qtdTestes || ''}</td>
@@ -359,7 +369,7 @@ function getFormData() {
         numRSO: $('#addNumRSO').val(),
         data: $('#addData').val(),
         numPPRi: $('#addNumPPRi').val(),
-        encEq: $('#addEncEq').val(),
+        cgp: $('#addCgp').val(),
         vtr: $('#addVtr').val(),
         bop: $('#addBop').val(),
         tpSvc: $('#addTpSvc').val(),
@@ -369,8 +379,8 @@ function getFormData() {
         hrInicio: $('#addHrInicio').val(),
         qtdFisc: $('#addQtdFisc').val(),
         qtdAut: $('#addQtdAut').val(),
-        qtBO: $('#addQtBO').val(),
-        qtARV: $('#addQtARV').val(),
+        qtdBO: $('#addQtdBO').val(),
+        qtdARV: $('#addQtdARV').val(),
         qtdARD: $('#addQtdARD').val(),
         qtdImg: $('#addQtdImg').val(),
         qtdTestes: $('#addQtdTestes').val()
@@ -438,7 +448,7 @@ $(document).ready(function() {
             $('#editData').val(rso.data);
             $('#editHrInicio').val(rso.hrInicio);            
             $('#editNumPPRi').val(rso.numPPRi);
-            $('#editEncEq').val(rso.encEq);
+            $('#editCgp').val(rso.cgp);
             $('#editVtr').val(rso.vtr);
             $('#editBop').val(rso.bop);
             $('#editTpSvc').val(rso.tpSvc);
@@ -447,8 +457,8 @@ $(document).ready(function() {
             $('#editAux3').val(rso.aux3);
             $('#editQtdFisc').val(rso.qtdFisc);
             $('#editQtdAut').val(rso.qtdAut);
-            $('#editQtBO').val(rso.qtBO);
-            $('#editQtARV').val(rso.qtARV);
+            $('#editQtdBO').val(rso.qtdBO);
+            $('#editQtdARV').val(rso.qtdARV);
             $('#editQtdARD').val(rso.qtdARD);
             $('#editQtdImg').val(rso.qtdImg);
             $('#editQtdTestes').val(rso.qtdTestes);
@@ -466,7 +476,7 @@ $(document).ready(function() {
             data: $('#editData').val(),
             hrInicio: $('#editHrInicio').val(),            
             numPPRi: $('#editNumPPRi').val(),
-            encEq: $('#editEncEq').val(),
+            cgp: $('#editCgp').val(),
             vtr: $('#editVtr').val(),
             bop: $('#editBop').val(),
             tpSvc: $('#editTpSvc').val(),
@@ -475,8 +485,8 @@ $(document).ready(function() {
             aux3: $('#editAux3').val(),
             qtdFisc: $('#editQtdFisc').val(),
             qtdAut: $('#editQtdAut').val(),
-            qtBO: $('#editQtBO').val(),
-            qtARV: $('#editQtARV').val(),
+            qtdBO: $('#editQtdBO').val(),
+            qtdARV: $('#editQtdARV').val(),
             qtdARD: $('#editQtdARD').val(),
             qtdImg: $('#editQtdImg').val(),
             qtdTestes: $('#editQtdTestes').val()
@@ -517,7 +527,7 @@ $(document).ready(function() {
                 <div class="mb-2"><strong style="color:#0d6efd;">Hora Inicio:</strong> ${rso.hrInicio}</div>                
                 <div class="mb-2"><strong style="color:#0d6efd;">PPRi Num:</strong> ${rso.numPPRi}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">Viatura:</strong> ${rso.vtr}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Encarregado:</strong> ${rso.encEq}</div>
+                <div class="mb-2"><strong style="color:#0d6efd;">CGP:</strong> ${rso.cgp}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">BOp:</strong> ${rso.bop}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">Serviço:</strong> ${rso.tpSvc}</div>
                 <div class="mb-2"><strong style="color:#0d6efd;">Aux-1:</strong> ${rso.aux1}</div>
@@ -527,14 +537,14 @@ $(document).ready(function() {
             `;
 
             const camposSecundarios = [
-                'qtdFisc','qtdAut','qtBO','qtARV','qtdARD','qtdImg','qtdTestes', 'createdAt', 'updatedAt'
+                'qtdFisc','qtdAut','qtdBO','qtdARV','qtdARD','qtdImg','qtdTestes', 'createdAt', 'updatedAt'
             ];
 
             const nomesCampos = {
                 qtdFisc: 'Quantidade de Fiscalizados',
                 qtdAut: 'Quantidade de Autuações',
-                qtBO: 'Quantidade de BO',
-                qtARV: 'Quantidade de ARV',
+                qtdBO: 'Quantidade de BO',
+                qtdARV: 'Quantidade de ARV',
                 qtdARD: 'Quantidade de ARD',
                 qtdImg: 'Quantidade de Imagens',
                 qtdTestes: 'Quantidade de Testes',

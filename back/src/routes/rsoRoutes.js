@@ -60,9 +60,9 @@ router.get('/buscar', async (req, res) => {
                 $eq: [{ $substr: ["$data", 5, 2] }, req.query.mes]
             };
         }        
-        if (req.query.encEq) {
+        if (req.query.cgp) {
             // Usa uma expressão regular para uma busca "parcial"
-            filtro.encEq = new RegExp(req.query.encEq, 'i');
+            filtro.cgp = new RegExp(req.query.cgp, 'i');
         }
         if (req.query.hrInicio) {
             filtro.hrInicio = req.query.hrInicio;

@@ -13,7 +13,7 @@
             background-color: #f8f9fa;
             padding: 20px;
         }
-.card {
+        .card {
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             border-radius: 1rem;
         }
@@ -21,14 +21,6 @@
             border-radius: 1rem 1rem 0 0 !important;
             background: linear-gradient(45deg, #0d6efd, #0dcaf0);
             color: white;
-            padding: 0.5rem 0.75rem; /* Reduz o padding do cabeçalho */
-        }
-        .card-body-sm {
-            padding: 0.5rem 0.5rem !important; /* Classe para reduzir o padding do corpo */
-        }
-        .card-body-sm h4 {
-            margin: 0; /* Remove a margem do título para economizar espaço */
-            font-size: 1.25rem; /* Opcional: diminui um pouco o tamanho da fonte */
         }
         .btn-gradient {
             background: linear-gradient(45deg, #0d6efd, #0dcaf0);
@@ -129,8 +121,8 @@
                     </div>                    
                     
                     <div class="me-2">
-                        <label for="filtroCgp" class="form-label">CGP:</label>
-                        <input type="text" class="form-control" id="filtroCgp" placeholder="Nome do CGP">
+                        <label for="filtroEncarregado" class="form-label">Encarregado:</label>
+                        <input type="text" class="form-control" id="filtroEncarregado" placeholder="Nome do Encarregado">
                     </div>
                     
                     <div class="me-2">
@@ -141,7 +133,12 @@
                     <div class="me-2">
                         <label for="filtroServico" class="form-label">Serviço:</label>
                         <select class="form-control" id="filtroServico">
-
+                                <option value="">Todos</option>
+                                <option value="Patrulha">Patrulha</option>
+                                <option value="Dejem">Dejem</option>
+                                <option value="TOR">TOR</option>
+                                <option value="BOp">BOp</option>
+                                <option value="E.Extra">E.Extra</option>
                         </select>
                     </div>                    
 
@@ -159,7 +156,7 @@
                                 <th>Hora Início</th>
                                 <th>PPRi</th>
                                 <th>Viatura</th>
-                                <th>CGP</th>
+                                <th>Encarregado</th>
                                 <th>BOP</th>
                                 <th>Serviço</th>
                                 <th>Auxiliar 1</th>
@@ -167,8 +164,8 @@
                                 <th>Auxiliar 3</th>
                                 <th>Qtd Fisc</th>
                                 <th>Qtd Aut</th>
-                                <th>Qtd BO</th>
-                                <th>Qtd ARV</th>
+                                <th>Qt BO</th>
+                                <th>Qt ARV</th>
                                 <th>Qtd ARD</th>
                                 <th>Qtd Img</th>
                                 <th>Qtd Testes</th>
@@ -177,65 +174,6 @@
                         <tbody id="rsoTableBody">
                             </tbody>
                     </table>
-                </div>
-
-                <div class="row mt-4 justify-content-center" id="resumoCalculado">
-                    <div class="col-12 text-center mb-3">
-                        <h4>Resumo da atividade</h4>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-primary text-white">Fiscalizações</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdFisc">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-success text-white">Autuações</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdAut">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-danger text-white">B.O.</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdBO">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-warning text-dark">A.R.V.</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdARV">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-info text-white">A.R.D.</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdARD">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-secondary text-white">Imagens</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdImg">0</h4></div>
-                        </div>
-                    </div>
-                    <div class="col-6 col-sm-4 col-md-auto text-center">
-                        <div class="card">
-                            <div class="card-header bg-dark text-white">Testes</div>
-                            <div class="card-body card-body-sm"><h4 id="somaQtdTestes">0</h4></div>
-                        </div>
-                    </div>
-                </div>
-
-
-                <div class="row mt-4 justify-content-center">
-                    <div class="col-12 text-center mb-3">
-                        <h4>Viaturas mais Utilizadas</h4>
-                    </div>
-                    <div class="col-12 col-md-auto text-center">
-                        <div class="row" id="resumoVtrs">
-                            </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -264,17 +202,6 @@
             }
             const tbody = $('#rsoTableBody');
             tbody.empty();
-
-            // Reinicia as somas
-            let somaQtdFisc = 0;
-            let somaQtdAut = 0;
-            let somaQtdBO = 0;
-            let somaQtdARV = 0;
-            let somaQtdARD = 0;
-            let somaQtdImg = 0;
-            let somaQtdTestes = 0;
-            const contagemVtrs = {}; // Objeto para contar as viaturas
-
             rsos.forEach(rso => {
                 let dataFormatada = '';
                 if (rso.data) {
@@ -286,19 +213,7 @@
                     }
                 }
                 
-                // Acumula os valores para o cálculo
-                somaQtdFisc += parseInt(rso.qtdFisc || 0);
-                somaQtdAut += parseInt(rso.qtdAut || 0);
-                somaQtdBO += parseInt(rso.qtBO || 0);
-                somaQtdARV += parseInt(rso.qtARV || 0);
-                somaQtdARD += parseInt(rso.qtdARD || 0);
-                somaQtdImg += parseInt(rso.qtdImg || 0);
-                somaQtdTestes += parseInt(rso.qtdTestes || 0);
-                
-                // Contagem das viaturas
-                const vtr = rso.vtr || 'Não Informado';
-                contagemVtrs[vtr] = (contagemVtrs[vtr] || 0) + 1;
-
+                // Adicionamos todas as colunas de dados aqui
                 tbody.append(`
                     <tr>
                         <td>${rso.numRSO || ''}</td>
@@ -306,7 +221,7 @@
                         <td>${rso.hrInicio || ''}</td>
                         <td>${rso.numPPRi || ''}</td>
                         <td>${rso.vtr || ''}</td>
-                        <td>${rso.cgp || ''}</td>
+                        <td>${rso.encEq || ''}</td>
                         <td>${rso.bop || ''}</td>
                         <td>${rso.tpSvc || ''}</td>
                         <td>${rso.aux1 || ''}</td>
@@ -314,8 +229,8 @@
                         <td>${rso.aux3 || ''}</td>
                         <td>${rso.qtdFisc || ''}</td>
                         <td>${rso.qtdAut || ''}</td>
-                        <td>${rso.qtdBO || ''}</td>
-                        <td>${rso.qtdARV || ''}</td>
+                        <td>${rso.qtBO || ''}</td>
+                        <td>${rso.qtARV || ''}</td>
                         <td>${rso.qtdARD || ''}</td>
                         <td>${rso.qtdImg || ''}</td>
                         <td>${rso.qtdTestes || ''}</td>
@@ -323,43 +238,6 @@
                 `);
             });
 
-            // Exibe os totais calculados
-            $('#somaQtdFisc').text(somaQtdFisc);
-            $('#somaQtdAut').text(somaQtdAut);
-            $('#somaQtdBO').text(somaQtdBO);
-            $('#somaQtdARV').text(somaQtdARV);
-            $('#somaQtdARD').text(somaQtdARD);
-            $('#somaQtdImg').text(somaQtdImg);
-            $('#somaQtdTestes').text(somaQtdTestes);
-
-            // --- Nova Lógica para as 6 Viaturas mais Usadas ---
-            const vtrsOrdenadas = Object.entries(contagemVtrs).sort((a, b) => b[1] - a[1]);
-            const topVtrs = vtrsOrdenadas.slice(0, 6);
-            const cores = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger', 'bg-secondary'];
-            let htmlVtrs = '';
-            
-            // Se não houver viaturas, exibe uma mensagem
-            if (topVtrs.length === 0) {
-                htmlVtrs = '<div class="col-12 text-center text-muted">Nenhuma VTR encontrada para os filtros.</div>';
-            } else {
-                topVtrs.forEach(([vtr, count], index) => {
-                    const cor = cores[index % cores.length];
-                    htmlVtrs += `
-                        <div class="col-6 col-sm-4 col-md-auto text-center mb-2">
-                            <div class="card">
-                                <div class="card-header ${cor} text-white">${vtr}</div>
-                                <div class="card-body card-body-sm">
-                                    <h4>${count}</h4>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                });
-            }
-
-            $('#resumoVtrs').html(htmlVtrs);
-
-            // Inicializa a DataTable
             dataTable = $('#rsoTable').DataTable({
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
@@ -386,11 +264,10 @@
             });
         }
 
-
         // Event listener para o botão de filtrar
         $('#btnFiltrar').on('click', function() {
             const filtroBop = $('#filtroBop').val();
-            const filtroCgp = $('#filtroCgp').val();
+            const filtroEncarregado = $('#filtroEncarregado').val();
             const filtroHoraInicio = $('#filtroHoraInicio').val();
             const filtroServico = $('#filtroServico').val();
             const filtroMes = $('#filtroMes').val();
@@ -403,8 +280,8 @@
             if (filtroMes !== '') {
                 params.mes = filtroMes;
             }            
-            if (filtroCgp !== '') {
-                params.cgp = filtroCgp;
+            if (filtroEncarregado !== '') {
+                params.encEq = filtroEncarregado;
             }
             if (filtroHoraInicio !== '') {
                 params.hrInicio = filtroHoraInicio;
@@ -413,7 +290,7 @@
                 params.tpSvc = filtroServico;
             }
             
-            // Converte o objeto de parâmetros para uma string de URL (Ex: "bop=270%2F5&cgp=Fulano")
+            // Converte o objeto de parâmetros para uma string de URL (Ex: "bop=270%2F5&encEq=Fulano")
             const queryString = $.param(params);
             const url = `${API_URL}?${queryString}`;
 
