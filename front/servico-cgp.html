@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo Serviço por CGP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+        }
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+            padding: 0.75rem 1.25rem;
+        }
+        .navbar-custom {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            margin-bottom: 20px;
+            border-radius: 1rem;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+        }
+        .table-responsive {
+            margin-top: 20px;
+        }
+        .table-custom {
+            white-space: nowrap;
+            text-align: center;
+        }
+        /* Estilos para a tabela fixa */
+        .sticky-table-container {
+            position: relative;
+            max-height: 70vh; /* Altura máxima para ativar a rolagem vertical */
+            overflow: auto;
+        }
+        .table-custom thead th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: var(--bs-table-bg);
+        }
+        .table-custom tbody th, .table-custom tbody td:first-child {
+            position: sticky;
+            left: 0;
+            background-color: var(--bs-table-bg);
+            z-index: 9;
+        }
+        .table-custom tfoot td {
+            position: sticky;
+            bottom: 0;
+            z-index: 10;
+            background-color: var(--bs-table-bg);
+        }
+        .table-custom tbody th {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbarContainer"></div>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center py-3">
+                <h2><i class="bi bi-bar-chart me-2"></i>Resumo de Atividades por CGP e Auxiliar</h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap mb-4 align-items-end">
+                    <div class="me-2">
+                        <label for="filtroMes" class="form-label">Filtrar por Mês:</label>
+                        <select class="form-control" id="filtroMes">
+                            <option value="">Todos</option>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroPeriodo" class="form-label">Filtrar por Período:</label>
+                        <select class="form-control" id="filtroPeriodo">
+                            <option value="">Todos</option>
+                            <option value="Manhã">Manhã (06h - 12h)</option>
+                            <option value="Tarde">Tarde (12h01 - 18h)</option>
+                            <option value="Noite">Noite (18h01 - 00h)</option>
+                            <option value="Madrugada">Madrugada (00h01 - 05h59)</option>
+                        </select>
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroBop" class="form-label">Filtrar por BOP:</label>
+                        <select class="form-control" id="filtroBop">
+                            <option value="">Todos</option>
+                            </select>
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroTpsvc" class="form-label">Filtrar por Serviço:</label>
+                        <select class="form-control" id="filtroTpsvc">
+                            <option value="">Todos</option>
+                            </select>
+                    </div>
+                    <button id="btnFiltrar" class="btn btn-primary me-2">
+                        <i class="bi bi-filter"></i> Filtrar
+                    </button>
+                    <button id="btnReset" class="btn btn-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i> Resetar
+                    </button>
+                </div>
+                
+                <div id="tableContainer" class="sticky-table-container">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = 'http://localhost:3001/api/rso/buscar';
+        const auxiliarFields = ['aux1', 'aux2', 'aux3'];
+        let allRecords = [];
+
+        // Carrega o conteúdo do navbar.html
+        $(function(){
+            $("#navbarContainer").load("navbar.html");
+        });        
+
+        // Função de utilidade para determinar o período
+        function getPeriodo(hora) {
+            const [horas, minutos] = hora.split(':').map(Number);
+            const totalMinutos = horas * 60 + minutos;
+
+            if (totalMinutos >= 360 && totalMinutos <= 720) return 'Manhã';
+            if (totalMinutos > 720 && totalMinutos <= 1080) return 'Tarde';
+            if (totalMinutos > 1080 && totalMinutos <= 1440) return 'Noite';
+            return 'Madrugada';
+        }
+
+        // Função para preencher o dropdown de BOP
+        function populateBopDropdown(records) {
+            const bopDropdown = $('#filtroBop');
+            const uniqueBops = [...new Set(records.map(r => r.bop).filter(Boolean))].sort();
+            bopDropdown.find('option:not(:first-child)').remove();
+            uniqueBops.forEach(bop => {
+                bopDropdown.append(`<option value="${bop}">${bop}</option>`);
+            });
+        }
+        
+        // Função para preencher o dropdown de Tipo de Serviço
+        function populateTpsvcDropdown(records) {
+            const tpsvcDropdown = $('#filtroTpsvc');
+            const uniqueTpsvcs = [...new Set(records.map(r => r.tpSvc).filter(Boolean))].sort();
+            tpsvcDropdown.find('option:not(:first-child)').remove();
+            uniqueTpsvcs.forEach(tpsvc => {
+                tpsvcDropdown.append(`<option value="${tpsvc}">${tpsvc}</option>`);
+            });
+        }
+        
+        // Função principal para processar os dados e renderizar a tabela
+        function processAndRenderTable(records) {
+            const tableContainer = $('#tableContainer');
+            tableContainer.empty();
+
+            if (records.length === 0) {
+                tableContainer.html('<div class="alert alert-info text-center">Nenhum registro encontrado para os filtros selecionados.</div>');
+                return;
+            }
+
+            const cgpCounts = {};
+            const auxiliarCounts = {};
+            const interactionCounts = {}; // Para armazenar a contagem de interações CGP x Auxiliar
+
+            // 1. Processar os dados e contar as ocorrências
+            records.forEach(rso => {
+                const cgp = rso.cgp || 'CGP Não Informado';
+                cgpCounts[cgp] = (cgpCounts[cgp] || 0) + 1;
+
+                auxiliarFields.forEach(field => {
+                    const auxiliar = rso[field];
+                    if (auxiliar) {
+                        auxiliarCounts[auxiliar] = (auxiliarCounts[auxiliar] || 0) + 1;
+                        if (!interactionCounts[cgp]) {
+                            interactionCounts[cgp] = {};
+                        }
+                        interactionCounts[cgp][auxiliar] = (interactionCounts[cgp][auxiliar] || 0) + 1;
+                    }
+                });
+            });
+
+            // 2. Coletar nomes únicos
+            const uniqueCgpHdrs = Object.keys(cgpCounts).sort();
+            const uniqueAuxiliars = Object.keys(auxiliarCounts).sort();
+
+            // 3. Gerar o HTML da tabela
+            let tableHtml = `<table class="table table-striped table-hover table-bordered table-custom">`;
+            
+            // Cabeçalho da tabela
+            tableHtml += `
+                <thead class="table-primary">
+                    <tr>
+                        <th>Auxiliar \\ CGP</th>
+                        ${uniqueCgpHdrs.map(cgp => `<th>${cgp}</th>`).join('')}
+                        <th>Total</th>
+                    </tr>
+                </thead>
+            `;
+
+            // Corpo da tabela
+            tableHtml += `<tbody>`;
+            uniqueAuxiliars.forEach(auxiliar => {
+                let rowTotal = auxiliarCounts[auxiliar] || 0;
+                tableHtml += `
+                    <tr>
+                        <th scope="row">${auxiliar}</th>
+                        ${uniqueCgpHdrs.map(cgp => {
+                            const count = interactionCounts[cgp]?.[auxiliar] || 0;
+                            const totalCgp = cgpCounts[cgp];
+                            const percentage = totalCgp > 0 ? ((count / totalCgp) * 100).toFixed(1) : 0;
+                            return `<td>${count} (${percentage}%)</td>`;
+                        }).join('')}
+                        <td class="fw-bold">${rowTotal}</td>
+                    </tr>
+                `;
+            });
+            tableHtml += `</tbody>`;
+
+            // Rodapé com os totais de CGP
+            tableHtml += `
+                <tfoot>
+                    <tr class="table-secondary">
+                        <td class="fw-bold">Total por CGP</td>
+                        ${uniqueCgpHdrs.map(cgp => `<td>${cgpCounts[cgp]}</td>`).join('')}
+                        <td>${records.length}</td>
+                    </tr>
+                </tfoot>
+            `;
+            
+            tableHtml += `</table>`;
+            tableContainer.html(tableHtml);
+        }
+
+        // Lógica de Filtros e Event Listeners
+        $(document).ready(function() {
+            // Carrega todos os registros ao carregar a página
+            $.get(API_URL, function(rsos) {
+                allRecords = rsos;
+                populateBopDropdown(allRecords);
+                populateTpsvcDropdown(allRecords); // Popula o dropdown de Tipo de Serviço
+                processAndRenderTable(allRecords);
+            });
+
+            // Lógica do botão de filtro
+            $('#btnFiltrar').on('click', function() {
+                const filtroMes = $('#filtroMes').val();
+                const filtroPeriodo = $('#filtroPeriodo').val();
+                const filtroBop = $('#filtroBop').val();
+                const filtroTpsvc = $('#filtroTpsvc').val(); // Pega o valor do novo filtro
+
+                let filteredRecords = allRecords;
+
+                if (filtroMes) {
+                    filteredRecords = filteredRecords.filter(r => {
+                        const mesDoRegistro = new Date(r.data).getMonth() + 1;
+                        return mesDoRegistro.toString() === filtroMes;
+                    });
+                }
+                if (filtroPeriodo) {
+                    filteredRecords = filteredRecords.filter(r => getPeriodo(r.hrInicio) === filtroPeriodo);
+                }
+                if (filtroBop) {
+                    filteredRecords = filteredRecords.filter(r => r.bop && r.bop.toLowerCase() === filtroBop.toLowerCase());
+                }
+                if (filtroTpsvc) {
+                    filteredRecords = filteredRecords.filter(r => r.tpSvc && r.tpSvc.toLowerCase() === filtroTpsvc.toLowerCase());
+                }
+
+                processAndRenderTable(filteredRecords);
+            });
+
+            // Lógica do botão de reset
+            $('#btnReset').on('click', function() {
+                $('#filtroMes').val('');
+                $('#filtroPeriodo').val('');
+                $('#filtroBop').val('');
+                $('#filtroTpsvc').val(''); // Reseta o novo filtro
+                processAndRenderTable(allRecords);
+            });
+        });
+    </script>
+</body>
+</html>

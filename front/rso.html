@@ -58,29 +58,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-shield-check"></i> Sistema
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cadastro.html"><i class="bi bi-person-plus"></i> Cadastro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="consulta-rso.html"><i class="bi bi-funnel-fill"></i> Filtro</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div id="navbarContainer"></div>
 
     <div class="container">
         <div class="card">
@@ -282,310 +260,320 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 
 
-<script>
-const API_URL = 'http://localhost:3001/api/rso';
+    <script>
+        const API_URL = 'http://localhost:3001/api/rso';
 
-// ...existing code...
-let dataTable;
+        // ...existing code...
+        let dataTable;
 
-function renderTable(rsos) {
-    // Se já existe, destrói para evitar duplicidade
-    if ($.fn.DataTable.isDataTable('#rsoTable')) {
-        $('#rsoTable').DataTable().destroy();
-    }
-    const tbody = $('#rsoTableBody');
-    tbody.empty();
-    rsos.forEach(rso => {
-        // Formata o campo data para DD-MM-YYYY
-        let dataFormatada = '';
-        if (rso.data) {
-            const partes = rso.data.split('-');
-            if (partes.length === 3) {
-                dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-            } else {
-                dataFormatada = rso.data;
+        function renderTable(rsos) {
+            // Se já existe, destrói para evitar duplicidade
+            if ($.fn.DataTable.isDataTable('#rsoTable')) {
+                $('#rsoTable').DataTable().destroy();
             }
-        }
-        tbody.append(`
-            <tr>
-                <td>${rso.numRSO || ''}</td>
-                <td>${dataFormatada || ''}</td>
-                <td>${rso.numPPRi || ''}</td>
-                <td>${rso.vtr || ''}</td>
-                <td>${rso.cgp || ''}</td>
-                <td>${rso.bop || ''}</td>
-                <td>
-                    <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
-                        <i class="bi bi-eye"></i>
-                    </button>
-                </td>
-                <td class="export-only">${rso.hrInicio || ''}</td>
-                <td class="export-only">${rso.tpSvc || ''}</td>
-                <td class="export-only">${rso.aux1 || ''}</td>
-                <td class="export-only">${rso.aux2 || ''}</td>
-                <td class="export-only">${rso.aux3 || ''}</td>
-                <td class="export-only">${rso.qtdFisc || ''}</td>
-                <td class="export-only">${rso.qtdAut || ''}</td>
-                <td class="export-only">${rso.qtdBO || ''}</td>
-                <td class="export-only">${rso.qtdARV || ''}</td>
-                <td class="export-only">${rso.qtdARD || ''}</td>
-                <td class="export-only">${rso.qtdImg || ''}</td>
-                <td class="export-only">${rso.qtdTestes || ''}</td>
-            </tr>
-        `);
-    });
-
-    // Inicializa o DataTable
-    dataTable = $('#rsoTable').DataTable({
-        language: {
-            url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-        },
-        destroy: true,
-        dom: 'Bfrtip',
-        buttons: [
-            {
-                extend: 'excelHtml5',
-                text: '<i class="bi bi-file-earmark-excel"></i> Exportar XLSX',
-                className: 'btn btn-success'
-            },
-            {
-                extend: 'pdfHtml5',
-                text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
-                className: 'btn btn-danger'
-            },
-            {
-                extend: 'print',
-                text: '<i class="bi bi-printer"></i> Imprimir',
-                className: 'btn btn-secondary'
-            }
-        ]
-    });
-
-}
-
-
-function getFormData() {
-    return {
-        numRSO: $('#addNumRSO').val(),
-        data: $('#addData').val(),
-        numPPRi: $('#addNumPPRi').val(),
-        cgp: $('#addCgp').val(),
-        vtr: $('#addVtr').val(),
-        bop: $('#addBop').val(),
-        tpSvc: $('#addTpSvc').val(),
-        aux1: $('#addAux1').val(),
-        aux2: $('#addAux2').val(),
-        aux3: $('#addAux3').val(),
-        hrInicio: $('#addHrInicio').val(),
-        qtdFisc: $('#addQtdFisc').val(),
-        qtdAut: $('#addQtdAut').val(),
-        qtdBO: $('#addQtdBO').val(),
-        qtdARV: $('#addQtdARV').val(),
-        qtdARD: $('#addQtdARD').val(),
-        qtdImg: $('#addQtdImg').val(),
-        qtdTestes: $('#addQtdTestes').val()
-    };
-}
-
-$(document).ready(function() {
-    // Carregar registros
-    $.get(API_URL, renderTable);
-
-    // Adicionar registro
-    $('#salvarAdicionar').click(function() {
-        const data = getFormData();
-        $.ajax({
-            url: API_URL,
-            type: 'POST',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function(response) {
-                $('#adicionarModal').modal('hide');
-                $.get(API_URL, renderTable);
-                $('#addForm')[0].reset();
-
-                // Exibe mensagem com o número do registro
-                if (response && response.numRSO) {
-                    alert(`Registrado! Número do RSO ---- ${response.numRSO}`);
-                } else {
-                    alert('Registro salvo com sucesso!');
+            const tbody = $('#rsoTableBody');
+            tbody.empty();
+            rsos.forEach(rso => {
+                // Formata o campo data para DD-MM-YYYY
+                let dataFormatada = '';
+                if (rso.data) {
+                    const partes = rso.data.split('-');
+                    if (partes.length === 3) {
+                        dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+                    } else {
+                        dataFormatada = rso.data;
+                    }
                 }
-            }
-        });
-    });
+                tbody.append(`
+                    <tr>
+                        <td>${rso.numRSO || ''}</td>
+                        <td>${dataFormatada || ''}</td>
+                        <td>${rso.numPPRi || ''}</td>
+                        <td>${rso.vtr || ''}</td>
+                        <td>${rso.cgp || ''}</td>
+                        <td>${rso.bop || ''}</td>
+                        <td>
+                            <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
+                                <i class="bi bi-eye"></i>
+                            </button>
+                        </td>
+                        <td class="export-only">${rso.hrInicio || ''}</td>
+                        <td class="export-only">${rso.tpSvc || ''}</td>
+                        <td class="export-only">${rso.aux1 || ''}</td>
+                        <td class="export-only">${rso.aux2 || ''}</td>
+                        <td class="export-only">${rso.aux3 || ''}</td>
+                        <td class="export-only">${rso.qtdFisc || ''}</td>
+                        <td class="export-only">${rso.qtdAut || ''}</td>
+                        <td class="export-only">${rso.qtdBO || ''}</td>
+                        <td class="export-only">${rso.qtdARV || ''}</td>
+                        <td class="export-only">${rso.qtdARD || ''}</td>
+                        <td class="export-only">${rso.qtdImg || ''}</td>
+                        <td class="export-only">${rso.qtdTestes || ''}</td>
+                    </tr>
+                `);
+            });
 
-    // aplicar máscara
-    $('#addVtr').mask('A-0000', {
-        translation: {
-            'A': { pattern: /[A-Za-z]/ }
+            // Inicializa o DataTable
+            dataTable = $('#rsoTable').DataTable({
+                order: [[0, 'desc']], // Ordena por numRSO decrescente
+                language: {
+                    // url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json" //caminho online mais lento, CORS trava
+                    url: "pt-BR.json" //caminho local
+                },
+                destroy: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: '<i class="bi bi-file-earmark-excel"></i> Exportar XLSX',
+                        className: 'btn btn-success'
+                    },
+                    {
+                        extend: 'pdfHtml5',
+                        text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+                        className: 'btn btn-danger'
+                    },
+                    {
+                        extend: 'print',
+                        text: '<i class="bi bi-printer"></i> Imprimir',
+                        className: 'btn btn-secondary'
+                    }
+                ]
+            });
+
         }
-    });
-    $('#editVtr').mask('A-0000', {
-        translation: {
-            'A': { pattern: /[A-Za-z]/ }
-        }
-    });
-
-    $('#addHrInicio, #editHrInicio').mask('00:00');
-
-    // converter em maiusculo
-    $('#addVtr, #editVtr').on('input', function() {
-        let val = $(this).val();
-        // Só altera a letra, mantém o traço e números
-        if (val.length > 0) {
-            $(this).val(val.charAt(0).toUpperCase() + val.slice(1));
-        }
-    });
 
 
-    // Editar Registro
-    $(document).on('click', '#btnEditar', function() {
-        const id = $(this).data('id');
-        console.log(`id para edição ${id}`);
-        $.get(`${API_URL}/${id}`, function(rso) {
-            $('#editId').val(rso._id);
-            $('#editNumRSO').val(rso.numRSO);
-            $('#editData').val(rso.data);
-            $('#editHrInicio').val(rso.hrInicio);            
-            $('#editNumPPRi').val(rso.numPPRi);
-            $('#editCgp').val(rso.cgp);
-            $('#editVtr').val(rso.vtr);
-            $('#editBop').val(rso.bop);
-            $('#editTpSvc').val(rso.tpSvc);
-            $('#editAux1').val(rso.aux1);
-            $('#editAux2').val(rso.aux2);
-            $('#editAux3').val(rso.aux3);
-            $('#editQtdFisc').val(rso.qtdFisc);
-            $('#editQtdAut').val(rso.qtdAut);
-            $('#editQtdBO').val(rso.qtdBO);
-            $('#editQtdARV').val(rso.qtdARV);
-            $('#editQtdARD').val(rso.qtdARD);
-            $('#editQtdImg').val(rso.qtdImg);
-            $('#editQtdTestes').val(rso.qtdTestes);
-            $('#editarModal').modal('show');
-        });
-    });
-
-
-    //Salvar Edição
-    $('#salvarEdicao').click(function() {
-        const id = $('#editId').val();
-                console.log(`id salvo para edição linha 366 ${id}`);
-        const data = {
-            numRSO: $('#editNumRSO').val(),
-            data: $('#editData').val(),
-            hrInicio: $('#editHrInicio').val(),            
-            numPPRi: $('#editNumPPRi').val(),
-            cgp: $('#editCgp').val(),
-            vtr: $('#editVtr').val(),
-            bop: $('#editBop').val(),
-            tpSvc: $('#editTpSvc').val(),
-            aux1: $('#editAux1').val(),
-            aux2: $('#editAux2').val(),
-            aux3: $('#editAux3').val(),
-            qtdFisc: $('#editQtdFisc').val(),
-            qtdAut: $('#editQtdAut').val(),
-            qtdBO: $('#editQtdBO').val(),
-            qtdARV: $('#editQtdARV').val(),
-            qtdARD: $('#editQtdARD').val(),
-            qtdImg: $('#editQtdImg').val(),
-            qtdTestes: $('#editQtdTestes').val()
-        };
-            console.log('data salvo para edição linha 387', JSON.stringify(data, null, 2));
-        $.ajax({
-            url: `${API_URL}/${id}`,
-            type: 'PUT',
-            contentType: 'application/json',
-            data: JSON.stringify(data),
-            success: function() {
-                $('#editarModal').modal('hide');
-                $.get(API_URL, renderTable);
-            }
-        });
-    });
-    
-
-    // Exibir detalhes
-    $(document).on('click', '.btn-details', function() {
-        const id = $(this).data('id');
-        $.get(`${API_URL}/${id}`, function(rso) {
-
-            let dataFormatada = '';
-            if (rso.data) {
-                const partes = rso.data.split('-');
-                if (partes.length === 3) {
-                    dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
-                } else {
-                    dataFormatada = rso.data;
-                }
-            }
-
-            let html = `
-                <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${rso._id}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">RSO Num:</strong> ${rso.numRSO}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Data:</strong> ${dataFormatada}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Hora Inicio:</strong> ${rso.hrInicio}</div>                
-                <div class="mb-2"><strong style="color:#0d6efd;">PPRi Num:</strong> ${rso.numPPRi}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Viatura:</strong> ${rso.vtr}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">CGP:</strong> ${rso.cgp}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">BOp:</strong> ${rso.bop}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Serviço:</strong> ${rso.tpSvc}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Aux-1:</strong> ${rso.aux1}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Aux-2:</strong> ${rso.aux2}</div>
-                <div class="mb-2"><strong style="color:#0d6efd;">Aux-3:</strong> ${rso.aux3}</div>
-                <hr>
-            `;
-
-            const camposSecundarios = [
-                'qtdFisc','qtdAut','qtdBO','qtdARV','qtdARD','qtdImg','qtdTestes', 'createdAt', 'updatedAt'
-            ];
-
-            const nomesCampos = {
-                qtdFisc: 'Quantidade de Fiscalizados',
-                qtdAut: 'Quantidade de Autuações',
-                qtdBO: 'Quantidade de BO',
-                qtdARV: 'Quantidade de ARV',
-                qtdARD: 'Quantidade de ARD',
-                qtdImg: 'Quantidade de Imagens',
-                qtdTestes: 'Quantidade de Testes',
-                createdAt: 'Data/Hora de Inclusão',
-                updatedAt: 'Data/Hora de Alteração'
+        function getFormData() {
+            return {
+                numRSO: $('#addNumRSO').val(),
+                data: $('#addData').val(),
+                numPPRi: $('#addNumPPRi').val(),
+                cgp: $('#addCgp').val(),
+                vtr: $('#addVtr').val(),
+                bop: $('#addBop').val(),
+                tpSvc: $('#addTpSvc').val(),
+                aux1: $('#addAux1').val(),
+                aux2: $('#addAux2').val(),
+                aux3: $('#addAux3').val(),
+                hrInicio: $('#addHrInicio').val(),
+                qtdFisc: $('#addQtdFisc').val(),
+                qtdAut: $('#addQtdAut').val(),
+                qtdBO: $('#addQtdBO').val(),
+                qtdARV: $('#addQtdARV').val(),
+                qtdARD: $('#addQtdARD').val(),
+                qtdImg: $('#addQtdImg').val(),
+                qtdTestes: $('#addQtdTestes').val()
             };
-
-            camposSecundarios.forEach(campo => {
-                let valor = rso[campo] || '';
-                // Formata datas se necessário
-                if (campo === 'createdAt' || campo === 'updatedAt') {
-                    valor = valor ? new Date(valor).toLocaleString('pt-BR') : '';
-                }
-                html += `<div class="mb-2"><strong>${nomesCampos[campo]}:</strong> ${valor}</div>`;
-            });
-            html += `
-                <div class="mt-3 text-end">
-                    <button class="btn btn-warning" id="btnEditar" data-id="${rso._id}" data-bs-dismiss="modal">
-                        <i class="bi bi-pencil"></i> Editar
-                    </button>
-                </div>
-            `;
-            $('#detalhesModal .modal-body').html(html);
-        });
-    });
-
-    // Excluir registro
-    $(document).on('click', '.btn-delete', function() {
-        const id = $(this).data('id');
-        if (confirm('Tem certeza que deseja excluir este registro?')) {
-            $.ajax({
-                url: `${API_URL}/${id}`,
-                type: 'DELETE',
-                success: function() {
-                    $.get(API_URL, renderTable);
-                }
-            });
         }
-    });
-});
-</script>
+
+        $(document).ready(function() {
+            // Carregar registros
+            $.get(API_URL, renderTable);
+
+            
+            // Carrega o conteúdo do navbar.html
+            $(function(){
+                $("#navbarContainer").load("navbar.html");
+            });
+
+            // Adicionar registro
+            $('#salvarAdicionar').click(function() {
+                const data = getFormData();
+                $.ajax({
+                    url: API_URL,
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function(response) {
+                        $('#adicionarModal').modal('hide');
+                        $.get(API_URL, renderTable);
+                        $('#addForm')[0].reset();
+
+                        // Exibe mensagem com o número do registro
+                        if (response && response.numRSO) {
+                            alert(`Registrado! Número do RSO ---- ${response.numRSO}`);
+                        } else {
+                            alert('Registro salvo com sucesso!');
+                        }
+                    }
+                });
+            });
+
+            // aplicar máscara
+            $('#addVtr').mask('A-0000', {
+                translation: {
+                    'A': { pattern: /[A-Za-z]/ }
+                }
+            });
+            $('#editVtr').mask('A-0000', {
+                translation: {
+                    'A': { pattern: /[A-Za-z]/ }
+                }
+            });
+
+            $('#addHrInicio, #editHrInicio').mask('00:00');
+
+            // converter em maiusculo
+            $('#addVtr, #editVtr').on('input', function() {
+                let val = $(this).val();
+                // Só altera a letra, mantém o traço e números
+                if (val.length > 0) {
+                    $(this).val(val.charAt(0).toUpperCase() + val.slice(1));
+                }
+            });
+
+
+            // Editar Registro
+            $(document).on('click', '#btnEditar', function() {
+                const id = $(this).data('id');
+                console.log(`id para edição ${id}`);
+                $.get(`${API_URL}/${id}`, function(rso) {
+                    $('#editId').val(rso._id);
+                    $('#editNumRSO').val(rso.numRSO);
+                    $('#editData').val(rso.data);
+                    $('#editHrInicio').val(rso.hrInicio);            
+                    $('#editNumPPRi').val(rso.numPPRi);
+                    $('#editCgp').val(rso.cgp);
+                    $('#editVtr').val(rso.vtr);
+                    $('#editBop').val(rso.bop);
+                    $('#editTpSvc').val(rso.tpSvc);
+                    $('#editAux1').val(rso.aux1);
+                    $('#editAux2').val(rso.aux2);
+                    $('#editAux3').val(rso.aux3);
+                    $('#editQtdFisc').val(rso.qtdFisc);
+                    $('#editQtdAut').val(rso.qtdAut);
+                    $('#editQtdBO').val(rso.qtdBO);
+                    $('#editQtdARV').val(rso.qtdARV);
+                    $('#editQtdARD').val(rso.qtdARD);
+                    $('#editQtdImg').val(rso.qtdImg);
+                    $('#editQtdTestes').val(rso.qtdTestes);
+                    $('#editarModal').modal('show');
+                });
+            });
+
+
+            //Salvar Edição
+            $('#salvarEdicao').click(function() {
+                const id = $('#editId').val();
+                        console.log(`id salvo para edição linha 366 ${id}`);
+                const data = {
+                    numRSO: $('#editNumRSO').val(),
+                    data: $('#editData').val(),
+                    hrInicio: $('#editHrInicio').val(),            
+                    numPPRi: $('#editNumPPRi').val(),
+                    cgp: $('#editCgp').val(),
+                    vtr: $('#editVtr').val(),
+                    bop: $('#editBop').val(),
+                    tpSvc: $('#editTpSvc').val(),
+                    aux1: $('#editAux1').val(),
+                    aux2: $('#editAux2').val(),
+                    aux3: $('#editAux3').val(),
+                    qtdFisc: $('#editQtdFisc').val(),
+                    qtdAut: $('#editQtdAut').val(),
+                    qtdBO: $('#editQtdBO').val(),
+                    qtdARV: $('#editQtdARV').val(),
+                    qtdARD: $('#editQtdARD').val(),
+                    qtdImg: $('#editQtdImg').val(),
+                    qtdTestes: $('#editQtdTestes').val()
+                };
+                    console.log('data salvo para edição linha 387', JSON.stringify(data, null, 2));
+                $.ajax({
+                    url: `${API_URL}/${id}`,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function() {
+                        $('#editarModal').modal('hide');
+                        $.get(API_URL, renderTable);
+                    }
+                });
+            });
+            
+
+            // Exibir detalhes
+            $(document).on('click', '.btn-details', function() {
+                const id = $(this).data('id');
+                $.get(`${API_URL}/${id}`, function(rso) {
+
+                    let dataFormatada = '';
+                    if (rso.data) {
+                        const partes = rso.data.split('-');
+                        if (partes.length === 3) {
+                            dataFormatada = `${partes[2]}-${partes[1]}-${partes[0]}`;
+                        } else {
+                            dataFormatada = rso.data;
+                        }
+                    }
+
+                    let html = `
+                        <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${rso._id}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">RSO Num:</strong> ${rso.numRSO}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Data:</strong> ${dataFormatada}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Hora Inicio:</strong> ${rso.hrInicio}</div>                
+                        <div class="mb-2"><strong style="color:#0d6efd;">PPRi Num:</strong> ${rso.numPPRi}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Viatura:</strong> ${rso.vtr}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">CGP:</strong> ${rso.cgp}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">BOp:</strong> ${rso.bop}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Serviço:</strong> ${rso.tpSvc}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Aux-1:</strong> ${rso.aux1}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Aux-2:</strong> ${rso.aux2}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Aux-3:</strong> ${rso.aux3}</div>
+                        <hr>
+                    `;
+
+                    const camposSecundarios = [
+                        'qtdFisc','qtdAut','qtdBO','qtdARV','qtdARD','qtdImg','qtdTestes', 'createdAt', 'updatedAt'
+                    ];
+
+                    const nomesCampos = {
+                        qtdFisc: 'Quantidade de Fiscalizados',
+                        qtdAut: 'Quantidade de Autuações',
+                        qtdBO: 'Quantidade de BO',
+                        qtdARV: 'Quantidade de ARV',
+                        qtdARD: 'Quantidade de ARD',
+                        qtdImg: 'Quantidade de Imagens',
+                        qtdTestes: 'Quantidade de Testes',
+                        createdAt: 'Data/Hora de Inclusão',
+                        updatedAt: 'Data/Hora de Alteração'
+                    };
+
+                    camposSecundarios.forEach(campo => {
+                        let valor = rso[campo] || '';
+                        // Formata datas se necessário
+                        if (campo === 'createdAt' || campo === 'updatedAt') {
+                            valor = valor ? new Date(valor).toLocaleString('pt-BR') : '';
+                        }
+                        html += `<div class="mb-2"><strong>${nomesCampos[campo]}:</strong> ${valor}</div>`;
+                    });
+                    html += `
+                        <div class="mt-3 text-end">
+                            <button class="btn btn-warning" id="btnEditar" data-id="${rso._id}" data-bs-dismiss="modal">
+                                <i class="bi bi-pencil"></i> Editar
+                            </button>
+                        </div>
+                    `;
+                    $('#detalhesModal .modal-body').html(html);
+                });
+            });
+
+            // Excluir registro
+            $(document).on('click', '.btn-delete', function() {
+                const id = $(this).data('id');
+                if (confirm('Tem certeza que deseja excluir este registro?')) {
+                    $.ajax({
+                        url: `${API_URL}/${id}`,
+                        type: 'DELETE',
+                        success: function() {
+                            $.get(API_URL, renderTable);
+                        }
+                    });
+                }
+            });
+
+
+        });
+    </script>
 
 </body>
 </html>

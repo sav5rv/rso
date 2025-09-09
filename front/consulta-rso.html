@@ -66,29 +66,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <i class="bi bi-shield-check"></i> Sistema
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html"><i class="bi bi-house-door"></i> Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="cadastro.html"><i class="bi bi-person-plus"></i> Cadastro</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="rso.html"><i class="bi bi-table"></i> RSO</a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+    <div id="navbarContainer"></div>
 
     <div class="container">
         <div class="card">
@@ -141,7 +119,17 @@
                     <div class="me-2">
                         <label for="filtroServico" class="form-label">Serviço:</label>
                         <select class="form-control" id="filtroServico">
-
+                                <option value="">Selecione</option>
+                                <option value="ADM">ADM</option>
+                                <option value="CGP">CGP</option>
+                                <option value="CMT">CMT</option>
+                                <option value="Dejem">Dejem</option>
+                                <option value="Escala Extra">Escala Extra</option>
+                                <option value="Guarda Quartel">Guarda Quartel</option>
+                                <option value="OPERACIONAL">OPERACIONAL</option>
+                                <option value="PDR">PDR</option>
+                                <option value="Reforço Op">Reforço Op</option>
+                                <option value="TOR">TOR</option>
                         </select>
                     </div>                    
 
@@ -258,6 +246,11 @@
         const API_URL = 'http://localhost:3001/api/rso/buscar'; // Atualize para o endpoint correto
         let dataTable;
 
+        // Carrega o conteúdo do navbar.html
+        $(function(){
+            $("#navbarContainer").load("navbar.html");
+        });
+
         function renderTable(rsos) {
             if ($.fn.DataTable.isDataTable('#rsoTable')) {
                 $('#rsoTable').DataTable().destroy();
@@ -362,7 +355,8 @@
             // Inicializa a DataTable
             dataTable = $('#rsoTable').DataTable({
                 language: {
-                    url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                    // url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                    url: "pt-BR.json" //caminho local
                 },
                 destroy: true,
                 dom: 'Bfrtip',

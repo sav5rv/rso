@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resumo CGP</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .card {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            border-radius: 1rem;
+        }
+        .card-header {
+            border-radius: 1rem 1rem 0 0 !important;
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            color: white;
+            padding: 0.75rem 1.25rem;
+        }
+        .navbar-custom {
+            background: linear-gradient(45deg, #0d6efd, #0dcaf0);
+            margin-bottom: 20px;
+            border-radius: 1rem;
+        }
+        .navbar-custom .navbar-brand, .navbar-custom .nav-link {
+            color: white !important;
+        }
+        /* Estilo para a lista aninhada */
+        .nested-list-item {
+            cursor: pointer;
+            padding: 5px;
+            margin-bottom: 2px;
+            border-radius: 3px;
+        }
+        .nested-list-item:hover {
+            background-color: #e9ecef;
+        }
+        .nested-list-item i.bi-caret-right-fill {
+            transition: transform 0.2s;
+        }
+        .nested-list-item.expanded i.bi-caret-right-fill {
+            transform: rotate(90deg);
+        }
+        .nested-list ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="navbarContainer"></div>
+
+    <div class="container">
+        <div class="card">
+            <div class="card-header text-center py-3">
+                <h2><i class="bi bi-graph-up me-2"></i>Resumo CGP</h2>
+            </div>
+            <div class="card-body p-4">
+                <div class="d-flex flex-wrap mb-4 align-items-end">
+                    <div class="me-2">
+                        <label for="filtroData" class="form-label">Filtrar por Data:</label>
+                        <input type="date" class="form-control" id="filtroData">
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroMes" class="form-label">Filtrar por Mês:</label>
+                        <select class="form-control" id="filtroMes">
+                            <option value="">Todos</option>
+                            <option value="1">Janeiro</option>
+                            <option value="2">Fevereiro</option>
+                            <option value="3">Março</option>
+                            <option value="4">Abril</option>
+                            <option value="5">Maio</option>
+                            <option value="6">Junho</option>
+                            <option value="7">Julho</option>
+                            <option value="8">Agosto</option>
+                            <option value="9">Setembro</option>
+                            <option value="10">Outubro</option>
+                            <option value="11">Novembro</option>
+                            <option value="12">Dezembro</option>
+                        </select>
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroPeriodo" class="form-label">Filtrar por Período:</label>
+                        <select class="form-control" id="filtroPeriodo">
+                            <option value="">Todos</option>
+                            <option value="Manhã">Manhã (06h - 12h)</option>
+                            <option value="Tarde">Tarde (12h01 - 18h)</option>
+                            <option value="Noite">Noite (18h01 - 00h)</option>
+                            <option value="Madrugada">Madrugada (00h01 - 05h59)</option>
+                        </select>
+                    </div>
+                    <div class="me-2">
+                        <label for="filtroCgp" class="form-label">Filtrar por CGP:</label>
+                        <input type="text" class="form-control" id="filtroCgp" placeholder="Nome do CGP">
+                    </div>
+                    <button id="btnFiltrar" class="btn btn-primary me-2">
+                        <i class="bi bi-filter"></i> Filtrar
+                    </button>
+                    <button id="btnReset" class="btn btn-secondary">
+                        <i class="bi bi-arrow-counterclockwise"></i> Resetar
+                    </button>
+                </div>
+                
+                <div id="treeContainer" class="nested-list">
+                    </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const API_URL = 'http://localhost:3001/api/rso/buscar';
+        const camposQtd = ['qtdFisc', 'qtdAut', 'qtdBO', 'qtdARV', 'qtdARD', 'qtdImg', 'qtdTestes'];
+        let allRecords = [];
+
+        // Carrega o conteúdo do navbar.html
+        $(function(){
+            $("#navbarContainer").load("navbar.html");
+        });
+
+        
+        // Função para determinar o período
+        function getPeriodo(hora) {
+            const [horas, minutos] = hora.split(':').map(Number);
+            const totalMinutos = horas * 60 + minutos;
+
+            if (totalMinutos >= 360 && totalMinutos <= 720) return 'Manhã';
+            if (totalMinutos > 720 && totalMinutos <= 1080) return 'Tarde';
+            if (totalMinutos > 1080 && totalMinutos <= 1440) return 'Noite';
+            return 'Madrugada';
+        }
+        
+        // Função para construir a árvore hierárquica
+        function buildTree(rsos) {
+            const treeData = {};
+        
+            rsos.forEach(rso => {
+                const bop = rso.bop || 'BOP Não Informado';
+                const servico = rso.tpSvc || 'Serviço Não Informado';
+                const vtr = rso.vtr || 'VTR Não Informada';
+                const auxiliar = rso.aux1 || 'Auxiliar Não Informado';
+        
+                if (!treeData[bop]) treeData[bop] = {};
+                if (!treeData[bop][servico]) treeData[bop][servico] = {};
+                if (!treeData[bop][servico][vtr]) treeData[bop][servico][vtr] = {};
+                if (!treeData[bop][servico][vtr][auxiliar]) {
+                    treeData[bop][servico][vtr][auxiliar] = {};
+                }
+        
+                camposQtd.forEach(campo => {
+                    treeData[bop][servico][vtr][auxiliar][campo] = (treeData[bop][servico][vtr][auxiliar][campo] || 0) + (rso[campo] || 0);
+                });
+            });
+        
+            renderTree(treeData, $('#treeContainer'));
+        }
+        
+        // Função para renderizar a lista aninhada no HTML
+        function renderTree(data, parentElement) {
+            parentElement.empty();
+            if (Object.keys(data).length === 0) {
+                parentElement.html('<div class="alert alert-info text-center">Nenhum registro encontrado para os filtros selecionados.</div>');
+                return;
+            }
+
+            const ul = $('<ul>');
+            for (const key in data) {
+                const item = data[key];
+                const li = $('<li>');
+                
+                let hasChildren = false;
+                if (typeof item === 'object' && item !== null) {
+                    hasChildren = Object.keys(item).some(childKey => !camposQtd.includes(childKey));
+                }
+        
+                let nodeHtml = `<div class="nested-list-item"><i class="bi bi-caret-right-fill"></i> ${key}</div>`;
+                const nodeDiv = $(nodeHtml);
+                li.append(nodeDiv);
+        
+                if (hasChildren) {
+                    const contentUl = $('<ul>').hide();
+                    li.append(contentUl);
+                    renderTree(item, contentUl);
+        
+                    nodeDiv.on('click', function() {
+                        $(this).toggleClass('expanded');
+                        contentUl.slideToggle(200);
+                    });
+                } else {
+                    nodeDiv.find('i').remove(); // Remove o ícone se não houver filhos
+                }
+        
+                // No último nível, exibe os campos QTD
+                const isLastLevel = Object.keys(item).every(childKey => camposQtd.includes(childKey));
+                if (isLastLevel) {
+                    const fieldsHtml = camposQtd.map(campo => {
+                        const nomeCampo = campo.replace('qtd', 'Qtd ').replace(/([A-Z])/g, ' $1').trim();
+                        return `<div><small><strong>${nomeCampo}:</strong> ${item[campo] || 0}</small></div>`;
+                    }).join('');
+                    li.append($('<ul>').html(`<li>${fieldsHtml}</li>`));
+                }
+        
+                ul.append(li);
+            }
+            parentElement.append(ul);
+        }
+
+        // Lógica de Filtros e Event Listeners
+        $(document).ready(function() {
+            $.get(API_URL, function(rsos) {
+                allRecords = rsos;
+                buildTree(allRecords);
+            });
+
+            $('#btnFiltrar').on('click', function() {
+                const filtroData = $('#filtroData').val();
+                const filtroMes = $('#filtroMes').val();
+                const filtroPeriodo = $('#filtroPeriodo').val();
+                const filtroCgp = $('#filtroCgp').val();
+
+                let filteredRecords = allRecords;
+
+                if (filtroData) {
+                    filteredRecords = filteredRecords.filter(r => r.data === filtroData);
+                }
+                if (filtroMes) {
+                    filteredRecords = filteredRecords.filter(r => {
+                        const mesDoRegistro = new Date(r.data).getMonth() + 1;
+                        return mesDoRegistro.toString() === filtroMes;
+                    });
+                }
+                if (filtroPeriodo) {
+                    filteredRecords = filteredRecords.filter(r => getPeriodo(r.hrInicio) === filtroPeriodo);
+                }
+                if (filtroCgp) {
+                    filteredRecords = filteredRecords.filter(r => r.cgp && r.cgp.toLowerCase().includes(filtroCgp.toLowerCase()));
+                }
+
+                buildTree(filteredRecords);
+            });
+
+            $('#btnReset').on('click', function() {
+                $('#filtroData').val('');
+                $('#filtroMes').val('');
+                $('#filtroPeriodo').val('');
+                $('#filtroCgp').val('');
+                buildTree(allRecords);
+            });
+        });
+    </script>
+</body>
+</html>
