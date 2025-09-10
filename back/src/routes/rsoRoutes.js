@@ -3,10 +3,14 @@ const router = express.Router();
 const RSO = require('../models/rso');
 const Counter = require('../models/rsoCounter');
 
-// Listar todos
+// Listar todos os registros
 router.get('/', async (req, res) => {
-    const rsos = await RSO.find();
-    res.json(rsos);
+    try {
+        const rsos = await RSO.find();
+        res.json(rsos);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
 });
 
 // Criar novo
@@ -75,7 +79,7 @@ router.get('/buscar', async (req, res) => {
         console.log('Objeto de filtro para o MongoDB:', filtro);
 
         // Usa o objeto de filtro no método find() do Mongoose
-        const rsos = await RSO.find(filtro);
+        const rsos = await RSO.find(filtro).sort({ numRSO: 'desc' });
         res.json(rsos);
     } catch (err) {
         res.status(500).json({ message: err.message });

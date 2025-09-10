@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const rsoSchema = new mongoose.Schema({
-  numRSO: String,
+  numRSO: { type: Number, default: 0 },
   data: String,
   numPPRi: String,
   cgp: String,
