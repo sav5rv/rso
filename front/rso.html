@@ -69,10 +69,10 @@
     <div class="container">
         <div class="card">
             <div class="card-header text-center py-3">
-                <h2><i class="bi bi-table me-2"></i>Registros RSO</h2>
+                <h2><i class="bi bi-table me-2"></i>Lista de RSO registrado</h2>
             </div>
             <div class="card-body p-4">
-                <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
+                <!-- <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
                     <button class="btn btn-gradient me-2 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#adicionarModal">
                         <i class="bi bi-plus-circle"></i> Adicionar Registro
                     </button>
@@ -81,7 +81,7 @@
                             <i class="bi bi-file-earmark-excel"></i> Exportar XLSX
                         </button>
                     </div>
-                </div>
+                </div> -->
                 
                 <div id="loadingMessage" class="d-none">Carregando...</div>
                 
@@ -110,7 +110,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Registro</h5>
+                    <h5 class="modal-title" id="detalhesModalLabel">Detalhes do Registro: <span id="rsoNumModal"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body"></div>
@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <div class="modal fade" id="adicionarModal" tabindex="-1" aria-labelledby="adicionarModalLabel" aria-hidden="true">
+    <!-- <div class="modal fade" id="adicionarModal" tabindex="-1" aria-labelledby="adicionarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -242,7 +242,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -279,9 +279,6 @@
                         <td class="text-center">
                             <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
                                 <i class="bi bi-eye"></i>
-                            </button>
-                            <button class="btn btn-warning btn-action" id="btnEditar" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#editarModal">
-                                <i class="bi bi-pencil"></i>
                             </button>
                             <button class="btn btn-danger btn-action btn-delete" data-id="${rso._id}">
                                 <i class="bi bi-trash"></i>
@@ -330,25 +327,25 @@
             fetchAndRenderData();
             $("#navbarContainer").load("navbar.html");
 
-            $('#salvarAdicionar').click(function() {
-                const data = getFormData();
-                $.ajax({
-                    url: API_URL,
-                    type: 'POST',
-                    contentType: 'application/json',
-                    data: JSON.stringify(data),
-                    success: function(response) {
-                        $('#adicionarModal').modal('hide');
-                        fetchAndRenderData();
-                        $('#addForm')[0].reset();
-                        if (response && response.numRSO) {
-                            alert(`Registrado! Número do RSO ---- ${response.numRSO}`);
-                        } else {
-                            alert('Registro salvo com sucesso!');
-                        }
-                    }
-                });
-            });
+            // $('#salvarAdicionar').click(function() {
+            //     const data = getFormData();
+            //     $.ajax({
+            //         url: API_URL,
+            //         type: 'POST',
+            //         contentType: 'application/json',
+            //         data: JSON.stringify(data),
+            //         success: function(response) {
+            //             $('#adicionarModal').modal('hide');
+            //             fetchAndRenderData();
+            //             $('#addForm')[0].reset();
+            //             if (response && response.numRSO) {
+            //                 alert(`Registrado! Número do RSO ---- ${response.numRSO}`);
+            //             } else {
+            //                 alert('Registro salvo com sucesso!');
+            //             }
+            //         }
+            //     });
+            // });
 
             $('#salvarEdicao').click(function() {
                 const id = $('#editId').val();
@@ -464,6 +461,9 @@
             $(document).on('click', '.btn-details', function() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(rso) {
+                    // o jQuery seleciona o elemento com o ID "rsoNumModal" e Adiciona esta linha para preencher o cabeçalho do modal
+                    $('#rsoNumModal').text(rso.numRSO);
+
                     let dataFormatada = rso.data ? rso.data.split('-').reverse().join('-') : '';
                     let html = `
                         <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${rso._id}</div>

@@ -45,9 +45,12 @@
     <div class="container">
         <div class="card">
             <div class="card-header text-center py-3">
-                <h2><i class="bi bi-table me-2"></i>Registros RSO</h2>
+                <h2><i class="bi bi-bookmark-plus"></i>Registrar RSO</h2>
             </div>
             <div class="card-body p-4">
+                <div id="lastRsoInfo" class="alert alert-info" role="alert" style="display: none;">
+                    Último RSO cadastrado: <strong>carregando...</strong>
+                </div>
                 <div class="d-flex flex-column flex-md-row justify-content-between mb-3">
                     <button class="btn btn-gradient me-2 mb-2 mb-md-0" data-bs-toggle="modal" data-bs-target="#adicionarModal">
                         <i class="bi bi-plus-circle"></i> Adicionar Registro
@@ -128,6 +131,25 @@
     <script>
         const API_URL = 'http://localhost:3001/api/rso';
 
+        function fetchLastRSO() {
+            const lastRsoInfo = $('#lastRsoInfo');
+            lastRsoInfo.show();
+            
+            $.get(API_URL, function(rsos) {
+                if (rsos.length > 0) {
+                    // Ordena os dados por numRSO em ordem decrescente
+                    rsos.sort((a, b) => b.numRSO - a.numRSO);
+                    const lastRSO = rsos[0];
+                    const createdAt = new Date(lastRSO.createdAt).toLocaleString('pt-BR');
+                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${createdAt} para a Vtr ${lastRSO.vtr}.`);
+                } else {
+                    lastRsoInfo.html('Nenhum registro encontrado.');
+                }
+            }).fail(function() {
+                lastRsoInfo.html('Erro ao carregar o último RSO.');
+            });
+        }
+
         function getFormData() {
             return {
                 data: $('#addData').val(),
@@ -152,6 +174,7 @@
 
         $(document).ready(function() {
             $("#navbarContainer").load("navbar.html");
+            fetchLastRSO(); // Busca e exibe o último RSO ao carregar a página
 
             // Lógica para salvar novo registro
             $('#salvarAdicionar').click(function() {
@@ -169,6 +192,7 @@
                         } else {
                             alert('Registro salvo com sucesso!');
                         }
+                        fetchLastRSO(); // Atualiza a mensagem do último RSO
                     },
                     error: function(xhr, status, error) {
                         console.error('Erro ao salvar registro:', error);
@@ -209,7 +233,7 @@
             });
 
             // Lógicas de máscara e maiúsculas
-            $('#addVtr').mask('A-0000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
+            $('#addVtr').mask('A-00000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
             $('#addHrInicio').mask('00:00');
             $('#addVtr').on('input', function() {
                 let val = $(this).val();
