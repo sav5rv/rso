@@ -3,6 +3,8 @@ const router = express.Router();
 const RSO = require('../models/rso');
 const Counter = require('../models/rsoCounter');
 
+
+
 // Listar todos os registros
 router.get('/', async (req, res) => {
     try {
@@ -12,6 +14,8 @@ router.get('/', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+
 
 // Criar novo
 router.post('/', async (req, res) => {
@@ -36,11 +40,14 @@ router.put('/:id', async (req, res) => {
     res.json(rso);
 });
 
+
+
 // Excluir
 router.delete('/:id', async (req, res) => {
     await RSO.findByIdAndDelete(req.params.id);
     res.json({ message: 'Excluído com sucesso' });
 });
+
 
 
 // Rota para buscar todos os registros com filtros opcionais

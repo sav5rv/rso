@@ -13,7 +13,7 @@
             background-color: #f8f9fa;
             padding: 20px;
         }
-        .card {
+.card {
             box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
             border-radius: 1rem;
         }
@@ -21,14 +21,14 @@
             border-radius: 1rem 1rem 0 0 !important;
             background: linear-gradient(45deg, #0d6efd, #0dcaf0);
             color: white;
-            padding: 0.5rem 0.75rem;
+            padding: 0.5rem 0.75rem; /* Reduz o padding do cabeçalho */
         }
         .card-body-sm {
-            padding: 0.5rem 0.5rem !important;
+            padding: 0.5rem 0.5rem !important; /* Classe para reduzir o padding do corpo */
         }
         .card-body-sm h4 {
-            margin: 0;
-            font-size: 1.25rem;
+            margin: 0; /* Remove a margem do título para economizar espaço */
+            font-size: 1.25rem; /* Opcional: diminui um pouco o tamanho da fonte */
         }
         .btn-gradient {
             background: linear-gradient(45deg, #0d6efd, #0dcaf0);
@@ -59,6 +59,7 @@
             align-items: center;
             justify-content: center;
         }
+        /* Garantir que a tabela se adapte */
         #rsoTable th, #rsoTable td {
             white-space: nowrap;
         }
@@ -109,6 +110,11 @@
                         <label for="filtroCgp" class="form-label">CGP:</label>
                         <input type="text" class="form-control" id="filtroCgp" placeholder="Nome do CGP">
                     </div>
+                    
+                    <div class="me-2">
+                        <label for="filtroHoraInicio" class="form-label">Hora Início:</label>
+                        <input type="text" class="form-control" id="filtroHoraInicio" placeholder="Ex: 10:00">
+                    </div>
 
                     <div class="me-2">
                         <label for="filtroServico" class="form-label">Serviço:</label>
@@ -127,35 +133,18 @@
                         </select>
                     </div>                    
 
-                    <div class="me-2">
-                        <label for="filtroPeriodo" class="form-label">Período:</label>
-                        <select class="form-control" id="filtroPeriodo">
-                            <option value="">Todos</option>
-                            <option value="Manhã">Manhã</option>
-                            <option value="Tarde">Tarde</option>
-                            <option value="Noite">Noite</option>
-                            <option value="Madrugada">Madrugada</option>
-                        </select>
-                    </div>
-
-                    <button id="btnFiltrar" class="btn btn-gradient me-2">
+                    <button id="btnFiltrar" class="btn btn-gradient">
                         <i class="bi bi-filter"></i> Filtrar
-                    </button>
-                    <button id="btnReset" class="btn btn-secondary">
-                        <i class="bi bi-arrow-clockwise"></i> Resetar
                     </button>
                 </div>
                 
-                <div class="progress mb-3" id="loadingProgressBar" style="display: none;">
-                    <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-
                 <div class="table-responsive">
                     <table id="rsoTable" class="table table-striped table-hover">
                         <thead>
                             <tr>
                                 <th>RSO Num</th>
                                 <th>Data</th>
+                                <th>Hora Início</th>
                                 <th>PPRi</th>
                                 <th>Viatura</th>
                                 <th>CGP</th>
@@ -254,23 +243,13 @@
     <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
     
     <script>
-        const API_URL = 'http://localhost:3001/api/rso/buscar';
+        const API_URL = 'http://localhost:3001/api/rso/buscar'; // Atualize para o endpoint correto
         let dataTable;
 
+        // Carrega o conteúdo do navbar.html
         $(function(){
             $("#navbarContainer").load("navbar.html");
         });
-
-        // Função de utilidade para determinar o período
-        function getPeriodo(hora) {
-            const [horas, minutos] = hora.split(':').map(Number);
-            const totalMinutos = horas * 60 + minutos;
-
-            if (totalMinutos >= 360 && totalMinutos <= 720) return 'Manhã';
-            if (totalMinutos > 720 && totalMinutos <= 1080) return 'Tarde';
-            if (totalMinutos > 1080 && totalMinutos <= 1440) return 'Noite';
-            return 'Madrugada';
-        };
 
         function renderTable(rsos) {
             if ($.fn.DataTable.isDataTable('#rsoTable')) {
@@ -278,13 +257,8 @@
             }
             const tbody = $('#rsoTableBody');
             tbody.empty();
-            
-            const filtroPeriodo = $('#filtroPeriodo').val();
-            const rsosFiltrados = rsos.filter(rso => {
-                if (filtroPeriodo === '') return true;
-                return getPeriodo(rso.hrInicio) === filtroPeriodo;
-            });
 
+            // Reinicia as somas
             let somaQtdFisc = 0;
             let somaQtdAut = 0;
             let somaQtdBO = 0;
@@ -292,9 +266,9 @@
             let somaQtdARD = 0;
             let somaQtdImg = 0;
             let somaQtdTestes = 0;
-            const contagemVtrs = {};
+            const contagemVtrs = {}; // Objeto para contar as viaturas
 
-            rsosFiltrados.forEach(rso => {
+            rsos.forEach(rso => {
                 let dataFormatada = '';
                 if (rso.data) {
                     const partes = rso.data.split('-');
@@ -305,6 +279,7 @@
                     }
                 }
                 
+                // Acumula os valores para o cálculo
                 somaQtdFisc += parseInt(rso.qtdFisc || 0);
                 somaQtdAut += parseInt(rso.qtdAut || 0);
                 somaQtdBO += parseInt(rso.qtBO || 0);
@@ -313,6 +288,7 @@
                 somaQtdImg += parseInt(rso.qtdImg || 0);
                 somaQtdTestes += parseInt(rso.qtdTestes || 0);
                 
+                // Contagem das viaturas
                 const vtr = rso.vtr || 'Não Informado';
                 contagemVtrs[vtr] = (contagemVtrs[vtr] || 0) + 1;
 
@@ -320,6 +296,7 @@
                     <tr>
                         <td>${rso.numRSO || ''}</td>
                         <td>${dataFormatada || ''}</td>
+                        <td>${rso.hrInicio || ''}</td>
                         <td>${rso.numPPRi || ''}</td>
                         <td>${rso.vtr || ''}</td>
                         <td>${rso.cgp || ''}</td>
@@ -339,6 +316,7 @@
                 `);
             });
 
+            // Exibe os totais calculados
             $('#somaQtdFisc').text(somaQtdFisc);
             $('#somaQtdAut').text(somaQtdAut);
             $('#somaQtdBO').text(somaQtdBO);
@@ -347,11 +325,13 @@
             $('#somaQtdImg').text(somaQtdImg);
             $('#somaQtdTestes').text(somaQtdTestes);
 
+            // --- Nova Lógica para as 6 Viaturas mais Usadas ---
             const vtrsOrdenadas = Object.entries(contagemVtrs).sort((a, b) => b[1] - a[1]);
             const topVtrs = vtrsOrdenadas.slice(0, 6);
             const cores = ['bg-primary', 'bg-success', 'bg-info', 'bg-warning', 'bg-danger', 'bg-secondary'];
             let htmlVtrs = '';
             
+            // Se não houver viaturas, exibe uma mensagem
             if (topVtrs.length === 0) {
                 htmlVtrs = '<div class="col-12 text-center text-muted">Nenhuma VTR encontrada para os filtros.</div>';
             } else {
@@ -372,9 +352,11 @@
 
             $('#resumoVtrs').html(htmlVtrs);
 
+            // Inicializa a DataTable
             dataTable = $('#rsoTable').DataTable({
                 language: {
-                    url: "pt-BR.json"
+                    // url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+                    url: "pt-BR.json" //caminho local
                 },
                 destroy: true,
                 dom: 'Bfrtip',
@@ -398,23 +380,16 @@
             });
         }
 
-        function fetchDataAndRender(url) {
-            $('#loadingProgressBar').show();
-            $.get(url, function(data) {
-                renderTable(data);
-            }).always(function() {
-                $('#loadingProgressBar').hide();
-            });
-        }
 
-
+        // Event listener para o botão de filtrar
         $('#btnFiltrar').on('click', function() {
             const filtroBop = $('#filtroBop').val();
             const filtroCgp = $('#filtroCgp').val();
+            const filtroHoraInicio = $('#filtroHoraInicio').val();
             const filtroServico = $('#filtroServico').val();
             const filtroMes = $('#filtroMes').val();
-            const filtroPeriodo = $('#filtroPeriodo').val();
-            
+
+            // Cria um objeto de parâmetros de consulta
             const params = {};
             if (filtroBop !== '') {
                 params.bop = filtroBop;
@@ -425,33 +400,22 @@
             if (filtroCgp !== '') {
                 params.cgp = filtroCgp;
             }
+            if (filtroHoraInicio !== '') {
+                params.hrInicio = filtroHoraInicio;
+            }
             if (filtroServico !== '') {
                 params.tpSvc = filtroServico;
             }
-            if (filtroPeriodo !== '') {
-                params.periodo = filtroPeriodo;
-            }
-
+            
+            // Converte o objeto de parâmetros para uma string de URL (Ex: "bop=270%2F5&cgp=Fulano")
             const queryString = $.param(params);
             const url = `${API_URL}?${queryString}`;
-            fetchDataAndRender(url);
-        });
 
-        $('#btnReset').on('click', function() {
-            $('#filtroBop').val('');
-            $('#filtroMes').val('');
-            $('#filtroCgp').val('');
-            $('#filtroServico').val('');
-            $('#filtroPeriodo').val('');
-            
-            const allRecordsUrl = API_URL.replace('/buscar', '');
-            fetchDataAndRender(allRecordsUrl);
-        });
+            // AQUI ESTÁ O CONSOLE.LOG PARA VOCÊ VER A URL GERADA
+            console.log('URL da requisição:', url);
 
-        // Carrega os dados iniciais ao carregar a página
-        $(document).ready(function() {
-            const allRecordsUrl = API_URL.replace('/buscar', '');
-            fetchDataAndRender(allRecordsUrl);
+            // Faz a requisição com a nova URL
+            $.get(url, renderTable);
         });
     </script>
 </body>

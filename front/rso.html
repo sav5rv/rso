@@ -125,7 +125,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editarModalLabel">Editar Registro</h5>
+                    <h5 class="modal-title" id="editarModalLabel">Editar Registro: <span id="rsoNumModal"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -137,16 +137,16 @@
                         <div class="mb-3"><label for="editCgp" class="form-label">CGP</label><input type="text" class="form-control" id="editCgp"></div>
                         <div class="mb-3">
                             <label for="editVtr" class="form-label">VTR</label>
-                            <input type="text" class="form-control" id="editVtr" placeholder="B-1234">
-                            <small class="form-text text-muted">Formato: B-1234</small>
+                            <input type="text" class="form-control" id="editVtr" placeholder="B-01234">
+                            <small class="form-text text-muted">Formato: B-01234</small>
                         </div>
                         <div class="mb-3">
                             <label for="editBop" class="form-label">BOP</label>
                             <select class="form-control" id="editBop">
                                 <option value="">Selecione</option>
-                                <option value="270/5">127/2</option>
-                                <option value="270/5">258/1</option>
-                                <option value="270/5">258/2</option>
+                                <option value="127/2">127/2</option>
+                                <option value="258/1">258/1</option>
+                                <option value="258/2">258/2</option>
                                 <option value="270/5">270/5</option>
                                 <option value="270/6">270/6</option>
                             </select>
@@ -423,7 +423,7 @@
                 });
             });
 
-            $('#addVtr, #editVtr').mask('A-0000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
+            $('#addVtr, #editVtr').mask('A-00000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
             $('#addHrInicio, #editHrInicio').mask('00:00');
             $('#addVtr, #editVtr').on('input', function() {
                 let val = $(this).val();

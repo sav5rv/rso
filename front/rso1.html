@@ -69,7 +69,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="adicionarModalLabel">Registrar R.S.O.</h5>
+                    <h5 class="modal-title" id="adicionarModalLabel">Registrar RSO: <span id="rsoNumModal"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -80,15 +80,15 @@
                         <div class="mb-3"><label for="addCgp" class="form-label">CGP</label><input type="text" class="form-control" id="addCgp"></div>
                         <div class="mb-3">
                             <label for="addVtr" class="form-label">Viatura</label>
-                            <input type="text" class="form-control" id="addVtr" placeholder="B-1234">
+                            <input type="text" class="form-control" id="addVtr" placeholder="B-01234">
                             </div>
                         <div class="mb-3">
                             <label for="addBop" class="form-label">Base Operacional</label>
                             <select class="form-control" id="addBop">
                                 <option value="">Selecione</option>
-                                <option value="270/5">127/2</option>
-                                <option value="270/5">258/1</option>
-                                <option value="270/5">258/2</option>
+                                <option value="127/2">127/2</option>
+                                <option value="258/1">258/1</option>
+                                <option value="258/2">258/2</option>
                                 <option value="270/5">270/5</option>
                                 <option value="270/6">270/6</option>
                             </select>
@@ -141,7 +141,8 @@
                     rsos.sort((a, b) => b.numRSO - a.numRSO);
                     const lastRSO = rsos[0];
                     const createdAt = new Date(lastRSO.createdAt).toLocaleString('pt-BR');
-                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${createdAt} para a Vtr ${lastRSO.vtr}.`);
+                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${createdAt} para a Vtr ${lastRSO.vtr} na BOp ${lastRSO.bop}.`);
+                    $('#rsoNumModal').text(lastRSO.numRSO + 1); // Atualiza o número do RSO no cabeçalho do modal
                 } else {
                     lastRsoInfo.html('Nenhum registro encontrado.');
                 }

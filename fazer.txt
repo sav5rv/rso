@@ -11,5 +11,3 @@ GEMINI
 erro ao realizar a consulta pelo campo data
 
 
-um rso com lista completa
-um rso so para adicionar
