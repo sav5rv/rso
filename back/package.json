@@ -4,7 +4,8 @@
   "description": "1. Navegue até o diretório onde estão as pastas \"front\" e \"back\". 2. Crie a pasta \"back\" se ela ainda não existir.",
   "main": "src/app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node src/app.js"
   },
   "keywords": [],
   "author": "",

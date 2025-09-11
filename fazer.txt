@@ -11,3 +11,4 @@ GEMINI
 erro ao realizar a consulta pelo campo data
 
 
+configurar o acesso via express - gemini
