@@ -125,7 +125,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editarModalLabel">Editar Registro: <span id="rsoNumModal"></span></h5>
+                    <h5 class="modal-title" id="editarModalLabel">Editar Registro: <span id="rsoNumModalEdit"></span></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -170,13 +170,6 @@
                         <div class="mb-3"><label for="editAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="editAux1"></div>
                         <div class="mb-3"><label for="editAux2" class="form-label">Aux2</label><input type="text" class="form-control" id="editAux2"></div>
                         <div class="mb-3"><label for="editAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="editAux3"></div>
-                        <div class="mb-3"><label for="editQtdFisc" class="form-label">Qtd Fisc</label><input type="number" class="form-control" id="editQtdFisc"></div>
-                        <div class="mb-3"><label for="editQtdAut" class="form-label">Qtd Aut</label><input type="number" class="form-control" id="editQtdAut"></div>
-                        <div class="mb-3"><label for="editQtdBO" class="form-label">Qtd BO</label><input type="number" class="form-control" id="editQtdBO"></div>
-                        <div class="mb-3"><label for="editQtdARV" class="form-label">Qtd ARV</label><input type="number" class="form-control" id="editQtdARV"></div>
-                        <div class="mb-3"><label for="editQtdARD" class="form-label">Qtd ARD</label><input type="number" class="form-control" id="editQtdARD"></div>
-                        <div class="mb-3"><label for="editQtdImg" class="form-label">Qtd Img</label><input type="number" class="form-control" id="editQtdImg"></div>
-                        <div class="mb-3"><label for="editQtdTestes" class="form-label">Qtd Testes</label><input type="number" class="form-control" id="editQtdTestes"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -271,7 +264,7 @@
                 const newRow = `
                     <tr>
                         <td>${rso.numRSO || ''}</td>
-                        <td>${dataFormatada}</td>
+                        <td>${dataFormatada || ''}</td>
                         <td>${rso.numPPRi || ''}</td>
                         <td>${rso.vtr || ''}</td>
                         <td>${rso.cgp || ''}</td>
@@ -280,9 +273,7 @@
                             <button class="btn btn-info btn-action btn-details" data-id="${rso._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
                                 <i class="bi bi-eye"></i>
                             </button>
-                            <button class="btn btn-danger btn-action btn-delete" data-id="${rso._id}">
-                                <i class="bi bi-trash"></i>
-                            </button>
+
                         </td>
                     </tr>
                 `;
@@ -312,14 +303,8 @@
                 aux1: $('#addAux1').val(),
                 aux2: $('#addAux2').val(),
                 aux3: $('#addAux3').val(),
-                hrInicio: $('#addHrInicio').val(),
-                qtdFisc: $('#addQtdFisc').val(),
-                qtdAut: $('#addQtdAut').val(),
-                qtdBO: $('#addQtdBO').val(),
-                qtdARV: $('#addQtdARV').val(),
-                qtdARD: $('#addQtdARD').val(),
-                qtdImg: $('#addQtdImg').val(),
-                qtdTestes: $('#addQtdTestes').val()
+                hrInicio: $('#addHrInicio').val()
+
             };
         }
 
@@ -359,14 +344,8 @@
                     tpSvc: $('#editTpSvc').val(),
                     aux1: $('#editAux1').val(),
                     aux2: $('#editAux2').val(),
-                    aux3: $('#editAux3').val(),
-                    qtdFisc: $('#editQtdFisc').val(),
-                    qtdAut: $('#editQtdAut').val(),
-                    qtdBO: $('#editQtdBO').val(),
-                    qtdARV: $('#editQtdARV').val(),
-                    qtdARD: $('#editQtdARD').val(),
-                    qtdImg: $('#editQtdImg').val(),
-                    qtdTestes: $('#editQtdTestes').val()
+                    aux3: $('#editAux3').val()
+
                 };
                 $.ajax({
                     url: `${API_URL}/${id}`,
@@ -407,13 +386,7 @@
                         'Aux-1': rso.aux1,
                         'Aux-2': rso.aux2,
                         'Aux-3': rso.aux3,
-                        'Qtd Fisc': rso.qtdFisc,
-                        'Qtd Aut': rso.qtdAut,
-                        'Qtd BO': rso.qtdBO,
-                        'Qtd ARV': rso.qtdARV,
-                        'Qtd ARD': rso.qtdARD,
-                        'Qtd Img': rso.qtdImg,
-                        'Qtd Testes': rso.qtdTestes,
+
                     }));
 
                     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
@@ -435,8 +408,9 @@
             $(document).on('click', '#btnEditar', function() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(rso) {
+                    $('#rsoNumModalEdit').text(rso.numRSO);
+
                     $('#editId').val(rso._id);
-                    $('#editNumRSO').val(rso.numRSO);
                     $('#editData').val(rso.data);
                     $('#editHrInicio').val(rso.hrInicio);            
                     $('#editNumPPRi').val(rso.numPPRi);
@@ -447,13 +421,7 @@
                     $('#editAux1').val(rso.aux1);
                     $('#editAux2').val(rso.aux2);
                     $('#editAux3').val(rso.aux3);
-                    $('#editQtdFisc').val(rso.qtdFisc);
-                    $('#editQtdAut').val(rso.qtdAut);
-                    $('#editQtdBO').val(rso.qtdBO);
-                    $('#editQtdARV').val(rso.qtdARV);
-                    $('#editQtdARD').val(rso.qtdARD);
-                    $('#editQtdImg').val(rso.qtdImg);
-                    $('#editQtdTestes').val(rso.qtdTestes);
+
                     $('#editarModal').modal('show');
                 });
             });
@@ -480,9 +448,9 @@
                         <div class="mb-2"><strong style="color:#0d6efd;">Aux-3:</strong> ${rso.aux3}</div>
                         <hr>
                     `;
-                    const camposSecundarios = ['qtdFisc', 'qtdAut', 'qtdBO', 'qtdARV', 'qtdARD', 'qtdImg', 'qtdTestes', 'createdAt', 'updatedAt'];
+                    const camposSecundarios = ['createdAt', 'updatedAt'];
                     const nomesCampos = {
-                        qtdFisc: 'Quantidade de Fiscalizados', qtdAut: 'Quantidade de Autuações', qtdBO: 'Quantidade de BO', qtdARV: 'Quantidade de ARV', qtdARD: 'Quantidade de ARD', qtdImg: 'Quantidade de Imagens', qtdTestes: 'Quantidade de Testes', createdAt: 'Data/Hora de Inclusão', updatedAt: 'Data/Hora de Alteração'
+                        createdAt: 'Data/Hora de Inclusão', updatedAt: 'Data/Hora de Alteração'
                     };
                     camposSecundarios.forEach(campo => {
                         let valor = rso[campo] || '';

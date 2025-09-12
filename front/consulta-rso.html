@@ -156,6 +156,7 @@
                             <tr>
                                 <th>RSO Num</th>
                                 <th>Data</th>
+                                <th>Hora</th>
                                 <th>PPRi</th>
                                 <th>Viatura</th>
                                 <th>CGP</th>
@@ -164,13 +165,13 @@
                                 <th>Auxiliar 1</th>
                                 <th>Auxiliar 2</th>
                                 <th>Auxiliar 3</th>
-                                <th>Qtd Fisc</th>
-                                <th>Qtd Aut</th>
-                                <th>Qtd BO</th>
-                                <th>Qtd ARV</th>
-                                <th>Qtd ARD</th>
-                                <th>Qtd Img</th>
-                                <th>Qtd Testes</th>
+                                <!-- <th>Qtd Fisc</th> -->
+                                <!-- <th>Qtd Aut</th> -->
+                                <!-- <th>Qtd BO</th> -->
+                                <!-- <th>Qtd ARV</th> -->
+                                <!-- <th>Qtd ARD</th> -->
+                                <!-- <th>Qtd Img</th> -->
+                                <!-- <th>Qtd Testes</th> -->
                             </tr>
                         </thead>
                         <tbody id="rsoTableBody">
@@ -320,6 +321,7 @@
                     <tr>
                         <td>${rso.numRSO || ''}</td>
                         <td>${dataFormatada || ''}</td>
+                        <td>${rso.hrInicio || ''}</td>
                         <td>${rso.numPPRi || ''}</td>
                         <td>${rso.vtr || ''}</td>
                         <td>${rso.cgp || ''}</td>
@@ -328,13 +330,7 @@
                         <td>${rso.aux1 || ''}</td>
                         <td>${rso.aux2 || ''}</td>
                         <td>${rso.aux3 || ''}</td>
-                        <td>${rso.qtdFisc || ''}</td>
-                        <td>${rso.qtdAut || ''}</td>
-                        <td>${rso.qtdBO || ''}</td>
-                        <td>${rso.qtdARV || ''}</td>
-                        <td>${rso.qtdARD || ''}</td>
-                        <td>${rso.qtdImg || ''}</td>
-                        <td>${rso.qtdTestes || ''}</td>
+
                     </tr>
                 `);
             });

@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema de Cadastro de Usuários</title>
+    <title>Numerador</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <style>
+            /* Estilos globais */
         * {
             margin: 0;
             padding: 0;
@@ -16,11 +17,11 @@
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background-color: #f8f9fa;
-            padding: 20px;
+        /* Remova o padding aqui, ele é desnecessário com o .container */
+        font-family: 'Arial', sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background-color: #f8f9fa;
         }
 
         .container {
@@ -40,11 +41,13 @@
         }
 
         .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+        /* Remova a largura de 100%, pois o .container já limita a largura */
         }
+
 
         .nav-brand h2 {
             color: #007bff;
@@ -82,12 +85,14 @@
         }
 
         /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, #007bff, #0056b3);
-            color: white;
-            padding: 120px 0 80px;
-            text-align: center;
-        }
+    .hero {
+        background: linear-gradient(135deg, #007bff, #0056b3);
+        color: white;
+        padding: 120px 0 80px;
+        text-align: center;
+        /* Adicione margem para o conteúdo não ficar atrás do header fixo */
+        margin-top: 70px;
+    }
 
         .hero-content h1 {
             font-size: 3rem;
@@ -260,48 +265,44 @@
 </head>
 <body>
     <header class="header">
-        <nav class="navbar">
-            <div class="nav-brand">
-                <h2>MeuSite</h2>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#sobre">Sobre</a></li>
-                <li><a href="#servicos">Serviços</a></li>
-                <li><a href="#contato">Contato</a></li>
-                <li><a href="rso1.html">RSO</a></li>
-                <li><a href="cadastro2.html">Efetivo</a></li>
-                <li><a href="#">Outros</a></li>
-            </ul>
-            <div class="hamburger">
-                <span></span>
-                <span></span>
-                <span></span>
-            </div>
-        </nav>
+    <nav class="navbar container">
+        <div class="nav-brand">
+            <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" fill="currentColor" class="bi bi-cone-striped" viewBox="0 0 16 16">
+                <path d="m9.97 4.88.953 3.811C10.159 8.878 9.14 9 8 9s-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12m-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4s1.2-.036 1.725-.098m4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257z"/>
+            </svg>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#home">Home</a></li>
+            <li><a href="rso1.html">RSO</a></li>
+        </ul>
+        <div class="hamburger">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </nav>
     </header>
 
     <main>
         <section id="home" class="hero">
             <div class="hero-content">
-                <h1>Bem-vindo ao Nosso Site</h1>
-                <p>cia</p>
-                <button class="cta-button">Login</button>
+                <h1>2ª Companhia - Itapetininga</h1>
             </div>
         </section>
 
         <section id="sobre" class="about">
             <div class="container">
-                <h2>Sobre Nós</h2>
+                <!-- <h2>Sobre Nós</h2>
                 <div class="about-content">
                     <div class="about-text">
-                        <p>Somos uma empresa dedicada a criar experiências digitais excepcionais.</p>
+                        <p>CPRv 5º BPRv 2ª Cia</p>
+                        <p></p>
                     </div>
-                </div>
+                </div> -->
             </div>
         </section>
 
-        <section id="servicos" class="services">
+        <!-- <section id="servicos" class="services">
             <div class="container">
                 <h2>Nossos Serviços</h2>
                 <div class="services-grid">
@@ -319,9 +320,9 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> -->
 
-        <section id="contato" class="contact">
+        <!-- <section id="contato" class="contact">
             <div class="container">
                 <h2>Entre em Contato</h2>
                 <form class="contact-form">
@@ -331,72 +332,11 @@
                     <button type="submit">Enviar Mensagem</button>
                 </form>
             </div>
-        </section>
-            <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-8 col-lg-6">
-                        <div class="card">
-                            <div class="card-header text-center py-3">
-                                <h2><i class="bi bi-person-plus-fill me-2"></i>Cadastro de Usuário</h2>
-                            </div>
-                            <div class="card-body p-4">
-                                <form id="userForm">
-                                    <div class="mb-3">
-                                        <label for="nome" class="form-label required-field">Nome Completo</label>
-                                        <input type="text" class="form-control" id="nome" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="email" class="form-label required-field">E-mail</label>
-                                        <input type="email" class="form-control" id="email" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="celular" class="form-label required-field">Celular</label>
-                                        <input type="text" class="form-control" id="celular" placeholder="(XX) XXXXX-XXXX" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="dataNascimento" class="form-label required-field">Data de Nascimento</label>
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="dataNascimento" placeholder="DD-MM-YYYY" required>
-                                            <span class="input-group-text" id="calendarioBtn"><i class="bi bi-calendar"></i></span>
-                                        </div>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <label for="senha" class="form-label required-field">Senha</label>
-                                        <div class="input-group">
-                                            <input type="password" class="form-control" id="senha" required>
-                                            <span class="input-group-text password-toggle" id="togglePassword">
-                                                <i class="bi bi-eye"></i>
-                                            </span>
-                                        </div>
-                                        <div class="form-text">Mínimo 8 caracteres, incluindo letras, números e caracteres especiais</div>
-                                    </div>
-
-                                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                                        <button type="button" class="btn btn-secondary me-md-2" id="cancelarBtn">
-                                            <i class="bi bi-x-circle"></i> Cancelar
-                                        </button>
-                                        <button type="button" class="btn btn-info me-md-2" id="localizarBtn" data-bs-toggle="modal" data-bs-target="#localizarModal">
-                                            <i class="bi bi-search"></i> Localizar
-                                        </button>
-                                        <button type="submit" class="btn btn-gradient" id="cadastrarBtn">
-                                            <i class="bi bi-person-plus"></i> Cadastrar
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </section> -->
     </main>
 
     <footer class="footer">
-        <p>&copy; 2024 MeuSite. Todos os direitos reservados.</p>
+        <p>&copy; 2025 - 2Cia.</p>
     </footer>
 
 
