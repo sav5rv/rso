@@ -72,19 +72,19 @@
                 </div>
                 <div class="modal-body">
                     <form id="addForm">
-                        <div class="mb-3"><label for="addEventoDER" class="form-label">Num evento DER</label><input type="text" class="form-control" id="addEventoDER" required></div>
+                        <div class="mb-3"><label for="addEventoDER" class="form-label">Num evento DER</label><input type="number" class="form-control" id="addEventoDER" required></div>
                         <div class="mb-3"><label for="addAtendDER" class="form-label">Nome atendente DER</label><input type="text" class="form-control" id="addAtendDER"></div>                        
-                        <div class="mb-3"><label for="addNumRV" class="form-label">Número do RV</label><input type="text" class="form-control" id="addNumRV"></div>
+                        <div class="mb-3"><label for="addNumRV" class="form-label">Número do RV</label><input type="number" class="form-control" id="addNumRV"></div>
                         <div class="mb-3"><label for="addNumBO" class="form-label">Número do BO</label><input type="text" class="form-control" id="addNumBO"></div>            
                         <div class="mb-3"><label for="addSituacao" class="form-label">Situação do veículo</label><input type="text" class="form-control" id="addSituacao"></div>
                         <div class="mb-3"><label for="addMarca" class="form-label">Marca do veículo</label><input type="text" class="form-control" id="addMarca"></div>
                         <div class="mb-3"><label for="addModelo" class="form-label">Modelo do veículo</label><input type="text" class="form-control" id="addModelo"></div>
                         <div class="mb-3"><label for="addPlaca" class="form-label">Placa do veículo</label><input type="text" class="form-control" id="addPlaca"></div>
-                        <div class="mb-3"><label for="addPatioDt" class="form-label">Data movimentação</label><input type="text" class="form-control" id="addPatioDt"></div>
+                        <div class="mb-3"><label for="addPatioDt" class="form-label">Data movimentação</label><input type="date" class="form-control" id="addPatioDt"></div>
                         <div class="mb-3"><label for="addPatioLoc" class="form-label">Localização movimentação</label><input type="text" class="form-control" id="addPatioLoc"></div>
                         <div class="mb-3"><label for="addGuinchoPlaca" class="form-label">Placa do guincho</label><input type="text" class="form-control" id="addGuinchoPlaca"></div>
                         <div class="mb-3"><label for="addGuinchoNome" class="form-label">Nome do guincheiro</label><input type="text" class="form-control" id="addGuinchoNome"></div>
-                        <div class="mb-3"><label for="addNumMsg" class="form-label">Núm Msg ao P3</label><input type="text" class="form-control" id="addNumMsg"></div>
+                        <div class="mb-3"><label for="addNumMsg" class="form-label">Núm Msg ao P3</label><input type="number" class="form-control" id="addNumMsg"></div>
                         <div class="mb-3"><label for="addObs" class="form-label">Observações</label><input type="text" class="form-control" id="addObs"></div>
                         </form>
                 </div>
@@ -104,26 +104,6 @@
 
     <script>
         const API_URL = 'http://localhost:3001/api/mov';
-
-        // function fetchLastRSO() {
-        //     const lastRsoInfo = $('#lastRsoInfo');
-        //     lastRsoInfo.show();
-            
-        //     $.get(API_URL, function(movs) {
-        //         if (movs.length > 0) {
-        //             // Ordena os dados por numRSO em ordem decrescente
-        //             movs.sort((a, b) => b.numReg - a.numReg);
-        //             const lastMov = movs[0];
-        //             const createdAt = new Date(lastMov.createdAt).toLocaleString('pt-BR');
-        //             lastMovInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${createdAt} para a Vtr ${lastRSO.vtr} na BOp ${lastRSO.bop}.`);
-        //             $('#movNumModal').text(lastMov.numReg + 1); // Atualiza o número do RSO no cabeçalho do modal
-        //         } else {
-        //             lastRsoInfo.html('Nenhum registro encontrado.');
-        //         }
-        //     }).fail(function() {
-        //         lastRsoInfo.html('Erro ao carregar o último RSO.');
-        //     });
-        // }
 
         function getFormData() {
             return {
@@ -146,7 +126,6 @@
 
         $(document).ready(function() {
             $("#navbarContainer").load("mov_navbar.html");
-            // fetchLastRSO(); // Busca e exibe o último RSO ao carregar a página
 
             // Lógica para salvar novo registro
             $('#salvarAdicionar').click(function() {
@@ -164,7 +143,6 @@
                         } else {
                             alert('Registro salvo com sucesso!');
                         }
-                        // fetchLastRSO(); // Atualiza a mensagem do último RSO
                     },
                     error: function(xhr, status, error) {
                         console.error('Erro ao salvar registro:', error);
@@ -200,13 +178,16 @@
                 });
             });
 
-            // Lógicas de máscara e maiúsculas
-            $('#addVtr').mask('A-00000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
-            $('#addHrInicio').mask('00:00');
-            $('#addVtr').on('input', function() {
-                let val = $(this).val();
-                if (val.length > 0) {
-                    $(this).val(val.charAt(0).toUpperCase() + val.slice(1));
+            // Lógica para a máscara de placas (AAA-0L00)
+            $('#addPlaca, #addGuinchoPlaca').mask('AAA-0L00', {
+                translation: {
+                    'A': { pattern: /[A-Za-z]/ },
+                    'L': { pattern: /[A-Za-z0-9]/ },
+                    '0': { pattern: /[0-9]/ }
+                },
+                // Este `onKeyPress` garante que as letras sejam sempre maiúsculas
+                onKeyPress: function(val, e, field, options) {
+                    field.val(val.toUpperCase());
                 }
             });
         });

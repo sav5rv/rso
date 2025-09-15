@@ -60,27 +60,18 @@ router.get('/buscar', async (req, res) => {
         const filtro = {};
 
         // Adiciona os campos de filtro se eles estiverem presentes na URL
-        if (req.query.bop) {
-            filtro.bop = req.query.bop;
+        if (req.query.placa) {
+            filtro.placa = req.query.placa;
         }
         if (req.query.mes) {
             // Usa $expr para extrair o mês da data e comparar
             // O campo 'data' é uma string no formato 'YYYY-MM-DD'
             // Extrai os caracteres 5 e 6 (o mês) e compara com o filtro
             filtro.$expr = {
-                $eq: [{ $substr: ["$data", 5, 2] }, req.query.mes]
+                $eq: [{ $substr: ["$patioDt", 5, 2] }, req.query.mes]
             };
         }        
-        if (req.query.cgp) {
-            // Usa uma expressão regular para uma busca "parcial"
-            filtro.cgp = new RegExp(req.query.cgp, 'i');
-        }
-        if (req.query.hrInicio) {
-            filtro.hrInicio = req.query.hrInicio;
-        }
-        if (req.query.tpSvc) {
-            filtro.tpSvc = req.query.tpSvc;
-        }
+
 
         // AQUI ESTÁ O CONSOLE.LOG PARA VOCÊ VER A CONSULTA QUE O MONGOOSE VAI EXECUTAR
         console.log('Objeto de filtro para o MongoDB:', filtro);
@@ -101,19 +92,5 @@ router.get('/:id', async (req, res) => {
     if (!mov) return res.status(404).json({ error: 'Não encontrado' });
     res.json(mov);
 });
-
-
-
-// // buscar registros por BOP
-// router.get('/bop/:bop', async (req, res) => {
-//     try {
-//         const bop = req.params.bop;
-//         // Usa o método find do Mongoose para filtrar por BOP
-//         const rsos = await RSO.find({ bop: bop });
-//         res.json(rsos);
-//     } catch (err) {
-//         res.status(500).json({ message: err.message });
-//     }
-// });
 
 module.exports = router;

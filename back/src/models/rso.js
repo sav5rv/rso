@@ -18,7 +18,9 @@ const rsoSchema = new mongoose.Schema({
   qtdARV: String,
   qtdARD: String,
   qtdImg: String,
-  qtdTestes: String
+  qtdTestes: String,
+  enc: String,
+  obs: String
 }, { timestamps: true });
 
 module.exports = mongoose.model('RSO', rsoSchema);

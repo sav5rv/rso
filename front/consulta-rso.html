@@ -162,16 +162,11 @@
                                 <th>CGP</th>
                                 <th>BOP</th>
                                 <th>Serviço</th>
+                                <th>Encarregado</th>
                                 <th>Auxiliar 1</th>
                                 <th>Auxiliar 2</th>
                                 <th>Auxiliar 3</th>
-                                <!-- <th>Qtd Fisc</th> -->
-                                <!-- <th>Qtd Aut</th> -->
-                                <!-- <th>Qtd BO</th> -->
-                                <!-- <th>Qtd ARV</th> -->
-                                <!-- <th>Qtd ARD</th> -->
-                                <!-- <th>Qtd Img</th> -->
-                                <!-- <th>Qtd Testes</th> -->
+                                <th>Observações</th>
                             </tr>
                         </thead>
                         <tbody id="rsoTableBody">
@@ -327,9 +322,11 @@
                         <td>${rso.cgp || ''}</td>
                         <td>${rso.bop || ''}</td>
                         <td>${rso.tpSvc || ''}</td>
+                        <td>${rso.enc || ''}</td>
                         <td>${rso.aux1 || ''}</td>
                         <td>${rso.aux2 || ''}</td>
                         <td>${rso.aux3 || ''}</td>
+                        <td>${rso.obs || ''}</td>
 
                     </tr>
                 `);

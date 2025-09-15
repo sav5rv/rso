@@ -1,7 +1,5 @@
 
 
-adicionar campos OBS
-
 
     qd fui importar o xls para json
 campo hora, não formatei como hora, digitei 00:00
@@ -10,5 +8,4 @@ campo data, formatei como data, 22/02/2025
 GEMINI
 erro ao realizar a consulta pelo campo data
 
-
-configurar o acesso via express - gemini
+html para alterar numeradores

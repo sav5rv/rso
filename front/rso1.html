@@ -78,10 +78,7 @@
                         <div class="mb-3"><label for="addHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="addHrInicio"></div>                        
                         <div class="mb-3"><label for="addNumPPRi" class="form-label">Número do PPRi</label><input type="number" class="form-control" id="addNumPPRi"></div>
                         <div class="mb-3"><label for="addCgp" class="form-label">CGP</label><input type="text" class="form-control" id="addCgp"></div>
-                        <div class="mb-3">
-                            <label for="addVtr" class="form-label">Viatura</label>
-                            <input type="text" class="form-control" id="addVtr" placeholder="B-01234">
-                            </div>
+                        <div class="mb-3"><label for="addVtr" class="form-label">Viatura</label><input type="text" class="form-control" id="addVtr" placeholder="B-01234"></div>
                         <div class="mb-3">
                             <label for="addBop" class="form-label">Base Operacional</label>
                             <select class="form-control" id="addBop">
@@ -109,9 +106,11 @@
                                 <option value="TOR">TOR</option>
                             </select>
                         </div>                        
+                        <div class="mb-3"><label for="addEnc" class="form-label">Encarregado</label><input type="text" class="form-control" id="addEnc"></div>
                         <div class="mb-3"><label for="addAux1" class="form-label">Auxiliar 1</label><input type="text" class="form-control" id="addAux1"></div>
                         <div class="mb-3"><label for="addAux2" class="form-label">Auxiliar 2</label><input type="text" class="form-control" id="addAux2"></div>
                         <div class="mb-3"><label for="addAux3" class="form-label">Auxiliar 3</label><input type="text" class="form-control" id="addAux3"></div>
+                        <div class="mb-3"><label for="addObs" class="form-label">Observações</label><input type="text" class="form-control" id="addObs"></div>
                         </form>
                 </div>
                 <div class="modal-footer">
@@ -151,6 +150,7 @@
             });
         }
 
+        //coletar todos os dados inseridos nos campos de um formulário HTML e organizá-los em um único objeto JavaScrip
         function getFormData() {
             return {
                 data: $('#addData').val(),
@@ -159,17 +159,12 @@
                 vtr: $('#addVtr').val(),
                 bop: $('#addBop').val(),
                 tpSvc: $('#addTpSvc').val(),
+                enc: $('#addEnc').val(),
                 aux1: $('#addAux1').val(),
                 aux2: $('#addAux2').val(),
                 aux3: $('#addAux3').val(),
                 hrInicio: $('#addHrInicio').val(),
-                qtdFisc: $('#addQtdFisc').val(),
-                qtdAut: $('#addQtdAut').val(),
-                qtdBO: $('#addQtdBO').val(),
-                qtdARV: $('#addQtdARV').val(),
-                qtdARD: $('#addQtdARD').val(),
-                qtdImg: $('#addQtdImg').val(),
-                qtdTestes: $('#addQtdTestes').val()
+                obs: $('#addObs').val()
             };
         }
 
@@ -214,21 +209,17 @@
                         'BOp': rso.bop,
                         'Hora Início': rso.hrInicio,
                         'Serviço': rso.tpSvc,
+                        'Encarregado': rso.enc,
                         'Aux-1': rso.aux1,
                         'Aux-2': rso.aux2,
                         'Aux-3': rso.aux3,
-                        'Qtd Fisc': rso.qtdFisc,
-                        'Qtd Aut': rso.qtdAut,
-                        'Qtd BO': rso.qtdBO,
-                        'Qtd ARV': rso.qtdARV,
-                        'Qtd ARD': rso.qtdARD,
-                        'Qtd Img': rso.qtdImg,
-                        'Qtd Testes': rso.qtdTestes,
+                        'Observações': rso.obs,
+
                     }));
 
                     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
                     const workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, "Registros RSO");
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Relação do numerador de RSO");
                     XLSX.writeFile(workbook, "registros_rso.xlsx");
                 });
             });

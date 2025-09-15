@@ -133,13 +133,9 @@
                         <input type="hidden" id="editId">
                         <div class="mb-3"><label for="editData" class="form-label">Data</label><input type="date" class="form-control" id="editData" required></div>
                         <div class="mb-3"><label for="editHrInicio" class="form-label">Hora Início</label><input type="text" class="form-control" id="editHrInicio"></div>                        
-                        <div class="mb-3"><label for="editNumPPRi" class="form-label">numPPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
+                        <div class="mb-3"><label for="editNumPPRi" class="form-label">Número do PPRi</label><input type="text" class="form-control" id="editNumPPRi"></div>
                         <div class="mb-3"><label for="editCgp" class="form-label">CGP</label><input type="text" class="form-control" id="editCgp"></div>
-                        <div class="mb-3">
-                            <label for="editVtr" class="form-label">VTR</label>
-                            <input type="text" class="form-control" id="editVtr" placeholder="B-01234">
-                            <small class="form-text text-muted">Formato: B-01234</small>
-                        </div>
+                        <div class="mb-3"><label for="editVtr" class="form-label">Viatura</label><input type="text" class="form-control" id="editVtr" placeholder="B-01234"></div>
                         <div class="mb-3">
                             <label for="editBop" class="form-label">BOP</label>
                             <select class="form-control" id="editBop">
@@ -167,9 +163,11 @@
                                 <option value="TOR">TOR</option>
                             </select>
                         </div>
+                        <div class="mb-3"><label for="editEnc" class="form-label">Encarregado</label><input type="text" class="form-control" id="editEnc"></div>
                         <div class="mb-3"><label for="editAux1" class="form-label">Aux1</label><input type="text" class="form-control" id="editAux1"></div>
                         <div class="mb-3"><label for="editAux2" class="form-label">Aux2</label><input type="text" class="form-control" id="editAux2"></div>
                         <div class="mb-3"><label for="editAux3" class="form-label">Aux3</label><input type="text" class="form-control" id="editAux3"></div>
+                        <div class="mb-3"><label for="editObs" class="form-label">Observações</label><input type="text" class="form-control" id="editObs"></div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -295,15 +293,17 @@
         function getFormData() {
             return {
                 data: $('#addData').val(),
+                hrInicio: $('#addHrInicio').val(),               
                 numPPRi: $('#addNumPPRi').val(),
                 cgp: $('#addCgp').val(),
                 vtr: $('#addVtr').val(),
                 bop: $('#addBop').val(),
                 tpSvc: $('#addTpSvc').val(),
+                enc: $('#addEnc').val(),
                 aux1: $('#addAux1').val(),
                 aux2: $('#addAux2').val(),
                 aux3: $('#addAux3').val(),
-                hrInicio: $('#addHrInicio').val()
+                obs: $('#addObs').val()
 
             };
         }
@@ -342,9 +342,11 @@
                     vtr: $('#editVtr').val(),
                     bop: $('#editBop').val(),
                     tpSvc: $('#editTpSvc').val(),
+                    enc: $('#editEnc').val(),
                     aux1: $('#editAux1').val(),
                     aux2: $('#editAux2').val(),
-                    aux3: $('#editAux3').val()
+                    aux3: $('#editAux3').val(),
+                    obs: $('#editObs').val()
 
                 };
                 $.ajax({
@@ -377,21 +379,23 @@
                     const dataToExport = rsos.map(rso => ({
                         'Num RSO': rso.numRSO,
                         'Data': rso.data,
+                        'Hora Início': rso.hrInicio,                        
                         'PPRi': rso.numPPRi,
                         'Viatura': rso.vtr,
                         'CGP': rso.cgp,
                         'BOp': rso.bop,
-                        'Hora Início': rso.hrInicio,
                         'Serviço': rso.tpSvc,
+                        'Encarregado': rso.enc,
                         'Aux-1': rso.aux1,
                         'Aux-2': rso.aux2,
                         'Aux-3': rso.aux3,
+                        'Observações': rso.obs
 
                     }));
 
                     const worksheet = XLSX.utils.json_to_sheet(dataToExport);
                     const workbook = XLSX.utils.book_new();
-                    XLSX.utils.book_append_sheet(workbook, worksheet, "Registros RSO");
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Numerador de RSO");
                     XLSX.writeFile(workbook, "registros_rso.xlsx");
                 });
             });
@@ -418,9 +422,11 @@
                     $('#editVtr').val(rso.vtr);
                     $('#editBop').val(rso.bop);
                     $('#editTpSvc').val(rso.tpSvc);
+                    $('#editEnc').val(rso.enc);
                     $('#editAux1').val(rso.aux1);
                     $('#editAux2').val(rso.aux2);
                     $('#editAux3').val(rso.aux3);
+                    $('#editObs').val(rso.obs);
 
                     $('#editarModal').modal('show');
                 });
@@ -443,14 +449,15 @@
                         <div class="mb-2"><strong style="color:#0d6efd;">CGP:</strong> ${rso.cgp}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">BOp:</strong> ${rso.bop}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">Serviço:</strong> ${rso.tpSvc}</div>
+                        <div class="mb-2"><strong style="color:#0d6efd;">Enc:</strong> ${rso.enc}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">Aux-1:</strong> ${rso.aux1}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">Aux-2:</strong> ${rso.aux2}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">Aux-3:</strong> ${rso.aux3}</div>
                         <hr>
                     `;
-                    const camposSecundarios = ['createdAt', 'updatedAt'];
+                    const camposSecundarios = ['obs', 'createdAt', 'updatedAt'];
                     const nomesCampos = {
-                        createdAt: 'Data/Hora de Inclusão', updatedAt: 'Data/Hora de Alteração'
+                        obs: 'Observações', createdAt: 'Data/Hora de Inclusão', updatedAt: 'Data/Hora de Alteração'
                     };
                     camposSecundarios.forEach(campo => {
                         let valor = rso[campo] || '';
