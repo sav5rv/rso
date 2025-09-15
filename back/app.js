@@ -1,15 +1,16 @@
 require('dotenv').config();
 const express = require('express');
-const path = require('path');
 const cors = require('cors');
+const path = require('path');
 const mongoose = require('mongoose');
 
 const rsoRoutes = require('./src/routes/rsoRoutes');
 const movimentRoutes = require('./src/routes/movimentRoutes');
+const numRoutes = require('./src/routes/numRoutes');
 
 const app = express();
-app.use(cors());
 app.use(express.json());
+app.use(cors());
 
 // Middleware para servir arquivos estáticos
 app.use(express.static(path.join(__dirname, '..', 'front')));
@@ -31,6 +32,7 @@ mongoose.connect(MONGO_URI)
 // Rotas
 app.use('/api/rso', rsoRoutes);
 app.use('/api/mov', movimentRoutes);
+app.use('/api/num', numRoutes);
 
 // Rota principal para servir a página index.html
 app.get('/', (req, res) => {
