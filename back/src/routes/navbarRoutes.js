@@ -11,23 +11,55 @@ const path = require('path');
 
 // Rota para Index
 router.get('/', (req, res) => {  
-    res.sendFile(path.join(__dirname, '..', '..', 'front', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'index.html'));
 });
+
+
 
 // Rotas para RSO
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'front', 'index.html'));
+router.get('/rso', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/rso1.html'));
+});
+router.get('/listar', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/rso.html'));
+});
+router.get('/consultar', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/consulta-rso.html'));
+});
+router.get('/resumo1', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/servico-cgp.html'));
+});
+router.get('/resumo2', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/resumo-cgp.html'));
 });
 
+
+
 // Rotas para Movimentação
-router.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', '..', 'front', 'index.html'));
+router.get('/patio', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'patio/moviment1.html'));
 });
+router.get('/movlistar', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'patio/moviment.html'));
+});
+router.get('/movconsultar', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'patio/consulta-moviment.html'));
+});
+
+
+// Rotas para Alterar Numerador
+router.get('/numerador', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'numerador/alterarNum.html'));
+});
+
+
 
 // Rotas para Cadastro
 router.get('/cad', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'front', 'cadastro.html'));
+    res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'pessoas/cadastro.html'));
 });
+
+
 
 // Exporta o objeto router para ser usado em outros arquivos
 module.exports = router;
