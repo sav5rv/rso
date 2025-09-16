@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const mongoose = require('mongoose');
 
+// Importa as rotas do arquivo navbarRoutes.js
+const navbarRoutes = require('./src/routes/navbarRoutes');
 const rsoRoutes = require('./src/routes/rsoRoutes');
 const movRoutes = require('./src/routes/movRoutes');
 const numRoutes = require('./src/routes/numRoutes');
@@ -29,18 +31,19 @@ mongoose.connect(MONGO_URI)
 
 
 
-// Rotas
+// Rotas Usa o objeto de rotas que importamos
+app.use('/', navbarRoutes);
 app.use('/api/rso', rsoRoutes);
 app.use('/api/mov', movRoutes);
 app.use('/api/num', numRoutes);
 
 // Rota principal para servir a página index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'front', 'index.html'));
-});
+// app.get('/', (req, res) => {
+//     res.sendFile(path.join(__dirname, '..', 'front', 'index.html'));
+// });
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando em http://localhost:${PORT}`);
 });
