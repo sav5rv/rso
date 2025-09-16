@@ -5,7 +5,7 @@ const path = require('path');
 const mongoose = require('mongoose');
 
 const rsoRoutes = require('./src/routes/rsoRoutes');
-const movimentRoutes = require('./src/routes/movimentRoutes');
+const movRoutes = require('./src/routes/movRoutes');
 const numRoutes = require('./src/routes/numRoutes');
 
 const app = express();
@@ -31,7 +31,7 @@ mongoose.connect(MONGO_URI)
 
 // Rotas
 app.use('/api/rso', rsoRoutes);
-app.use('/api/mov', movimentRoutes);
+app.use('/api/mov', movRoutes);
 app.use('/api/num', numRoutes);
 
 // Rota principal para servir a página index.html

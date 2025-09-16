@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const MOV = require('../models/moviment');
-const COUNTER = require('../models/movimentCounter');
+const COUNTER = require('../models/movCounter');
 
 
 

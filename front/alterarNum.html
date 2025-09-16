@@ -52,8 +52,8 @@
                     <label for="collectionSelect" class="form-label">Selecione a Tabela:</label>
                     <select class="form-select" id="collectionSelect">
                         <option value="">-- Selecione uma tabela --</option>
-                        <option value="rsoCounter">RSO</option>
-                        <option value="movCounter">Movimentação</option>
+                        <option value="rsocounters">RSO</option>
+                        <option value="movcounters">Movimentação</option>
                         </select>
                 </div>
                 <div class="mb-3">
@@ -78,16 +78,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 
     <script>
-    const API_COUNTER_URL = 'http://localhost:3001/api/counter';
-    const API_COLLECTIONS_URL = 'http://localhost:3001/api/collections';
+    const API_COUNTER_URL = 'http://localhost:3001/api/num';
 
     function updateCounterValue(collectionName) {
         if (!collectionName) {
+            console.log('Nenhuma tabela selecionada.');
             $('#currentCounter').val('');
             return;
         }
 
         $.get(`${API_COUNTER_URL}/${collectionName}`, function(data) {
+
             $('#currentCounter').val(data.seq);
         }).fail(function() {
             $('#currentCounter').val('Erro ao carregar.');
@@ -95,66 +96,58 @@
         });
     }
 
+
     $(document).ready(function() {
-        $("#navbarContainer").load("navbar.html");
+        $("#navbarContainer").load("alterarNum_navbar.html");
         
-        // Passo 1: Buscar a lista de coleções do banco de dados
-        $.get(API_COLLECTIONS_URL, function(collectionNames) {
-            const collectionSelect = $('#collectionSelect');
-            collectionSelect.empty().append('<option value="">-- Selecione uma tabela --</option>'); // Limpa e adiciona a opção padrão
-
-            // Passo 2: Popular o dropdown com os nomes das coleções
-            collectionNames.forEach(name => {
-                // Filtra apenas as coleções de contadores
-                if (name.includes('Counter')) {
-                    collectionSelect.append(`<option value="${name}">${name}</option>`);
-                }
-            });
-
-            // Passo 3: Adicionar os event listeners APÓS a lista ser populada
-            $('#collectionSelect').on('change', function() {
-                const selectedCollection = $(this).val();
-                updateCounterValue(selectedCollection);
-                $('#newCounter').val('');
-                $('#statusMessage').addClass('d-none').text('');
-            });
-
-            $('#btnUpdate').on('click', function() {
-                const selectedCollection = $('#collectionSelect').val();
-                const newSeq = $('#newCounter').val();
-
-                if (!selectedCollection || newSeq === '') {
-                    $('#statusMessage').text('Por favor, selecione uma tabela e digite um novo valor.').removeClass('d-none').addClass('text-danger');
-                    return;
-                }
-
-                $.ajax({
-                    url: `${API_COUNTER_URL}/${selectedCollection}`,
-                    type: 'PUT',
-                    contentType: 'application/json',
-                    data: JSON.stringify({ seq: parseInt(newSeq, 10) }),
-                    success: function(response) {
-                        $('#statusMessage').text(`Numerador de ${selectedCollection} atualizado para ${response.seq}!`).removeClass('d-none').addClass('text-success');
-                        updateCounterValue(selectedCollection);
-                        $('#newCounter').val('');
-                    },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        $('#statusMessage').text(`Erro ao atualizar: ${jqXHR.responseJSON.message || 'Erro desconhecido'}`).removeClass('d-none').addClass('text-danger');
-                    }
-                });
-            });
-
-            $('#btnCancel').on('click', function() {
-                $('#collectionSelect').val('');
-                $('#currentCounter').val('');
-                $('#newCounter').val('');
-                $('#statusMessage').addClass('d-none').text('');
-            });
-        }).fail(function() {
-            // Em caso de erro ao buscar as coleções, exibe uma mensagem
-            $('#statusMessage').text('Erro ao carregar a lista de tabelas. Verifique a API.').removeClass('d-none').addClass('text-danger');
+        // Adicione os event listeners aqui diretamente
+        $('#collectionSelect').on('change', function() {
+            const selectedCollection = $(this).val();
+            console.log('Tabela selecionada:', selectedCollection);
+            updateCounterValue(selectedCollection);
+            $('#newCounter').val('');
+            $('#statusMessage').addClass('d-none').text('');
         });
+
+        $('#btnUpdate').on('click', function() {
+            const selectedCollection = $('#collectionSelect').val();
+            const newSeq = $('#newCounter').val();
+
+            if (!selectedCollection || newSeq === '') {
+                $('#statusMessage').text('Por favor, selecione uma tabela e digite um novo valor.').removeClass('d-none').addClass('text-danger');
+                return;
+            }
+
+            $.ajax({
+                url: `${API_COUNTER_URL}/${selectedCollection}`,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({ seq: parseInt(newSeq, 10) }),
+                success: function(response) {
+                    $('#statusMessage').text(`Numerador de ${selectedCollection} atualizado para ${response.seq}!`).removeClass('d-none').addClass('text-success');
+                    updateCounterValue(selectedCollection);
+                    $('#newCounter').val('');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    $('#statusMessage').text(`Erro ao atualizar: ${jqXHR.responseJSON.message || 'Erro desconhecido'}`).removeClass('d-none').addClass('text-danger');
+                }
+            });
+        });
+
+        $('#btnCancel').on('click', function() {
+            $('#collectionSelect').val('');
+            $('#currentCounter').val('');
+            $('#newCounter').val('');
+            $('#statusMessage').addClass('d-none').text('');
+        });
+
+        // Chama a função para popular o campo do valor atual quando a página carrega, se houver uma opção selecionada
+        const initialCollection = $('#collectionSelect').val();
+        if (initialCollection) {
+            updateCounterValue(initialCollection);
+        }
     });
+
 </script>
 </body>
 </html>
