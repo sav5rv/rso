@@ -121,12 +121,12 @@
                                 <th>RV</th>
                                 <th>BO</th>
                                 <th>Situação</th>
-                                <th>Marca</th>
+
                                 <th>Modelo</th>
                                 <th>Placa</th>
                                 <th>Dt moviment</th>
                                 <th>Cidade Pátio</th>
-                                <th>Placa Guincho</th>
+
                                 <th>Nome Guincheiro</th>
                                 <th>Msg P3</th>
                                 <th>Obs</th>
@@ -187,12 +187,12 @@
                         <td>${mov.numRV || ''}</td>
                         <td>${mov.numBO || ''}</td>
                         <td>${mov.situacao || ''}</td>
-                        <td>${mov.marca || ''}</td>
+
                         <td>${mov.modelo || ''}</td>
                         <td>${mov.placa || ''}</td>
                         <td>${dataFormatada || ''}</td>
                         <td>${mov.patioLoc || ''}</td>
-                        <td>${mov.guinchoPlaca || ''}</td>
+
                         <td>${mov.guinchoNome || ''}</td>
                         <td>${mov.numMsg || ''}</td>
                         <td>${mov.obs || ''}</td>
@@ -201,7 +201,7 @@
             });
 
             // Inicializa o DataTable com os dados populados
-dataTable = $('#movTable').DataTable({
+    dataTable = $('#movTable').DataTable({
     language: {
         url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
     },
@@ -217,47 +217,41 @@ dataTable = $('#movTable').DataTable({
             extend: 'pdfHtml5',
             text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
             className: 'btn btn-danger',
-            orientation: 'landscape', // Paisagem
-            pageSize: 'A4', // Tamanho da página
+            orientation: 'landscape',
+            pageSize: 'A4',
             exportOptions: {
-                columns: ':visible', // Exporta apenas colunas visíveis
-                // Para exportar colunas específicas, use: [0, 1, 2, 3, 4, 5]
+                columns: ':visible'
             },
+            header: true,
+            title: 'Relatório de Movimentação de Veículos - 5º BPRv',
             customize: function (doc) {
-                // Personalizar o documento PDF
+                // Ajustar estilos básicos
+                doc.styles.title = {
+                    color: '#0d6efd',
+                    fontSize: 16,
+                    alignment: 'center'
+                };
+                
+                doc.styles.tableHeader = {
+                    fillColor: '#0d6efd',
+                    color: '#ffffff',
+                    bold: true
+                };
+                
                 doc.defaultStyle.fontSize = 9;
-                doc.styles.tableHeader.fontSize = 10;
-                doc.styles.tableHeader.fillColor = '#0d6efd'; // Azul do Bootstrap
                 
-                // Adicionar cabeçalho personalizado
-                doc.content.splice(0, 0, {
-                    text: 'Relatório de Movimentação de Veículos',
-                    style: 'header',
-                    alignment: 'center',
-                    margin: [0, 0, 0, 20] // [left, top, right, bottom]
-                });
+                // Adicionar rodapé com data (evitando a numeração problemática)
+                var now = new Date();
+                var dateStr = now.toLocaleDateString('pt-BR');
                 
-                // Adicionar rodapé com número de páginas
-                var pageCount = doc.internal.getNumberOfPages();
-                doc['footer'] = function (currentPage, pageCount) {
+                doc.footer = function(currentPage, pageCount) {
                     return {
-                        text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                        text: 'Gerado em: ' + dateStr,
                         alignment: 'center',
                         fontSize: 8,
                         margin: [0, 10, 0, 0]
                     };
                 };
-                
-                // Definir estilos personalizados
-                doc.styles.header = {
-                    fontSize: 16,
-                    bold: true,
-                    color: '#0d6efd',
-                    alignment: 'center'
-                };
-                
-                // Ajustar layouts das tabelas
-                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
             }
         },
         {

@@ -367,7 +367,7 @@
 
             dataTable = $('#rsoTable').DataTable({
                 language: {
-                    url: "pt-BR.json"
+                    url: "cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
                 },
                 destroy: true,
                 dom: 'Bfrtip',
@@ -380,7 +380,43 @@
                     {
                         extend: 'pdfHtml5',
                         text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
-                        className: 'btn btn-danger'
+                        className: 'btn btn-danger',
+                        orientation: 'landscape',
+                        pageSize: 'A4',
+                        exportOptions: {
+                            columns: ':visible'
+                        },
+                        header: true,
+                        title: 'Numerador RSO',
+                        customize: function (doc) {
+                            // Ajustar estilos básicos
+                            doc.styles.title = {
+                                color: '#0d6efd',
+                                fontSize: 16,
+                                alignment: 'center'
+                            };
+                            
+                            doc.styles.tableHeader = {
+                                fillColor: '#0d6efd',
+                                color: '#ffffff',
+                                bold: true
+                            };
+                            
+                            doc.defaultStyle.fontSize = 9;
+                            
+                            // Adicionar rodapé com data (evitando a numeração problemática)
+                            var now = new Date();
+                            var dateStr = now.toLocaleDateString('pt-BR');
+                            
+                            doc.footer = function(currentPage, pageCount) {
+                                return {
+                                    text: 'Gerado em: ' + dateStr,
+                                    alignment: 'center',
+                                    fontSize: 8,
+                                    margin: [0, 10, 0, 0]
+                                };
+                            };
+                        }
                     },
                     {
                         extend: 'print',

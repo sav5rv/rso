@@ -8,4 +8,4 @@ campo data, formatei como data, 22/02/2025
 GEMINI
 erro ao realizar a consulta pelo campo data
 
-html para alterar numeradores
+no consulta-moviment.html retirei marca e placaGuincho do dataTable, mas quero que fique visivel quando for exportado
