@@ -62,6 +62,25 @@
         #rsoTable th, #rsoTable td {
             white-space: nowrap;
         }
+        .outlook-modal .form-label {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+        .outlook-modal .form-control, .outlook-modal .form-select {
+            margin-bottom: 0.75rem;
+        }
+        .preview-container {
+            border: 1px solid #dee2e6;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-top: 1rem;
+            background-color: #f8f9fa;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .modal-lg-custom {
+            max-width: 900px;
+        }
     </style>
 </head>
 <body>
@@ -130,16 +149,101 @@
                                 <th>Nome Guincheiro</th>
                                 <th>Msg P3</th>
                                 <th>Obs</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody id="movTableBody">
-                            </tbody>
+                            <!-- Dados serão preenchidos via JavaScript -->
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Modal para Gerar Mensagem Outlook -->
+    <div class="modal fade" id="outlookModal" tabindex="-1" aria-labelledby="outlookModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-lg-custom">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title" id="outlookModalLabel"><i class="bi bi-envelope-plus me-2"></i>Gerar Mensagem para Outlook</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body outlook-modal">
+                    <form id="outlookForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="destinatario" class="form-label">Destinatário:</label>
+                                    <input type="email" class="form-control" id="destinatario" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="assunto" class="form-label">Assunto:</label>
+                                    <input type="text" class="form-control" id="assunto" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="placa" class="form-label">Placa do Veículo:</label>
+                                    <input type="text" class="form-control" id="placa">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="marca" class="form-label">Marca:</label>
+                                    <input type="text" class="form-control" id="marca">
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="modelo" class="form-label">Modelo:</label>
+                                    <input type="text" class="form-control" id="modelo">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="numReg" class="form-label">Número do Registro:</label>
+                                    <input type="text" class="form-control" id="numReg">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="dataMovimentacao" class="form-label">Data de Movimentação:</label>
+                                    <input type="text" class="form-control" id="dataMovimentacao">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="mensagem" class="form-label">Mensagem:</label>
+                            <textarea class="form-control" id="mensagem" rows="5" required></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Pré-visualização da Mensagem:</label>
+                            <div class="preview-container" id="previewMensagem">
+                                <!-- A pré-visualização será gerada aqui -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" id="btnGerarOutlook">
+                        <i class="bi bi-envelope-plus me-1"></i> Gerar Mensagem no Outlook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -156,6 +260,7 @@
     <script>
         const API_URL = 'http://localhost:3001/api/mov/buscar';
         let dataTable;
+        let currentMovimentacao = {};
 
         $(function(){
             $("#navbarContainer").load("mov_navbar.html");
@@ -196,6 +301,11 @@
                         <td>${mov.guinchoNome || ''}</td>
                         <td>${mov.numMsg || ''}</td>
                         <td>${mov.obs || ''}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outlook btn-action" title="Gerar mensagem Outlook" onclick="abrirModalOutlook(${JSON.stringify(mov).replace(/"/g, '&quot;')})">
+                                <i class="bi bi-envelope-plus"></i>
+                            </button>
+                        </td>
                     </tr>
                 `);
             });
@@ -204,7 +314,6 @@
             dataTable = $('#movTable').DataTable({
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-                    //url: "pt-BR.json"
                 },
                 destroy: true,
                 dom: 'Bfrtip',
@@ -224,6 +333,9 @@
                         text: '<i class="bi bi-printer"></i> Imprimir',
                         className: 'btn btn-secondary'
                     }
+                ],
+                columnDefs: [
+                    { orderable: false, targets: 15 } // Desabilita ordenação na coluna de ações
                 ]
             });
         }
@@ -254,7 +366,6 @@
             fetchDataAndRender(url);
         });
 
-
         $('#btnReset').on('click', function() {
             $('#filtroPlaca').val('');
             $('#filtroMes').val('');
@@ -263,6 +374,94 @@
             fetchDataAndRender(allRecordsUrl);
         });
 
+        // Função para abrir o modal com os dados da movimentação
+        window.abrirModalOutlook = function(mov) {
+            currentMovimentacao = mov;
+            
+            // Formatar a data
+            let dataFormatada = '';
+            if (mov.patioDt) {
+                const partes = mov.patioDt.split('-');
+                if (partes.length === 3) {
+                    dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+                } else {
+                    dataFormatada = mov.patioDt;
+                }
+            }
+            
+            // Preencher o formulário com os dados
+            $('#destinatario').val(''); // Limpar o campo de destinatário
+            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'}`);
+            $('#placa').val(mov.placa || '');
+            $('#marca').val(mov.marca || '');
+            $('#modelo').val(mov.modelo || '');
+            $('#numReg').val(mov.numReg || '');
+            $('#dataMovimentacao').val(dataFormatada);
+            
+            // Gerar mensagem padrão
+            const mensagemPadrao = `Prezados,\n\nInformamos a movimentação do veículo com as seguintes características:\n\n` +
+                                   `Placa: ${mov.placa || 'N/A'}\n` +
+                                   `Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}\n` +
+                                   `Nº do Registro: ${mov.numReg || 'N/A'}\n` +
+                                   `Data de Movimentação: ${dataFormatada}\n` +
+                                   `Local do Pátio: ${mov.patioLoc || 'N/A'}\n` +
+                                   `Situação: ${mov.situacao || 'N/A'}\n\n` +
+                                   `Atenciosamente,\n` +
+                                   `Equipe de Operações`;
+            
+            $('#mensagem').val(mensagemPadrao);
+            
+            // Atualizar a pré-visualização
+            atualizarPreview();
+            
+            // Abrir o modal
+            const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
+            outlookModal.show();
+        };
+
+        // Função para atualizar a pré-visualização da mensagem
+        function atualizarPreview() {
+            const destinatario = $('#destinatario').val();
+            const assunto = $('#assunto').val();
+            const mensagem = $('#mensagem').val().replace(/\n/g, '<br>');
+            
+            const previewHtml = `
+                <p><strong>Para:</strong> ${destinatario || '[Destinatário]'}</p>
+                <p><strong>Assunto:</strong> ${assunto || '[Assunto]'}</p>
+                <hr>
+                <div>${mensagem || '[Mensagem]'}</div>
+            `;
+            
+            $('#previewMensagem').html(previewHtml);
+        }
+
+        // Atualizar a pré-visualização quando os campos mudarem
+        $('#destinatario, #assunto, #mensagem').on('input', atualizarPreview);
+
+        // Gerar mensagem no Outlook
+        $('#btnGerarOutlook').on('click', function() {
+            const destinatario = $('#destinatario').val();
+            const assunto = $('#assunto').val();
+            const mensagem = $('#mensagem').val();
+            
+            if (!destinatario || !assunto || !mensagem) {
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+            
+            // Codificar os parâmetros para o mailto
+            const assuntoCodificado = encodeURIComponent(assunto);
+            const mensagemCodificada = encodeURIComponent(mensagem);
+            
+            // Criar o link mailto
+            const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
+            
+            // Abrir o cliente de e-mail
+            window.location.href = mailtoLink;
+            
+            // Fechar o modal
+            bootstrap.Modal.getInstance(document.getElementById('outlookModal')).hide();
+        });
 
         // Carrega os dados iniciais ao carregar a página
         $(document).ready(function() {
@@ -277,7 +476,6 @@
                 'L': { pattern: /[A-Za-z0-9]/ },
                 '0': { pattern: /[0-9]/ }
             },
-            // Este `onKeyPress` garante que as letras sejam sempre maiúsculas
             onKeyPress: function(val, e, field, options) {
                 field.val(val.toUpperCase());
             }

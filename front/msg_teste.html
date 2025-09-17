@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Formulário com Exportação para Outlook</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: #0078d4;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .description {
+            font-size: 1.1em;
+            margin-bottom: 20px;
+        }
+        
+        .content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 20px;
+        }
+        
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+        }
+        
+        .preview-section {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-left: 1px solid #eee;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+        
+        input:focus, textarea:focus, select:focus {
+            border-color: #0078d4;
+            outline: none;
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        button {
+            background: #0078d4;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: background 0.3s;
+            margin-right: 10px;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            background: #106ebe;
+        }
+        
+        button.secondary {
+            background: #4caf50;
+        }
+        
+        button.secondary:hover {
+            background: #45a049;
+        }
+        
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        
+        .preview {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            padding: 20px;
+            min-height: 300px;
+            margin-top: 20px;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .data-table th, .data-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        .data-table th {
+            background-color: #f2f2f2;
+        }
+        
+        .message {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+            display: none;
+        }
+        
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+            border: 1px solid #d6e9c6;
+        }
+        
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+            border: 1px solid #ebccd1;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+            }
+            
+            .preview-section {
+                border-left: none;
+                border-top: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Formulário com Exportação para Outlook</h1>
+            <p class="description">Preencha o formulário, salve os dados e exporte para o Outlook</p>
+        </header>
+        
+        <div class="content">
+            <div class="form-section">
+                <h2>Formulário de Dados</h2>
+                
+                <div id="message" class="message"></div>
+                
+                <form id="dataForm">
+                    <div class="form-group">
+                        <label for="nome">Nome completo:</label>
+                        <input type="text" id="nome" name="nome" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">E-mail:</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="empresa">Empresa:</label>
+                        <input type="text" id="empresa" name="empresa">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefone">Telefone:</label>
+                        <input type="tel" id="telefone" name="telefone">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="assunto">Assunto:</label>
+                        <input type="text" id="assunto" name="assunto" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem:</label>
+                        <textarea id="mensagem" name="mensagem" required></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="prioridade">Prioridade:</label>
+                        <select id="prioridade" name="prioridade">
+                            <option value="baixa">Baixa</option>
+                            <option value="media">Média</option>
+                            <option value="alta">Alta</option>
+                        </select>
+                    </div>
+                    
+                    <div class="buttons">
+                        <button type="submit">Salvar Dados</button>
+                        <button type="button" id="exportBtn" class="secondary">Exportar para Outlook</button>
+                        <button type="button" id="clearBtn">Limpar Formulário</button>
+                    </div>
+                </form>
+            </div>
+            
+            <div class="preview-section">
+                <h2>Visualização e Dados Salvos</h2>
+                
+                <div class="preview">
+                    <h3>Pré-visualização da Mensagem</h3>
+                    <div id="outlookPreview"></div>
+                    
+                    <h3 style="margin-top: 30px;">Dados Salvos</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>E-mail</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="savedData">
+                            <!-- Os dados salvos serão inseridos aqui via JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos do DOM
+            const dataForm = document.getElementById('dataForm');
+            const exportBtn = document.getElementById('exportBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const outlookPreview = document.getElementById('outlookPreview');
+            const savedData = document.getElementById('savedData');
+            const messageDiv = document.getElementById('message');
+            
+            // Array para simular o banco de dados
+            let savedItems = JSON.parse(localStorage.getItem('formData')) || [];
+            
+            // Função para mostrar mensagens
+            function showMessage(message, type) {
+                messageDiv.textContent = message;
+                messageDiv.className = 'message ' + type;
+                messageDiv.style.display = 'block';
+                
+                // Esconder a mensagem após 5 segundos
+                setTimeout(() => {
+                    messageDiv.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Função para atualizar a visualização
+            function updatePreview() {
+                const formData = new FormData(dataForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                if (data.nome && data.email) {
+                    outlookPreview.innerHTML = `
+                        <p><strong>De:</strong> ${data.nome} &lt;${data.email}&gt;</p>
+                        <p><strong>Assunto:</strong> ${data.assunto}</p>
+                        <p><strong>Prioridade:</strong> ${data.prioridade}</p>
+                        <hr>
+                        <p>${data.mensagem.replace(/\n/g, '<br>')}</p>
+                        <p><strong>Empresa:</strong> ${data.empresa}</p>
+                        <p><strong>Telefone:</strong> ${data.telefone}</p>
+                    `;
+                } else {
+                    outlookPreview.innerHTML = '<p>Preencha o formulário para ver a pré-visualização</p>';
+                }
+            }
+            
+            // Função para salvar dados
+            function saveData() {
+                const formData = new FormData(dataForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                // Adicionar timestamp
+                data.timestamp = new Date().toISOString();
+                data.id = Date.now(); // ID único
+                
+                // Adicionar ao array
+                savedItems.push(data);
+                
+                // Salvar no localStorage (simulando banco de dados)
+                localStorage.setItem('formData', JSON.stringify(savedItems));
+                
+                showMessage('Dados salvos com sucesso!', 'success');
+                updateSavedDataList();
+            }
+            
+            // Função para atualizar a lista de dados salvos
+            function updateSavedDataList() {
+                savedData.innerHTML = '';
+                
+                if (savedItems.length === 0) {
+                    savedData.innerHTML = '<tr><td colspan="3">Nenhum dado salvo ainda</td></tr>';
+                    return;
+                }
+                
+                savedItems.forEach(item => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${item.nome}</td>
+                        <td>${item.email}</td>
+                        <td>
+                            <button onclick="loadData(${item.id})">Carregar</button>
+                            <button onclick="deleteData(${item.id})">Excluir</button>
+                        </td>
+                    `;
+                    savedData.appendChild(row);
+                });
+            }
+            
+            // Função para carregar dados no formulário
+            window.loadData = function(id) {
+                const item = savedItems.find(i => i.id === id);
+                if (item) {
+                    document.getElementById('nome').value = item.nome || '';
+                    document.getElementById('email').value = item.email || '';
+                    document.getElementById('empresa').value = item.empresa || '';
+                    document.getElementById('telefone').value = item.telefone || '';
+                    document.getElementById('assunto').value = item.assunto || '';
+                    document.getElementById('mensagem').value = item.mensagem || '';
+                    document.getElementById('prioridade').value = item.prioridade || 'media';
+                    
+                    updatePreview();
+                    showMessage('Dados carregados com sucesso!', 'success');
+                }
+            };
+            
+            // Função para excluir dados
+            window.deleteData = function(id) {
+                if (confirm('Tem certeza que deseja excluir estes dados?')) {
+                    savedItems = savedItems.filter(i => i.id !== id);
+                    localStorage.setItem('formData', JSON.stringify(savedItems));
+                    updateSavedDataList();
+                    showMessage('Dados excluídos com sucesso!', 'success');
+                }
+            };
+            
+            // Função para exportar para o Outlook
+            function exportToOutlook() {
+                const formData = new FormData(dataForm);
+                const data = Object.fromEntries(formData.entries());
+                
+                if (!data.nome || !data.email || !data.assunto || !data.mensagem) {
+                    showMessage('Preencha todos os campos obrigatórios antes de exportar.', 'error');
+                    return;
+                }
+                
+                // Formatar a mensagem em HTML
+                const htmlMessage = `
+                    <html>
+                    <head>
+                        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+                    </head>
+                    <body>
+                        <p>${data.mensagem.replace(/\n/g, '<br>')}</p>
+                        <br>
+                        <p>Atenciosamente,</p>
+                        <p>${data.nome}</p>
+                        <p>${data.empresa ? 'Empresa: ' + data.empresa + '<br>' : ''}
+                        ${data.telefone ? 'Telefone: ' + data.telefone + '<br>' : ''}
+                        E-mail: ${data.email}</p>
+                    </body>
+                    </html>
+                `;
+                
+                // Codificar para URI
+                const subject = encodeURIComponent(data.assunto);
+                const body = encodeURIComponent(htmlMessage);
+                
+                // Criar o link mailto
+                const mailtoLink = `mailto:?subject=${subject}&body=${body}`;
+                
+                // Abrir o cliente de e-mail
+                window.location.href = mailtoLink;
+                
+                showMessage('Abrindo cliente de e-mail...', 'success');
+            }
+            
+            // Função para limpar o formulário
+            function clearForm() {
+                dataForm.reset();
+                outlookPreview.innerHTML = '<p>Preencha o formulário para ver a pré-visualização</p>';
+                showMessage('Formulário limpo!', 'success');
+            }
+            
+            // Event Listeners
+            dataForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveData();
+            });
+            
+            exportBtn.addEventListener('click', exportToOutlook);
+            clearBtn.addEventListener('click', clearForm);
+            
+            // Atualizar a visualização quando os campos mudam
+            const formInputs = dataForm.querySelectorAll('input, textarea, select');
+            formInputs.forEach(input => {
+                input.addEventListener('input', updatePreview);
+            });
+            
+            // Inicializar a visualização
+            updatePreview();
+            updateSavedDataList();
+        });
+    </script>
+</body>
+</html>

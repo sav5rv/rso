@@ -59,35 +59,7 @@
             position: sticky;
             top: 0;
             z-index: 1000;
-            background-color: #fff;
-        }
-        .outlook-modal .form-label {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-        .outlook-modal .form-control, .outlook-modal .form-select {
-            margin-bottom: 0.75rem;
-        }
-        .preview-container {
-            border: 1px solid #dee2e6;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            margin-top: 1rem;
-            background-color: #f8f9fa;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .modal-lg-custom {
-            max-width: 900px;
-        }
-        .btn-outlook {
-            background-color: #0078d4;
-            color: white;
-            border: none;
-        }
-        .btn-outlook:hover {
-            background-color: #106ebe;
-            color: white;
+            background-color: #fff; /* Adicionado para que o fundo não seja transparente */
         }
     </style>
 </head>
@@ -124,7 +96,6 @@
         </div>
     </div>
 
-    <!-- Modal para Detalhes -->
     <div class="modal fade" id="detalhesModal" tabindex="-1" aria-labelledby="detalhesModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -140,7 +111,6 @@
         </div>
     </div>
 
-    <!-- Modal para Editar -->
     <div class="modal fade" id="editarModal" tabindex="-1" aria-labelledby="editarModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -175,90 +145,6 @@
         </div>
     </div>
 
-    <!-- Modal para Gerar Mensagem Outlook -->
-    <div class="modal fade" id="outlookModal" tabindex="-1" aria-labelledby="outlookModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-lg-custom">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title" id="outlookModalLabel"><i class="bi bi-envelope-plus me-2"></i>Gerar Mensagem para Outlook</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body outlook-modal">
-                    <form id="outlookForm">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="destinatario" class="form-label">Destinatário:</label>
-                                    <input type="email" class="form-control" id="destinatario" required>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="assunto" class="form-label">Assunto:</label>
-                                    <input type="text" class="form-control" id="assunto" required>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="placa" class="form-label">Placa do Veículo:</label>
-                                    <input type="text" class="form-control" id="placa">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="marca" class="form-label">Marca:</label>
-                                    <input type="text" class="form-control" id="marca">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="modelo" class="form-label">Modelo:</label>
-                                    <input type="text" class="form-control" id="modelo">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="numReg" class="form-label">Número do Registro:</label>
-                                    <input type="text" class="form-control" id="numReg">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="dataMovimentacao" class="form-label">Data de Movimentação:</label>
-                                    <input type="text" class="form-control" id="dataMovimentacao">
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label for="mensagem" class="form-label">Mensagem:</label>
-                            <textarea class="form-control" id="mensagem" rows="5" required></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Pré-visualização da Mensagem:</label>
-                            <div class="preview-container" id="previewMensagem">
-                                <!-- A pré-visualização será gerada aqui -->
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="btnGerarOutlook">
-                        <i class="bi bi-envelope-plus me-1"></i> Gerar Mensagem no Outlook
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
@@ -266,7 +152,6 @@
 
     <script>
         const API_URL = 'http://localhost:3001/api/mov';
-        let currentMovimentacao = {};
 
         function renderTable(movs) {
             const tableBody = $('#movTable tbody');
@@ -292,9 +177,6 @@
                         <td class="text-center">
                             <button class="btn btn-info btn-action btn-details" data-id="${mov._id}" data-bs-toggle="modal" data-bs-target="#detalhesModal">
                                 <i class="bi bi-eye"></i>
-                            </button>
-                            <button class="btn btn-outlook btn-action btn-outlook" data-id="${mov._id}" title="Gerar mensagem Outlook">
-                                <i class="bi bi-envelope-plus"></i>
                             </button>
                             <button class="btn btn-danger btn-action btn-delete" data-id="${mov._id}">
                                 <i class="bi bi-trash"></i>
@@ -333,97 +215,8 @@
                 guinchoNome: $('#addGuinchoNome').val(),
                 numMsg: $('#addNumMsg').val(),
                 obs: $('#addObs').val()
+
             };
-        }
-
-        // Função para abrir o modal com os dados da movimentação
-        function abrirModalOutlook(mov) {
-            currentMovimentacao = mov;
-            
-            // Formatar a data
-            let dataFormatada = '';
-            if (mov.patioDt) {
-                const partes = mov.patioDt.split('-');
-                if (partes.length === 3) {
-                    dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-                } else {
-                    dataFormatada = mov.patioDt;
-                }
-            }
-            
-            // Preencher o formulário com os dados
-            $('#destinatario').val(''); // Limpar o campo de destinatário
-            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'}`);
-            $('#placa').val(mov.placa || '');
-            $('#marca').val(mov.marca || '');
-            $('#modelo').val(mov.modelo || '');
-            $('#numReg').val(mov.numReg || '');
-            $('#dataMovimentacao').val(dataFormatada);
-            
-            // Gerar mensagem padrão
-            const mensagemPadrao = `Prezados,\n\nInformamos a movimentação do veículo com as seguintes características:\n\n` +
-                                   `Placa: ${mov.placa || 'N/A'}\n` +
-                                   `Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}\n` +
-                                   `Nº do Registro: ${mov.numReg || 'N/A'}\n` +
-                                   `Data de Movimentação: ${dataFormatada}\n` +
-                                   `Local do Pátio: ${mov.patioLoc || 'N/A'}\n` +
-                                   `Situação: ${mov.situacao || 'N/A'}\n` +
-                                   (mov.numRV ? `Número do RV: ${mov.numRV}\n` : '') +
-                                   (mov.numBO ? `Número do BO: ${mov.numBO}\n` : '') +
-                                   (mov.guinchoPlaca ? `Placa do Guincho: ${mov.guinchoPlaca}\n` : '') +
-                                   (mov.guinchoNome ? `Nome do Guincheiro: ${mov.guinchoNome}\n` : '') +
-                                   `\nAtenciosamente,\n` +
-                                   `Equipe de Operações`;
-            
-            $('#mensagem').val(mensagemPadrao);
-            
-            // Atualizar a pré-visualização
-            atualizarPreview();
-            
-            // Abrir o modal
-            const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
-            outlookModal.show();
-        }
-
-        // Função para atualizar a pré-visualização da mensagem
-        function atualizarPreview() {
-            const destinatario = $('#destinatario').val();
-            const assunto = $('#assunto').val();
-            const mensagem = $('#mensagem').val().replace(/\n/g, '<br>');
-            
-            const previewHtml = `
-                <p><strong>Para:</strong> ${destinatario || '[Destinatário]'}</p>
-                <p><strong>Assunto:</strong> ${assunto || '[Assunto]'}</p>
-                <hr>
-                <div>${mensagem || '[Mensagem]'}</div>
-            `;
-            
-            $('#previewMensagem').html(previewHtml);
-        }
-
-        // Gerar mensagem no Outlook
-        function gerarMensagemOutlook() {
-            const destinatario = $('#destinatario').val();
-            const assunto = $('#assunto').val();
-            const mensagem = $('#mensagem').val();
-            
-            if (!destinatario || !assunto || !mensagem) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-            
-            // Codificar os parâmetros para o mailto
-            const assuntoCodificado = encodeURIComponent(assunto);
-            const mensagemCodificada = encodeURIComponent(mensagem);
-            
-            // Criar o link mailto
-            const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
-            
-            // Abrir o cliente de e-mail
-            window.location.href = mailtoLink;
-            
-            // Fechar o modal
-            bootstrap.Modal.getInstance(document.getElementById('outlookModal')).hide();
         }
 
         $(document).ready(function() {
@@ -447,6 +240,7 @@
                     guinchoNome: $('#editGuinchoNome').val(),
                     numMsg: $('#editNumMsg').val(),
                     obs: $('#editObs').val()
+
                 };
                 $.ajax({
                     url: `${API_URL}/${id}`,
@@ -473,19 +267,41 @@
                 }
             });
 
-            // Event listener para o botão de Outlook
-            $(document).on('click', '.btn-outlook', function() {
-                const id = $(this).data('id');
-                $.get(`${API_URL}/${id}`, function(mov) {
-                    abrirModalOutlook(mov);
-                });
+            // $('#exportXLSXBtn').on('click', function() {
+            //     $.get(API_URL, function(movs) {
+            //         const dataToExport = movs.map(mov => ({
+            //             'Num Reg': mov.numReg,
+            //             'Num evento DER': mov.eventoDER,
+            //             'Nome atendente': mov.atendDER,
+            //             'Num BO': mov.numBO,
+            //             'Situação': mov.situacao,
+            //             'Marca': mov.marca,
+            //             'Modelo': mov.modelo,
+            //             'Placa': mov.placa,
+            //             'Dt mov pátio': mov.patioDt,
+            //             'Cidade pátio': mov.patioLoc,
+            //             'Placa guincho': mov.guinchoPlaca,
+            //             'Nome Guincheiro': mov.guinchoNome,
+            //             'Num msg P3': mov.numMsg,
+            //             'Observações': mov.obs,
+
+            //         }));
+
+            //         const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+            //         const workbook = XLSX.utils.book_new();
+            //         XLSX.utils.book_append_sheet(workbook, worksheet, "RRegistros de movimentação de veículos ao pátio credenciado");
+            //         XLSX.writeFile(workbook, "movimentacoes_patio.xlsx");
+            //     });
+            // });
+
+            $('#addVtr, #editVtr').mask('A-00000', { translation: { 'A': { pattern: /[A-Za-z]/ } } });
+            $('#addHrInicio, #editHrInicio').mask('00:00');
+            $('#addVtr, #editVtr').on('input', function() {
+                let val = $(this).val();
+                if (val.length > 0) {
+                    $(this).val(val.charAt(0).toUpperCase() + val.slice(1));
+                }
             });
-
-            // Atualizar a pré-visualização quando os campos mudarem
-            $('#destinatario, #assunto, #mensagem').on('input', atualizarPreview);
-
-            // Event listener para o botão Gerar Mensagem no Outlook
-            $('#btnGerarOutlook').on('click', gerarMensagemOutlook);
 
             $(document).on('click', '#btnEditar', function() {
                 const id = $(this).data('id');
@@ -516,9 +332,10 @@
             $(document).on('click', '.btn-details', function() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(mov) {
+                    // o jQuery seleciona o elemento com o ID "rsoNumModal" e Adiciona esta linha para preencher o cabeçalho do modal
                     $('#movNumModal').text(mov.numReg);
 
-                    let dataFormatada = mov.patioDt ? mov.patioDt.split('-').reverse().join('-') : '';
+                    let dataFormatada = mov.data ? mov.data.split('-').reverse().join('-') : '';
                     let html = `
                         <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${mov._id}</div>
                         <div class="mb-2"><strong style="color:#0d6efd;">Num reg:</strong> ${mov.numReg}</div>
