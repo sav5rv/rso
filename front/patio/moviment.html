@@ -189,18 +189,18 @@
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="destinatario" class="form-label">Destinatário:</label>
-                                    <input type="email" class="form-control" id="destinatario" required>
+                                    <input type="email" class="form-control" id="destinatario">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="assunto" class="form-label">Assunto:</label>
-                                    <input type="text" class="form-control" id="assunto" required>
+                                    <input type="text" class="form-control" id="assunto">
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="row">
+<!--                         <div class="row">
                             <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="placa" class="form-label">Placa do Veículo:</label>
@@ -219,9 +219,9 @@
                                     <input type="text" class="form-control" id="modelo">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         
-                        <div class="row">
+<!--                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-3">
                                     <label for="numReg" class="form-label">Número do Registro:</label>
@@ -234,7 +234,7 @@
                                     <input type="text" class="form-control" id="dataMovimentacao">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         
                         <div class="mb-3">
                             <label for="mensagem" class="form-label">Mensagem:</label>
@@ -350,10 +350,27 @@
                     dataFormatada = mov.patioDt;
                 }
             }
+
+            // Formatar a data ATUAL
+            function getDataAtualExtenso() {
+                const data = new Date();
+                const dia = data.getDate();
+                const meses = [
+                    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+                    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+                ];
+                const mes = meses[data.getMonth()];
+                const ano = data.getFullYear();
+                
+                return `${dia}${mes}${ano}`;
+            }
+
+            // No seu código:
+            let dataFormatadaAtual = getDataAtualExtenso(); // Retorna "15 de outubro de 2023"
             
             // Preencher o formulário com os dados
-            $('#destinatario').val(''); // Limpar o campo de destinatário
-            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'}`);
+            $('#destinatario').val(`5bprv2ciap3@policiamilitar.sp.gov.br`); // Limpar o campo de destinatário
+            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'} para pátio credênciado`);
             $('#placa').val(mov.placa || '');
             $('#marca').val(mov.marca || '');
             $('#modelo').val(mov.modelo || '');
@@ -361,24 +378,66 @@
             $('#dataMovimentacao').val(dataFormatada);
             
             // Gerar mensagem padrão
-            const mensagemPadrao = `Prezados,\n\nInformamos a movimentação do veículo com as seguintes características:\n\n` +
-                                   `Placa: ${mov.placa || 'N/A'}\n` +
-                                   `Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}\n` +
-                                   `Nº do Registro: ${mov.numReg || 'N/A'}\n` +
-                                   `Data de Movimentação: ${dataFormatada}\n` +
-                                   `Local do Pátio: ${mov.patioLoc || 'N/A'}\n` +
-                                   `Situação: ${mov.situacao || 'N/A'}\n` +
-                                   (mov.numRV ? `Número do RV: ${mov.numRV}\n` : '') +
-                                   (mov.numBO ? `Número do BO: ${mov.numBO}\n` : '') +
-                                   (mov.guinchoPlaca ? `Placa do Guincho: ${mov.guinchoPlaca}\n` : '') +
-                                   (mov.guinchoNome ? `Nome do Guincheiro: ${mov.guinchoNome}\n` : '') +
-                                   `\nAtenciosamente,\n` +
-                                   `Equipe de Operações`;
+            const mensagemPadrao = `MENSAGEM Nº 5BPRv-${mov.numMsg}, de ${dataFormatadaAtual}.\n` +
+                                    `Do PDR da 2ª Cia do 5º BPRv\n` +
+                                    `Ao Sr Cmt da 2ª Cia do 5º BPRv.\n` +
+                                    `Assunto: Movimentação de veículo para pátio credênciado.\n` + 
+                                    `\n\n` +
+                                    `1.Informo que o veículo de Placas: ${mov.placa || 'N/A'} e Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}\n` +
+                                    `1.1. Recolhido mediante ARV Nº: ${mov.numRV || 'N/A'}, BO Nº: ${mov.numBO}, por: ${mov.situacao || 'N/A'}\n` +
+                                    `1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na cidade de ${mov.patioLoc || 'N/A'}, pelo guincho de Placas: ${mov.guinchoPlaca || 'N/A'}, conduzido pelo Sr: ${mov.guinchoNome || 'N/A'}.\n` +
+                                    `\n\n` +
+                                    `Assinatura\n`
+
+            // Gerar a mensagem em HTML
+            const mensagemHTML12 = `
+            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt;">
+                <p>MENSAGEM Nº 5BPRv-${mov.numMsg || 'N/A'}, de ${dataFormatadaAtual}.</p>                
+                <p><strong>Do</strong> PDR da 2ª Cia do 5º BPRv</p>
+                <p><strong>Ao</strong> Sr Cmt da 2ª Cia do 5º BPRv.</p>                
+                <p><strong>Assunto:</strong> Movimentação de veículo para pátio credenciado.</p>
+                
+                <p>1. Informo que o veículo de <strong>Placas:</strong> ${mov.placa || 'N/A'} e <strong>Marca/Modelo:</strong> ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}</p>
+                
+                <p>1.1. Recolhido mediante <strong>ARV Nº:</strong> ${mov.numRV || 'N/A'}, <strong>BO Nº:</strong> ${mov.numBO || 'N/A'}, <strong>por:</strong> ${mov.situacao || 'N/A'}</p>
+                
+                <p>1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na <strong>cidade de:</strong> ${mov.patioLoc || 'N/A'}, pelo <strong>guincho de Placas:</strong> ${mov.guinchoPlaca || 'N/A'}, <strong>conduzido pelo Sr:</strong> ${mov.guinchoNome || 'N/A'}.</p>
+                
+                <p>Assinatura</p>
+            </div>
+            `;
+
+            const mensagemHTML = `
+            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.0;">
+                <style>
+                    .mensagem p {
+                        margin: 0 0 8px 0;
+                        padding: 0;
+                        line-height: 1.0;
+                    }
+                </style>
+                
+                <div class="mensagem">
+                    <p>MENSAGEM Nº 5BPRv-123, de 17Set2025.<br>
+                    <strong>Do</strong> PDR da 2ª Cia do 5º BPRv<br>
+                    <strong>Ao</strong> Sr Cmt da 2ª Cia do 5º BPRv.<br>
+                    <strong>Assunto:</strong> Movimentação de veículo para pátio credenciado.</p>
+
+                    <p>1. Informo que o veículo de <strong>Placas:</strong> ${mov.placa || 'N/A'} e <strong>Marca:</strong> ${mov.marca || 'N/A'} / <strong>Modelo:</strong> ${mov.modelo || 'N/A'}</p>
+
+                    <p>1.1. Recolhido mediante <strong>ARV Nº:</strong> ${mov.numRV || 'N/A'}, <strong>BO Nº:</strong> ${mov.numBO || 'N/A'}, <strong>por:</strong> ${mov.situacao || 'N/A'}</p>
+
+                    <p>1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na <strong>cidade de:</strong> ${mov.patioLoc || 'N/A'}, pelo <strong>guincho de Placas:</strong> ${mov.guinchoPlaca || 'N/A'}, <strong>conduzido pelo Sr:</strong> ${mov.guinchoNome || 'N/A'}.</p>
+
+                    <p>Assinatura</p>
+                </div>
+            </div>
+            `;
             
-            $('#mensagem').val(mensagemPadrao);
+            $('#mensagem').val(mensagemHTML);
             
             // Atualizar a pré-visualização
-            atualizarPreview();
+             atualizarPreview();
             
             // Abrir o modal
             const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
@@ -414,7 +473,9 @@
             
             // Codificar os parâmetros para o mailto
             const assuntoCodificado = encodeURIComponent(assunto);
-            const mensagemCodificada = encodeURIComponent(mensagem);
+            // const mensagemCodificada = encodeURIComponent(mensagem);
+            const mensagemCodificada = encodeURIComponent(mensagemHTML);
+
             
             // Criar o link mailto
             const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
@@ -428,7 +489,7 @@
 
         $(document).ready(function() {
             fetchAndRenderData();
-            $("#navbarContainer").load("mov_navbar.html");
+            $("#navbarContainer").load("patio/mov_navbar.html");
 
             $('#salvarEdicao').click(function() {
                 const id = $('#editId').val();
@@ -482,7 +543,7 @@
             });
 
             // Atualizar a pré-visualização quando os campos mudarem
-            $('#destinatario, #assunto, #mensagem').on('input', atualizarPreview);
+            // $('#destinatario, #assunto, #mensagem').on('input', atualizarPreview);
 
             // Event listener para o botão Gerar Mensagem no Outlook
             $('#btnGerarOutlook').on('click', gerarMensagemOutlook);

@@ -158,7 +158,7 @@
         let dataTable;
 
         $(function(){
-            $("#navbarContainer").load("mov_navbar.html");
+            $("#navbarContainer").load("patio/mov_navbar.html");
         });
 
         function renderTable(movs) {
@@ -201,7 +201,84 @@
             });
 
             // Inicializa o DataTable com os dados populados
-            dataTable = $('#movTable').DataTable({
+dataTable = $('#movTable').DataTable({
+    language: {
+        url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
+    },
+    destroy: true,
+    dom: 'Bfrtip',
+    buttons: [
+        {
+            extend: 'excelHtml5',
+            text: '<i class="bi bi-file-earmark-excel"></i> Exportar XLSX',
+            className: 'btn btn-success'
+        },
+        {
+            extend: 'pdfHtml5',
+            text: '<i class="bi bi-file-earmark-pdf"></i> Exportar PDF',
+            className: 'btn btn-danger',
+            orientation: 'landscape', // Paisagem
+            pageSize: 'A4', // Tamanho da página
+            exportOptions: {
+                columns: ':visible', // Exporta apenas colunas visíveis
+                // Para exportar colunas específicas, use: [0, 1, 2, 3, 4, 5]
+            },
+            customize: function (doc) {
+                // Personalizar o documento PDF
+                doc.defaultStyle.fontSize = 9;
+                doc.styles.tableHeader.fontSize = 10;
+                doc.styles.tableHeader.fillColor = '#0d6efd'; // Azul do Bootstrap
+                
+                // Adicionar cabeçalho personalizado
+                doc.content.splice(0, 0, {
+                    text: 'Relatório de Movimentação de Veículos',
+                    style: 'header',
+                    alignment: 'center',
+                    margin: [0, 0, 0, 20] // [left, top, right, bottom]
+                });
+                
+                // Adicionar rodapé com número de páginas
+                var pageCount = doc.internal.getNumberOfPages();
+                doc['footer'] = function (currentPage, pageCount) {
+                    return {
+                        text: 'Página ' + currentPage.toString() + ' de ' + pageCount,
+                        alignment: 'center',
+                        fontSize: 8,
+                        margin: [0, 10, 0, 0]
+                    };
+                };
+                
+                // Definir estilos personalizados
+                doc.styles.header = {
+                    fontSize: 16,
+                    bold: true,
+                    color: '#0d6efd',
+                    alignment: 'center'
+                };
+                
+                // Ajustar layouts das tabelas
+                doc.content[1].table.widths = Array(doc.content[1].table.body[0].length + 1).join('*').split('');
+            }
+        },
+        {
+            extend: 'print',
+            text: '<i class="bi bi-printer"></i> Imprimir',
+            className: 'btn btn-secondary',
+            orientation: 'landscape', // Também funciona para impressão
+            pageSize: 'A4',
+            customize: function (win) {
+                // Personalizar a impressão também
+                $(win.document.body).prepend(
+                    '<h2 style="text-align:center; color:#0d6efd;">Relatório de Movimentação de Veículos</h2>'
+                );
+                
+                $(win.document.body).find('table').addClass('display').css('font-size', '12px');
+                $(win.document.body).find('tr:nth-child(odd)').css('background-color', '#f9f9f9');
+            }
+        }
+    ]
+});            
+/*             dataTable = $('#movTable').DataTable({
                 language: {
                     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
                     //url: "pt-BR.json"
@@ -225,7 +302,7 @@
                         className: 'btn btn-secondary'
                     }
                 ]
-            });
+            }); */
         }
 
         function fetchDataAndRender(url) {
