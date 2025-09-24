@@ -23,7 +23,7 @@ Isso criará um arquivo `package.json` com as configurações padrão.
 1. Instale o Express e o Mongoose (para interagir com o MongoDB):
 
 ```bash
-npm install express mongoose dotenv
+npm install express mongoose dotenv nodemon cors path
 ```
 
 - `express`: Framework web para Node.js.
@@ -32,10 +32,10 @@ npm install express mongoose dotenv
 
 ### Passo 4: Criar a Estrutura de Arquivos
 
-1. Crie um arquivo chamado `server.js` na pasta "back":
+1. Crie um arquivo chamado `app.js` na pasta "back":
 
 ```bash
-touch server.js
+touch app.js
 ```
 
 2. Crie uma pasta chamada `models` para armazenar os modelos do MongoDB:
@@ -46,10 +46,10 @@ mkdir models
 
 ### Passo 5: Configurar o Servidor Express
 
-Abra o arquivo `server.js` e adicione o seguinte código:
+Abra o arquivo `app.js` e adicione o seguinte código:
 
 ```javascript
-// server.js
+// app.js
 const express = require('express');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
@@ -97,7 +97,7 @@ MONGODB_URI=<your_mongodb_connection_string>
 1. Inicie o servidor:
 
 ```bash
-node server.js
+node app.js
 ```
 
 2. Abra o navegador e acesse `http://localhost:5000`. Você deve ver a mensagem "API está funcionando!".

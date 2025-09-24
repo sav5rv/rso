@@ -1,0 +1,25 @@
+{
+  "verbose": true,
+  "watch": [
+    "src/",
+    "config/",
+    ".env"
+  ],
+  "ignore": [
+    "node_modules/",
+    "logs/",
+    "uploads/",
+    "*.test.js"
+  ],
+  "ext": "js,json,html,css,env",
+  "exec": "node app.js",
+  "env": {
+    "NODE_ENV": "development",
+    "PORT": 3001,
+    "DB_HOST": "localhost"
+  },
+  "events": {
+    "restart": "echo '🔄 Servidor reiniciado devido a mudanças nos arquivos'",
+    "crash": "echo '💥 Servidor crashou! Verifique os logs'"
+  }
+}

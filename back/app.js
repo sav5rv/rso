@@ -45,5 +45,10 @@ app.use('/api/num', numRoutes);
 // Iniciar o servidor
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+        console.log(`🔄 Servidor rodando na porta ${PORT}`);
+        console.log('-----------------------------------');
+        console.log(`📊 Ambiente: ${process.env.NODE_ENV || 'desenvolvimento'}`);
+        console.log('-----------------------------------');
+        console.log(`🚀 Acesse: http://localhost:${PORT}`);
+        console.log('-----------------------------------');
 });
