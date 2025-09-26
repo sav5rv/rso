@@ -89,6 +89,13 @@
             background-color: #106ebe;
             color: white;
         }
+        .html-preview {
+            border: 1px solid #ccc;
+            padding: 10px;
+            background: white;
+            max-height: 400px;
+            overflow: auto;
+        }
     </style>
 </head>
 <body>
@@ -200,59 +207,26 @@
                             </div>
                         </div>
                         
-<!--                         <div class="row">
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="placa" class="form-label">Placa do Veículo:</label>
-                                    <input type="text" class="form-control" id="placa">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="marca" class="form-label">Marca:</label>
-                                    <input type="text" class="form-control" id="marca">
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="mb-3">
-                                    <label for="modelo" class="form-label">Modelo:</label>
-                                    <input type="text" class="form-control" id="modelo">
-                                </div>
-                            </div>
-                        </div> -->
-                        
-<!--                         <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="numReg" class="form-label">Número do Registro:</label>
-                                    <input type="text" class="form-control" id="numReg">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-3">
-                                    <label for="dataMovimentacao" class="form-label">Data de Movimentação:</label>
-                                    <input type="text" class="form-control" id="dataMovimentacao">
-                                </div>
-                            </div>
-                        </div> -->
-                        
                         <div class="mb-3">
-                            <label for="mensagem" class="form-label">Mensagem:</label>
-                            <textarea class="form-control" id="mensagem" rows="5" required></textarea>
+                            <label class="form-label">Mensagem HTML Formatada:</label>
+                            <div class="html-preview" id="htmlPreview">
+                                <!-- HTML será renderizado aqui -->
+                            </div>
                         </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Pré-visualização da Mensagem:</label>
-                            <div class="preview-container" id="previewMensagem">
-                                <!-- A pré-visualização será gerada aqui -->
-                            </div>
+
+                        <div class="alert alert-info">
+                            <strong>Instruções:</strong> Clique em "Copiar HTML" para copiar o conteúdo formatado. 
+                            Depois abra o Outlook, crie uma nova mensagem e cole (Ctrl+V) no corpo do email.
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-                    <button type="button" class="btn btn-primary" id="btnGerarOutlook">
-                        <i class="bi bi-envelope-plus me-1"></i> Gerar Mensagem no Outlook
+                    <button type="button" class="btn btn-success" id="btnCopiarHTML">
+                        <i class="bi bi-clipboard me-1"></i> Copiar HTML
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btnAbrirOutlook">
+                        <i class="bi bi-envelope-plus me-1"></i> Abrir Outlook
                     </button>
                 </div>
             </div>
@@ -267,6 +241,289 @@
     <script>
         const API_URL = 'http://localhost:3001/api/mov';
         let currentMovimentacao = {};
+        let currentHTMLContent = '';
+
+        // Funções auxiliares para formatação de data
+        function formatarData(data) {
+            if (!data) return 'N/A';
+            const partes = data.split('-');
+            return partes.length === 3 ? `${partes[2]}/${partes[1]}/${partes[0]}` : data;
+        }
+
+        function getDataAtualExtenso() {
+            const data = new Date();
+            const dia = data.getDate();
+            const meses = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+            const mes = meses[data.getMonth()];
+            const ano = data.getFullYear();
+            return `${dia}${mes}${ano}`;
+        }
+
+        // Função para gerar HTML formatado CORRIGIDA
+        function gerarMensagemHTML(mov) {
+            const dataFormatada = formatarData(mov.patioDt);
+            const dataFormatadaAtual = getDataAtualExtenso();
+            
+            return `<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Mensagem ${mov.numMsg || ''}</title>
+    <style type="text/css">
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            margin: 20px;
+            padding: 0;
+            color: #000000;
+            background-color: #ffffff;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #000000;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header h1 {
+            font-size: 14pt;
+            font-weight: bold;
+            margin: 0;
+            color: #000000;
+        }
+        .from-to {
+            margin: 20px 0;
+            line-height: 1.8;
+        }
+        .subject {
+            font-weight: bold;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border-left: 4px solid #0078d4;
+        }
+        .content {
+            margin: 25px 0;
+        }
+        .section {
+            margin: 15px 0;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-bottom: 8px;
+            color: #0078d4;
+            font-size: 11pt;
+        }
+        .item {
+            margin: 5px 0;
+            padding-left: 15px;
+        }
+        .label {
+            font-weight: bold;
+            color: #000000;
+        }
+        .signature {
+            margin-top: 50px;
+            text-align: right;
+            border-top: 1px solid #000000;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>MENSAGEM Nº 5BPRv-${mov.numMsg || 'N/A'}, de ${dataFormatadaAtual}</h1>
+        </div>
+        
+        <div class="from-to">
+            <div><span class="label">Do:</span> PDR da 2ª Cia do 5º BPRv</div>
+            <div><span class="label">Ao:</span> Sr Cmt da 2ª Cia do 5º BPRv</div>
+        </div>
+        
+        <div class="subject">
+            ASSUNTO: Movimentação de veículo para pátio credenciado
+        </div>
+        
+        <div class="content">
+            <div class="section">
+                <div class="section-title">1. INFORMAÇÕES DO VEÍCULO</div>
+                <div class="item"><span class="label">Placa:</span> ${mov.placa || 'N/A'}</div>
+                <div class="item"><span class="label">Marca/Modelo:</span> ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}</div>
+                <div class="item"><span class="label">Nº Registro:</span> ${mov.numReg || 'N/A'}</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">2. DADOS DO RECOLHIMENTO</div>
+                <div class="item"><span class="label">ARV Nº:</span> ${mov.numRV || 'N/A'}</div>
+                <div class="item"><span class="label">BO Nº:</span> ${mov.numBO || 'N/A'}</div>
+                <div class="item"><span class="label">Situação:</span> ${mov.situacao || 'N/A'}</div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">3. MOVIMENTAÇÃO PARA PÁTIO</div>
+                <div class="item"><span class="label">Data:</span> ${dataFormatada}</div>
+                <div class="item"><span class="label">Cidade:</span> ${mov.patioLoc || 'N/A'}</div>
+                <div class="item"><span class="label">Guincho (Placa):</span> ${mov.guinchoPlaca || 'N/A'}</div>
+                <div class="item"><span class="label">Motorista:</span> ${mov.guinchoNome || 'N/A'}</div>
+            </div>
+        </div>
+        
+        <div class="signature">
+            <div style="font-weight: bold;">Assinatura</div>
+            <div>PDR - 2ª Cia do 5º BPRv</div>
+            <div style="font-size: 10pt; color: #666;">${new Date().toLocaleDateString('pt-BR')}</div>
+        </div>
+    </div>
+</body>
+</html>`;
+        }
+
+        // Função para copiar HTML para clipboard - CORRIGIDA
+        function copiarHTMLParaClipboard(htmlContent) {
+            return new Promise((resolve, reject) => {
+                // Método moderno usando Clipboard API
+                if (navigator.clipboard && window.ClipboardItem) {
+                    const blob = new Blob([htmlContent], { type: 'text/html' });
+                    const clipboardItem = new ClipboardItem({ 'text/html': blob });
+                    
+                    navigator.clipboard.write([clipboardItem]).then(() => {
+                        resolve(true);
+                    }).catch(err => {
+                        // Fallback para método tradicional
+                        fallbackCopy(htmlContent) ? resolve(true) : reject(false);
+                    });
+                } else {
+                    // Método tradicional para navegadores antigos
+                    fallbackCopy(htmlContent) ? resolve(true) : reject(false);
+                }
+            });
+        }
+
+        // Fallback para cópia tradicional
+        function fallbackCopy(htmlContent) {
+            try {
+                const textArea = document.createElement('textarea');
+                textArea.value = htmlContent;
+                textArea.style.position = 'fixed';
+                textArea.style.left = '-999999px';
+                textArea.style.top = '-999999px';
+                document.body.appendChild(textArea);
+                textArea.focus();
+                textArea.select();
+                
+                const successful = document.execCommand('copy');
+                document.body.removeChild(textArea);
+                return successful;
+            } catch (err) {
+                return false;
+            }
+        }
+
+        // Função para abrir o modal com os dados da movimentação
+        function abrirModalOutlook(mov) {
+            currentMovimentacao = mov;
+            
+            // Preencher o formulário com os dados
+            $('#destinatario').val(`5bprv2ciap3@policiamilitar.sp.gov.br`);
+            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'} para pátio credênciado`);
+            
+            // Gerar e exibir o HTML formatado
+            currentHTMLContent = gerarMensagemHTML(mov);
+            $('#htmlPreview').html(currentHTMLContent);
+            
+            // Abrir o modal
+            const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
+            outlookModal.show();
+        }
+
+        // Função para copiar HTML
+        function copiarHTML() {
+            if (!currentHTMLContent) {
+                alert('Nenhum conteúdo HTML gerado.');
+                return;
+            }
+
+            copiarHTMLParaClipboard(currentHTMLContent).then(success => {
+                if (success) {
+                    // Feedback visual
+                    const btn = $('#btnCopiarHTML');
+                    const originalText = btn.html();
+                    btn.html('<i class="bi bi-check-circle me-1"></i> Copiado!');
+                    btn.removeClass('btn-success').addClass('btn-secondary');
+                    
+                    setTimeout(() => {
+                        btn.html(originalText);
+                        btn.removeClass('btn-secondary').addClass('btn-success');
+                    }, 2000);
+                    
+                    alert('✅ HTML copiado para a área de transferência!\n\nAgora abra o Outlook e:\n1. Clique em "Nova Mensagem"\n2. Cole no corpo do email (Ctrl+V)\n3. O HTML será renderizado automaticamente');
+                } else {
+                    alert('❌ Não foi possível copiar para a área de transferência. Tente manualmente.');
+                }
+            }).catch(() => {
+                alert('❌ Erro ao copiar. Tente manualmente.');
+            });
+        }
+
+        // Função para abrir Outlook
+        function abrirOutlook() {
+            const destinatario = $('#destinatario').val();
+            const assunto = $('#assunto').val();
+            
+            if (!destinatario || !assunto) {
+                alert('Por favor, preencha o destinatário e assunto.');
+                return;
+            }
+
+            // Gerar mensagem de texto simples para o mailto
+            const mensagemTexto = gerarMensagemTexto(currentMovimentacao);
+            const assuntoCodificado = encodeURIComponent(assunto);
+            const mensagemCodificada = encodeURIComponent(mensagemTexto);
+            
+            const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
+            window.location.href = mailtoLink;
+        }
+
+        // Função para gerar mensagem de texto simples (fallback)
+        function gerarMensagemTexto(mov) {
+            const dataFormatada = formatarData(mov.patioDt);
+            const dataFormatadaAtual = getDataAtualExtenso();
+            
+            return `MENSAGEM Nº 5BPRv-${mov.numMsg || 'N/A'}, de ${dataFormatadaAtual}
+
+Do: PDR da 2ª Cia do 5º BPRv
+Para: Sr Cmt da 2ª Cia do 5º BPRv
+
+ASSUNTO: Movimentação de veículo para pátio credenciado
+
+1. INFORMAÇÕES DO VEÍCULO:
+   - Placa: ${mov.placa || 'N/A'}
+   - Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}
+   - Nº Registro: ${mov.numReg || 'N/A'}
+
+2. DADOS DO RECOLHIMENTO:
+   - ARV Nº: ${mov.numRV || 'N/A'}
+   - BO Nº: ${mov.numBO || 'N/A'}
+   - Situação: ${mov.situacao || 'N/A'}
+
+3. MOVIMENTAÇÃO PARA PÁTIO:
+   - Data: ${dataFormatada}
+   - Cidade: ${mov.patioLoc || 'N/A'}
+   - Guincho: ${mov.guinchoPlaca || 'N/A'}
+   - Motorista: ${mov.guinchoNome || 'N/A'}
+
+Assinatura
+PDR - 2ª Cia do 5º BPRv`;
+        }
+
+        // ========== RESTANTE DO CÓDIGO (INALTERADO) ==========
 
         function renderTable(movs) {
             const tableBody = $('#movTable tbody');
@@ -317,181 +574,20 @@
             });
         }
 
-        function getFormData() {
-            return {
-                eventoDER: $('#addEventoDER').val(),
-                atendDER: $('#addAtendDER').val(),
-                numRV: $('#addNumRV').val(),
-                numBO: $('#addNumBO').val(),
-                situacao: $('#addSituacao').val(),
-                marca: $('#addMarca').val(),
-                modelo: $('#addModelo').val(),
-                placa: $('#addPlaca').val(),
-                patioDt: $('#addPatioDt').val(),
-                patioLoc: $('#addPatioLoc').val(),
-                guinchoPlaca: $('#addGuinchoPlaca').val(),
-                guinchoNome: $('#addGuinchoNome').val(),
-                numMsg: $('#addNumMsg').val(),
-                obs: $('#addObs').val()
-            };
-        }
-
-        // Função para abrir o modal com os dados da movimentação
-        function abrirModalOutlook(mov) {
-            currentMovimentacao = mov;
-            
-            // Formatar a data
-            let dataFormatada = '';
-            if (mov.patioDt) {
-                const partes = mov.patioDt.split('-');
-                if (partes.length === 3) {
-                    dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
-                } else {
-                    dataFormatada = mov.patioDt;
-                }
-            }
-
-            // Formatar a data ATUAL
-            function getDataAtualExtenso() {
-                const data = new Date();
-                const dia = data.getDate();
-                const meses = [
-                    'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
-                    'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
-                ];
-                const mes = meses[data.getMonth()];
-                const ano = data.getFullYear();
-                
-                return `${dia}${mes}${ano}`;
-            }
-
-            // No seu código:
-            let dataFormatadaAtual = getDataAtualExtenso(); // Retorna "15 de outubro de 2023"
-            
-            // Preencher o formulário com os dados
-            $('#destinatario').val(`5bprv2ciap3@policiamilitar.sp.gov.br`); // Limpar o campo de destinatário
-            $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'} para pátio credênciado`);
-            $('#placa').val(mov.placa || '');
-            $('#marca').val(mov.marca || '');
-            $('#modelo').val(mov.modelo || '');
-            $('#numReg').val(mov.numReg || '');
-            $('#dataMovimentacao').val(dataFormatada);
-            
-            // Gerar mensagem padrão
-            const mensagemPadrao = `MENSAGEM Nº 5BPRv-${mov.numMsg}, de ${dataFormatadaAtual}.\n` +
-                                    `Do PDR da 2ª Cia do 5º BPRv\n` +
-                                    `Ao Sr Cmt da 2ª Cia do 5º BPRv.\n` +
-                                    `Assunto: Movimentação de veículo para pátio credênciado.\n` + 
-                                    `\n\n` +
-                                    `1.Informo que o veículo de Placas: ${mov.placa || 'N/A'} e Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}\n` +
-                                    `1.1. Recolhido mediante ARV Nº: ${mov.numRV || 'N/A'}, BO Nº: ${mov.numBO}, por: ${mov.situacao || 'N/A'}\n` +
-                                    `1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na cidade de ${mov.patioLoc || 'N/A'}, pelo guincho de Placas: ${mov.guinchoPlaca || 'N/A'}, conduzido pelo Sr: ${mov.guinchoNome || 'N/A'}.\n` +
-                                    `\n\n` +
-                                    `Assinatura\n`
-
-            // Gerar a mensagem em HTML
-            const mensagemHTML12 = `
-            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt;">
-                <p>MENSAGEM Nº 5BPRv-${mov.numMsg || 'N/A'}, de ${dataFormatadaAtual}.</p>                
-                <p><strong>Do</strong> PDR da 2ª Cia do 5º BPRv</p>
-                <p><strong>Ao</strong> Sr Cmt da 2ª Cia do 5º BPRv.</p>                
-                <p><strong>Assunto:</strong> Movimentação de veículo para pátio credenciado.</p>
-                
-                <p>1. Informo que o veículo de <strong>Placas:</strong> ${mov.placa || 'N/A'} e <strong>Marca/Modelo:</strong> ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}</p>
-                
-                <p>1.1. Recolhido mediante <strong>ARV Nº:</strong> ${mov.numRV || 'N/A'}, <strong>BO Nº:</strong> ${mov.numBO || 'N/A'}, <strong>por:</strong> ${mov.situacao || 'N/A'}</p>
-                
-                <p>1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na <strong>cidade de:</strong> ${mov.patioLoc || 'N/A'}, pelo <strong>guincho de Placas:</strong> ${mov.guinchoPlaca || 'N/A'}, <strong>conduzido pelo Sr:</strong> ${mov.guinchoNome || 'N/A'}.</p>
-                
-                <p>Assinatura</p>
-            </div>
-            `;
-
-            const mensagemHTML = `
-            <div style="font-family: 'Times New Roman', Times, serif; font-size: 12pt; line-height: 1.0;">
-                <style>
-                    .mensagem p {
-                        margin: 0 0 8px 0;
-                        padding: 0;
-                        line-height: 1.0;
-                    }
-                </style>
-                
-                <div class="mensagem">
-                    <p>MENSAGEM Nº 5BPRv-123, de 17Set2025.<br>
-                    <strong>Do</strong> PDR da 2ª Cia do 5º BPRv<br>
-                    <strong>Ao</strong> Sr Cmt da 2ª Cia do 5º BPRv.<br>
-                    <strong>Assunto:</strong> Movimentação de veículo para pátio credenciado.</p>
-
-                    <p>1. Informo que o veículo de <strong>Placas:</strong> ${mov.placa || 'N/A'} e <strong>Marca:</strong> ${mov.marca || 'N/A'} / <strong>Modelo:</strong> ${mov.modelo || 'N/A'}</p>
-
-                    <p>1.1. Recolhido mediante <strong>ARV Nº:</strong> ${mov.numRV || 'N/A'}, <strong>BO Nº:</strong> ${mov.numBO || 'N/A'}, <strong>por:</strong> ${mov.situacao || 'N/A'}</p>
-
-                    <p>1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na <strong>cidade de:</strong> ${mov.patioLoc || 'N/A'}, pelo <strong>guincho de Placas:</strong> ${mov.guinchoPlaca || 'N/A'}, <strong>conduzido pelo Sr:</strong> ${mov.guinchoNome || 'N/A'}.</p>
-
-                    <p>Assinatura</p>
-                </div>
-            </div>
-            `;
-            
-            $('#mensagem').val(mensagemHTML);
-            
-            // Atualizar a pré-visualização
-             atualizarPreview();
-            
-            // Abrir o modal
-            const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
-            outlookModal.show();
-        }
-
-        // Função para atualizar a pré-visualização da mensagem
-        function atualizarPreview() {
-            const destinatario = $('#destinatario').val();
-            const assunto = $('#assunto').val();
-            const mensagem = $('#mensagem').val().replace(/\n/g, '<br>');
-            
-            const previewHtml = `
-                <p><strong>Para:</strong> ${destinatario || '[Destinatário]'}</p>
-                <p><strong>Assunto:</strong> ${assunto || '[Assunto]'}</p>
-                <hr>
-                <div>${mensagem || '[Mensagem]'}</div>
-            `;
-            
-            $('#previewMensagem').html(previewHtml);
-        }
-
-        // Gerar mensagem no Outlook
-        function gerarMensagemOutlook() {
-            const destinatario = $('#destinatario').val();
-            const assunto = $('#assunto').val();
-            const mensagem = $('#mensagem').val();
-            
-            if (!destinatario || !assunto || !mensagem) {
-                alert('Por favor, preencha todos os campos obrigatórios.');
-                return;
-            }
-            
-            // Codificar os parâmetros para o mailto
-            const assuntoCodificado = encodeURIComponent(assunto);
-            // const mensagemCodificada = encodeURIComponent(mensagem);
-            const mensagemCodificada = encodeURIComponent(mensagemHTML);
-
-            
-            // Criar o link mailto
-            const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
-            
-            // Abrir o cliente de e-mail
-            window.location.href = mailtoLink;
-            
-            // Fechar o modal
-            bootstrap.Modal.getInstance(document.getElementById('outlookModal')).hide();
-        }
-
         $(document).ready(function() {
             fetchAndRenderData();
             $("#navbarContainer").load("patio/mov_navbar.html");
 
-            $('#salvarEdicao').click(function() {
+            // Event listeners
+            $('#salvarEdicao').click(salvarEdicao);
+            $(document).on('click', '.btn-delete', deletarRegistro);
+            $(document).on('click', '.btn-outlook', abrirModalComDados);
+            $('#btnCopiarHTML').on('click', copiarHTML);
+            $('#btnAbrirOutlook').on('click', abrirOutlook);
+            $(document).on('click', '#btnEditar', editarRegistro);
+            $(document).on('click', '.btn-details', mostrarDetalhes);
+
+            function salvarEdicao() {
                 const id = $('#editId').val();
                 const data = {
                     eventoDER: $('#editEventoDER').val(),
@@ -519,9 +615,9 @@
                         fetchAndRenderData();
                     }
                 });
-            });
+            }
 
-            $(document).on('click', '.btn-delete', function() {
+            function deletarRegistro() {
                 const id = $(this).data('id');
                 if (confirm('Tem certeza que deseja excluir este registro?')) {
                     $.ajax({
@@ -532,29 +628,20 @@
                         }
                     });
                 }
-            });
+            }
 
-            // Event listener para o botão de Outlook
-            $(document).on('click', '.btn-outlook', function() {
+            function abrirModalComDados() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(mov) {
                     abrirModalOutlook(mov);
                 });
-            });
+            }
 
-            // Atualizar a pré-visualização quando os campos mudarem
-            // $('#destinatario, #assunto, #mensagem').on('input', atualizarPreview);
-
-            // Event listener para o botão Gerar Mensagem no Outlook
-            $('#btnGerarOutlook').on('click', gerarMensagemOutlook);
-
-            $(document).on('click', '#btnEditar', function() {
+            function editarRegistro() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(mov) {
                     $('#movNumModalEdit').text(mov.numReg);
-
                     $('#editId').val(mov._id);
-                    $('#editNumReg').val(mov.numReg);
                     $('#editEventoDER').val(mov.eventoDER);            
                     $('#editAtendDER').val(mov.atendDER);
                     $('#editNumRV').val(mov.numRV);
@@ -569,16 +656,14 @@
                     $('#editGuinchoNome').val(mov.guinchoNome);
                     $('#editNumMsg').val(mov.numMsg);
                     $('#editObs').val(mov.obs);
-
                     $('#editarModal').modal('show');
                 });
-            });
+            }
 
-            $(document).on('click', '.btn-details', function() {
+            function mostrarDetalhes() {
                 const id = $(this).data('id');
                 $.get(`${API_URL}/${id}`, function(mov) {
                     $('#movNumModal').text(mov.numReg);
-
                     let dataFormatada = mov.patioDt ? mov.patioDt.split('-').reverse().join('-') : '';
                     let html = `
                         <div class="mb-2"><strong style="color:#0d6efd;">ID:</strong> ${mov._id}</div>
@@ -613,7 +698,7 @@
                     html += `<div class="mt-3 text-end"><button class="btn btn-warning" id="btnEditar" data-id="${mov._id}" data-bs-dismiss="modal"><i class="bi bi-pencil"></i> Editar</button></div>`;
                     $('#detalhesModal .modal-body').html(html);
                 });
-            });
+            }
         });
     </script>
 </body>

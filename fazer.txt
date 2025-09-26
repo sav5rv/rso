@@ -9,3 +9,118 @@ GEMINI
 erro ao realizar a consulta pelo campo data
 
 no consulta-moviment.html retirei marca e placaGuincho do dataTable, mas quero que fique visivel quando for exportado
+
+
+
+
+
+
+msg formatada...
+// Função para abrir o modal com os dados da movimentação
+function abrirModalOutlook(mov) {
+    currentMovimentacao = mov;
+    
+    // Formatar a data do registro
+    let dataFormatada = '';
+    if (mov.patioDt) {
+        const partes = mov.patioDt.split('-');
+        if (partes.length === 3) {
+            dataFormatada = `${partes[2]}/${partes[1]}/${partes[0]}`;
+        } else {
+            dataFormatada = mov.patioDt;
+        }
+    }
+
+    // Formatar a data ATUAL
+    function getDataAtualExtenso() {
+        const data = new Date();
+        const dia = data.getDate();
+        const meses = [
+            'Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun',
+            'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'
+        ];
+        const mes = meses[data.getMonth()];
+        const ano = data.getFullYear();
+        
+        return `${dia}${mes}${ano}`;
+    }
+
+    let dataFormatadaAtual = getDataAtualExtenso();
+    
+    // Preencher o formulário com os dados
+    $('#destinatario').val(`5bprv2ciap3@policiamilitar.sp.gov.br`);
+    $('#assunto').val(`Movimentação de Veículo - Placa: ${mov.placa || 'N/A'} para pátio credênciado`);
+    
+    // ✅ CORREÇÃO: Usar TEXTO PURO em vez de HTML
+    const mensagemTexto = 
+`MENSAGEM Nº 5BPRv-${mov.numMsg || 'N/A'}, de ${dataFormatadaAtual}.
+
+Do PDR da 2ª Cia do 5º BPRv
+Ao Sr Cmt da 2ª Cia do 5º BPRv.
+
+Assunto: Movimentação de veículo para pátio credenciado.
+
+1. Informo que o veículo de Placas: ${mov.placa || 'N/A'} e Marca/Modelo: ${mov.marca || 'N/A'} / ${mov.modelo || 'N/A'}
+
+1.1. Recolhido mediante ARV Nº: ${mov.numRV || 'N/A'}, BO Nº: ${mov.numBO || 'N/A'}, por: ${mov.situacao || 'N/A'}
+
+1.2. Foi movimentado em ${dataFormatada} para o pátio credenciado na cidade de ${mov.patioLoc || 'N/A'}, pelo guincho de Placas: ${mov.guinchoPlaca || 'N/A'}, conduzido pelo Sr: ${mov.guinchoNome || 'N/A'}.
+
+Assinatura`;
+    
+    $('#mensagem').val(mensagemTexto);
+    
+    // ✅ CORREÇÃO: Atualizar a pré-visualização para mostrar texto puro
+    atualizarPreview();
+    
+    // Abrir o modal
+    const outlookModal = new bootstrap.Modal(document.getElementById('outlookModal'));
+    outlookModal.show();
+}
+
+// ✅ CORREÇÃO: Atualizar função de pré-visualização para texto puro
+function atualizarPreview() {
+    const destinatario = $('#destinatario').val();
+    const assunto = $('#assunto').val();
+    const mensagem = $('#mensagem').val(); // Já é texto puro
+    
+    const previewHtml = `
+        <p><strong>Para:</strong> ${destinatario || '[Destinatário]'}</p>
+        <p><strong>Assunto:</strong> ${assunto || '[Assunto]'}</p>
+        <hr>
+        <div style="white-space: pre-line; font-family: Arial, sans-serif; font-size: 14px;">
+            ${mensagem || '[Mensagem]'}
+        </div>
+    `;
+    
+    $('#previewMensagem').html(previewHtml);
+}
+
+// ✅ CORREÇÃO: Função de gerar mensagem (já está correta)
+function gerarMensagemOutlook() {
+    const destinatario = $('#destinatario').val();
+    const assunto = $('#assunto').val();
+    const mensagem = $('#mensagem').val(); // Texto puro
+    
+    if (!destinatario || !assunto || !mensagem) {
+        alert('Por favor, preencha todos os campos obrigatórios.');
+        return;
+    }
+    
+    // Codificar os parâmetros para o mailto
+    const assuntoCodificado = encodeURIComponent(assunto);
+    const mensagemCodificada = encodeURIComponent(mensagem); // Texto puro codificado
+    
+    // Criar o link mailto
+    const mailtoLink = `mailto:${destinatario}?subject=${assuntoCodificado}&body=${mensagemCodificada}`;
+    
+    console.log('Link mailto gerado:', mailtoLink);
+    
+    // Abrir o cliente de e-mail
+    window.location.href = mailtoLink;
+    
+    // Fechar o modal após um tempo
+    setTimeout(() => {
+        bootstrap.Modal.getInstance(document.getElementById('outlookModal')).hide();
+    }, 1000);
+}
