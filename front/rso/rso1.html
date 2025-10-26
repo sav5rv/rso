@@ -95,9 +95,11 @@
                             <select class="form-control" id="addTpSvc">
                                 <option value="">Selecione</option>
                                 <option value="ADM">ADM</option>
+                                <option value="CEP">CEP</option>
                                 <option value="CGP">CGP</option>
                                 <option value="CMT">CMT</option>
                                 <option value="Dejem">Dejem</option>
+                                <option value="EAP">EAP</option>
                                 <option value="Escala Extra">Escala Extra</option>
                                 <option value="Guarda Quartel">Guarda Quartel</option>
                                 <option value="OPERACIONAL">OPERACIONAL</option>
@@ -139,9 +141,9 @@
                     // Ordena os dados por numRSO em ordem decrescente
                     rsos.sort((a, b) => b.numRSO - a.numRSO);
                     const lastRSO = rsos[0];
-                    const createdAt = new Date(lastRSO.createdAt).toLocaleString('pt-BR');
-                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${createdAt} para a Vtr ${lastRSO.vtr} na BOp ${lastRSO.bop}.`);
-                    $('#rsoNumModal').text(lastRSO.numRSO + 1); // Atualiza o número do RSO no cabeçalho do modal
+                    const data = new Date(lastRSO.data).toLocaleDateString('pt-BR');
+                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${data} para ${lastRSO.vtr} encarregado ${lastRSO.enc} na BOp ${lastRSO.bop} para o serviço ${lastRSO.tpSvc}.`);
+                    $('#rsoNumModal').text(lastRSO.numRSO + 1) // Atualiza o número do RSO no cabeçalho do modal
                 } else {
                     lastRsoInfo.html('Nenhum registro encontrado.');
                 }

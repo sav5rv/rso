@@ -88,6 +88,8 @@ router.get('/buscar', async (req, res) => {
         // Usa o objeto de filtro no método find() do Mongoose
         const rsos = await RSO.find(filtro).sort({ numRSO: 'desc' });
         res.json(rsos);
+
+        
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

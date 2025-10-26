@@ -1,0 +1,25 @@
+<class="nav-menu">
+<li><a href="#home">Home</a></li>
+
+
+href="/rso">Registrar RSO
+        // Rotas para RSO
+        router.get('/rso', (req, res) => {
+            res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/rso1.html'));
+        });
+        router.get('/listar', (req, res) => {
+            res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/rso.html'));
+        });
+        router.get('/consultar', (req, res) => {
+            res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/consulta-rso.html'));
+        });
+        router.get('/resumo1', (req, res) => {
+            res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/servico-cgp.html'));
+        });
+        router.get('/resumo2', (req, res) => {
+            res.sendFile(path.join(__dirname, '..', '..', '..', 'front', 'rso/resumo-cgp.html'));
+        });
+
+
+<li><a href="/patio">Registrar Movimentação</a></li>
+<li><a href="/numerador">Zerar Numerador</a></li>
