@@ -141,8 +141,8 @@
                     // Ordena os dados por numRSO em ordem decrescente
                     rsos.sort((a, b) => b.numRSO - a.numRSO);
                     const lastRSO = rsos[0];
-                    const data = new Date(lastRSO.data).toLocaleDateString('pt-BR');
-                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${data} para ${lastRSO.vtr} encarregado ${lastRSO.enc} na BOp ${lastRSO.bop} para o serviço ${lastRSO.tpSvc}.`);
+                    //const data = new Date(lastRSO.data).toLocaleDateString('pt-BR');
+                    lastRsoInfo.html(`Último RSO cadastrado: <strong>${lastRSO.numRSO}</strong> em ${lastRSO.data} para ${lastRSO.vtr} encarregado ${lastRSO.enc} na BOp ${lastRSO.bop} para o serviço ${lastRSO.tpSvc}.`);
                     $('#rsoNumModal').text(lastRSO.numRSO + 1) // Atualiza o número do RSO no cabeçalho do modal
                 } else {
                     lastRsoInfo.html('Nenhum registro encontrado.');

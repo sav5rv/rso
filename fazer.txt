@@ -1,9 +1,12 @@
 
 
 
-    qd fui importar o xls para json
-campo hora, não formatei como hora, digitei 00:00
-campo data, formatei como data, 22/02/2025
+
+RSO - vou trabalhar somente com o ano corrente
+      o que for ref a anos anteriores colocarei em outra tb - RSO_ANT - posterior podemos realizar consultas exclusivas e mais pesadas
+      criar função que fica junto com o zerar numerador para mover os dados de RSOS para RSO_ANT
+      qd fui converter o xls para json - tratei todos os campos como texto no excel, depois converti
+
 
 GEMINI
 erro ao realizar a consulta pelo campo data
